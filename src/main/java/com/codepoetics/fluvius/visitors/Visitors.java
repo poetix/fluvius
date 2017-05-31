@@ -4,6 +4,7 @@ import com.codepoetics.fluvius.api.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public final class Visitors {
@@ -29,8 +30,8 @@ public final class Visitors {
         }
 
         @Override
-        public <T> Action visitSingle(Key<T> outputKey, Operation<T> operation) {
-            return new LoggingAction(operation.getName(), outputKey, innerVisitor.visitSingle(outputKey, operation));
+        public <T> Action visitSingle(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
+            return new LoggingAction(operation.getName(), providedKey, innerVisitor.visitSingle(requiredKeys, providedKey, operation));
         }
 
         @Override

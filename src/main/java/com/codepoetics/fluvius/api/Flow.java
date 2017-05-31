@@ -4,8 +4,8 @@ import java.util.Set;
 
 public interface Flow<T> extends DescribableFlow {
 
-    Set<Key<?>> getInputKeys();
-    Key<T> getOutputKey();
+    Set<Key<?>> getRequiredKeys();
+    Key<T> getProvidedKey();
     <V extends FlowVisitor> Action visit(V visitor);
 
     <N> Flow<N> then(Flow<N> next);

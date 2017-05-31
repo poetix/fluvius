@@ -4,7 +4,6 @@ import com.codepoetics.fluvius.api.Key;
 import com.codepoetics.fluvius.api.ScratchpadStorage;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

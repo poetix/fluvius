@@ -66,18 +66,18 @@ public class BranchFlow<T> extends AbstractFlow<T> {
     }
 
     private static <T> Flow<T> create(Flow<T> defaultFlow, Map<String, ConditionalFlow<T>> branches) {
-        Key<T> defaultOutputKey = defaultFlow.getOutputKey();
-        Set<Key<?>> requiredKeys = defaultFlow.getInputKeys();
+        Key<T> defaultOutputKey = defaultFlow.getProvidedKey();
+        Set<Key<?>> requiredKeys = defaultFlow.getRequiredKeys();
 
         for (ConditionalFlow<T> conditionalFlow : branches.values()) {
-            Key<T> conditionalOutputKey = conditionalFlow.getIfTrue().getOutputKey();
+            Key<T> conditionalOutputKey = conditionalFlow.getIfTrue().getProvidedKey();
             if (!conditionalOutputKey.equals(defaultOutputKey)) {
                 throw new IllegalBranchOutputKeyException(
                         defaultOutputKey,
                         conditionalFlow.getCondition().getDescription(),
                         conditionalOutputKey);
             }
-            requiredKeys.addAll(conditionalFlow.getIfTrue().getInputKeys());
+            requiredKeys.addAll(conditionalFlow.getIfTrue().getRequiredKeys());
         }
 
         return new BranchFlow<>(requiredKeys, defaultOutputKey, defaultFlow, branches);
@@ -109,7 +109,7 @@ public class BranchFlow<T> extends AbstractFlow<T> {
         for (ConditionalFlow<T> branchFlow : branches.values()) {
             describableBranches.put(branchFlow.getCondition().getDescription(), branchFlow.getIfTrue());
         }
-        return describer.describeBranch(defaultFlow, describableBranches);
+        return describer.describeBranch(defaultFlow, describableBranches, getRequiredKeys(), getProvidedKey());
     }
 
 

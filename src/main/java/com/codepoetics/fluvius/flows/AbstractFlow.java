@@ -7,22 +7,22 @@ import java.util.Set;
 
 public abstract class AbstractFlow<T> implements Flow<T> {
 
-    private final Set<Key<?>> inputKeys;
-    private final Key<T> outputKey;
+    private final Set<Key<?>> requiredKeys;
+    private final Key<T> providedKey;
 
-    protected AbstractFlow(Set<Key<?>> inputKeys, Key<T> outputKey) {
-        this.inputKeys = inputKeys;
-        this.outputKey = outputKey;
+    protected AbstractFlow(Set<Key<?>> requiredKeys, Key<T> providedKey) {
+        this.requiredKeys = requiredKeys;
+        this.providedKey = providedKey;
     }
 
     @Override
-    public final Set<Key<?>> getInputKeys() {
-        return new HashSet<>(inputKeys);
+    public final Set<Key<?>> getRequiredKeys() {
+        return new HashSet<>(requiredKeys);
     }
 
     @Override
-    public final Key<T> getOutputKey() {
-        return outputKey;
+    public final Key<T> getProvidedKey() {
+        return providedKey;
     }
 
     @Override

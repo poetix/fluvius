@@ -6,25 +6,25 @@ import java.util.Set;
 
 public class SingleOperationFlow<T> extends AbstractFlow<T> {
 
-    static <T> Flow<T> create(Set<Key<?>> inputKeys, Key<T> outputKey, Operation<T> operation) {
-        return new SingleOperationFlow<>(inputKeys, outputKey, operation);
+    static <T> Flow<T> create(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
+        return new SingleOperationFlow<>(requiredKeys, providedKey, operation);
     }
 
     private final Operation<T> operation;
 
-    private SingleOperationFlow(Set<Key<?>> inputKeys, Key<T> outputKey, Operation<T> operation) {
-        super(inputKeys, outputKey);
+    private SingleOperationFlow(Set<Key<?>> requiredKeys, Key<T> providedKeys, Operation<T> operation) {
+        super(requiredKeys, providedKeys);
         this.operation = operation;
     }
 
     @Override
     public <V extends FlowVisitor> Action visit(V visitor) {
-        return visitor.visitSingle(getOutputKey(), operation);
+        return visitor.visitSingle(getRequiredKeys(), getProvidedKey(), operation);
     }
 
     @Override
     public <D extends FlowDescriber<D>> D describe(FlowDescriber<D> describer) {
-        return describer.describeSingle(operation.getName());
+        return describer.describeSingle(operation.getName(), getRequiredKeys(), getProvidedKey());
     }
 
     @Override

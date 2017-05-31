@@ -1,7 +1,6 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.exceptions.MissingKeysException;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
 import java.util.*;
@@ -16,39 +15,30 @@ public class SequenceFlow<T> extends AbstractFlow<T> {
     }
 
     private static <T> Flow<T> create(Flow<?> first, List<Flow<?>> middle, Flow<T> last) {
-        Set<Key<?>> required = getRequiredKeys(first, middle, last);
-        Set<Key<?>> provided = getProvidedKeys(first, middle);
+        Set<Key<?>> requiredKeys = first.getRequiredKeys();
+        Set<Key<?>> providedKeys = new HashSet<>();
+        providedKeys.add(first.getProvidedKey());
 
-        required.removeAll(provided);
-
-        return new SequenceFlow<>(required, first, middle, last);
-    }
-
-    private static Set<Key<?>> getRequiredKeys(Flow<?> first, List<Flow<?>> middle, Flow<?> last) {
-        Set<Key<?>> required = new HashSet<>();
-        required.addAll(first.getInputKeys());
         for (Flow<?> flow : middle) {
-            required.addAll(flow.getInputKeys());
+            Set<Key<?>> requiredKeysForStage = flow.getRequiredKeys();
+            requiredKeysForStage.removeAll(providedKeys);
+            requiredKeys.addAll(requiredKeysForStage);
+            providedKeys.add(flow.getProvidedKey());
         }
-        required.addAll(last.getInputKeys());
-        return required;
-    }
 
-    private static Set<Key<?>> getProvidedKeys(Flow<?> first, List<Flow<?>> middle) {
-        Set<Key<?>> provided = new HashSet<>(middle.size() + 1);
-        provided.add(first.getOutputKey());
-        for (Flow<?> flow : middle) {
-            provided.add(flow.getOutputKey());
-        }
-        return provided;
+        Set<Key<?>> requiredKeysForLast = last.getRequiredKeys();
+        requiredKeysForLast.removeAll(providedKeys);
+        requiredKeys.addAll(requiredKeysForLast);
+
+        return new SequenceFlow<>(requiredKeys, first, middle, last);
     }
 
     private final Flow<?> first;
     private final List<Flow<?>> middle;
     private final Flow<T> last;
 
-    private SequenceFlow(Set<Key<?>> inputKeys, Flow<?> first, List<Flow<?>> middle, Flow<T> last) {
-        super(inputKeys, last.getOutputKey());
+    private SequenceFlow(Set<Key<?>> requiredKeys, Flow<?> first, List<Flow<?>> middle, Flow<T> last) {
+        super(requiredKeys, last.getProvidedKey());
         this.first = first;
         this.middle = middle;
         this.last = last;
@@ -73,7 +63,7 @@ public class SequenceFlow<T> extends AbstractFlow<T> {
 
     @Override
     public <D extends FlowDescriber<D>> D describe(FlowDescriber<D> describer) {
-        return describer.describeSequence(allFlows());
+        return describer.describeSequence(allFlows(), getRequiredKeys(), getProvidedKey());
     }
 
     @Override

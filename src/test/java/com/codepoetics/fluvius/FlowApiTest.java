@@ -1,6 +1,8 @@
 package com.codepoetics.fluvius;
 
 import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.conditions.Conditions;
+import com.codepoetics.fluvius.describers.PrettyPrintingFlowDescriber;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Keys;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
@@ -49,78 +51,47 @@ public class FlowApiTest {
 
     @Test
     public void testFlowApi() {
-        Flow<AuthorisationResult> authorize = Flows.from(userName, password).to(authorisationResult).using(new Operation<AuthorisationResult>() {
-            @Override
-            public String getName() {
-                return "Authorize credentials";
-            }
+        Flow<AuthorisationResult> authorize = Flows.extracting(authorisationResult).from(userName, password).using(
+                new Extractor2<String, String, AuthorisationResult>() {
+                    @Override
+                    public AuthorisationResult extract(String username, String password) {
+                        return (password.equals("the real password"))
+                            ? new AuthorisationResult(true, "ACCESS TOKEN")
+                            : new AuthorisationResult(false, null);
+                    }
+                });
 
+        Flow<String> extractAccessToken = Flows.extracting(accessToken).from(authorisationResult).using(new Extractor<AuthorisationResult, String>() {
             @Override
-            public AuthorisationResult run(Scratchpad scratchpad) {
-                if (scratchpad.get(password).equals("the real password")) {
-                    return new AuthorisationResult(true, "ACCESS TOKEN");
-                } else {
-                    return new AuthorisationResult(false, null);
-                }
-            }
-        });
-
-        Flow<String> extractAccessToken = Flows.from(authorisationResult).to(accessToken).using(new Operation<String>() {
-            @Override
-            public String getName() {
-                return "Extract access token";
-            }
-
-            @Override
-            public String run(Scratchpad scratchpad) {
-                return scratchpad.get(authorisationResult).getAccessToken();
+            public String extract(AuthorisationResult input) {
+                return input.getAccessToken();
             }
         });
 
-        Condition isAuthorised = new Condition() {
+        Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new ValuePredicate<AuthorisationResult>() {
             @Override
-            public String getDescription() {
-                return "is authorised";
-            }
-
-            @Override
-            public boolean test(Scratchpad scratchpad) {
-                return scratchpad.get(authorisationResult).isAuthorised();
-            }
-        };
-
-        Flow<String> formatError = Flows.from(userName, authorisationResult).to(weatherMessage).using(new Operation<String>() {
-            @Override
-            public String getName() {
-                return "Format error message";
-            }
-
-            @Override
-            public String run(Scratchpad scratchpad) {
-                return "Sorry, " + scratchpad.get(userName) + ", your credentials were not valid";
+            public boolean test(AuthorisationResult value) {
+                return value.isAuthorised();
             }
         });
 
-        Flow<Double> getWeather = Flows.from(accessToken, postcode).to(temperature).using(new Operation<Double>() {
+        Flow<String> formatError = Flows.extracting(weatherMessage).from(userName).using(new Extractor<String, String>() {
             @Override
-            public String getName() {
-                return "Get weather";
+            public String extract(String userName) {
+                return "Sorry, " + userName + ", your credentials were not valid";
             }
+        });
 
+        Flow<Double> getWeather = Flows.extracting(temperature).from(accessToken, postcode).using(new Extractor2<String, String, Double>() {
             @Override
-            public Double run(Scratchpad scratchpad) {
+            public Double extract(String accessToken, String postcode) {
                 return 26D;
             }
         });
 
-        Flow<String> formatWeather = Flows.from(userName, postcode, temperature).to(weatherMessage).using(new Operation<String>() {
+        Flow<String> formatWeather = Flows.from(userName, postcode, temperature).to(weatherMessage).using("Format weather", new ScratchpadFunction<String>() {
             @Override
-            public String getName() {
-                return "Format weather";
-            }
-
-            @Override
-            public String run(Scratchpad scratchpad) {
+            public String apply(Scratchpad scratchpad) {
                 return scratchpad.get(userName)
                         + ", the temperature at " + scratchpad.get(postcode)
                         + " is " + scratchpad.get(temperature) + " degrees";
@@ -133,6 +104,8 @@ public class FlowApiTest {
                                 extractAccessToken
                                         .then(getWeather)
                                         .then(formatWeather)));
+
+        System.out.println(Flows.prettyPrint(combined));
 
         Scratchpad initialScratchpad = Scratchpads.create(
                 userName.of("Fred"),

@@ -4,12 +4,13 @@ import com.codepoetics.fluvius.api.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 final class DefaultFlowVisitor implements FlowVisitor {
 
     @Override
-    public <T> Action visitSingle(Key<T> outputKey, Operation<T> operation) {
-        return SingleOperationAction.of(outputKey, operation);
+    public <T> Action visitSingle(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
+        return SingleOperationAction.of(providedKey, operation);
     }
 
     @Override
