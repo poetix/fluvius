@@ -2,7 +2,6 @@ package com.codepoetics.fluvius;
 
 import com.codepoetics.fluvius.api.*;
 import com.codepoetics.fluvius.conditions.Conditions;
-import com.codepoetics.fluvius.describers.PrettyPrintingFlowDescriber;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Keys;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
@@ -52,6 +51,7 @@ public class FlowApiTest {
     @Test
     public void testFlowApi() {
         Flow<AuthorisationResult> authorize = Flows.extracting(authorisationResult).from(userName, password).using(
+                "Check credentials",
                 new Extractor2<String, String, AuthorisationResult>() {
                     @Override
                     public AuthorisationResult extract(String username, String password) {
@@ -75,14 +75,16 @@ public class FlowApiTest {
             }
         });
 
-        Flow<String> formatError = Flows.extracting(weatherMessage).from(userName).using(new Extractor<String, String>() {
+        Flow<String> formatError = Flows.extracting(weatherMessage).from(userName).using("Format error message", new Extractor<String, String>() {
             @Override
             public String extract(String userName) {
                 return "Sorry, " + userName + ", your credentials were not valid";
             }
         });
 
-        Flow<Double> getWeather = Flows.extracting(temperature).from(accessToken, postcode).using(new Extractor2<String, String, Double>() {
+        Flow<Double> getWeather = Flows.extracting(temperature).from(accessToken, postcode).using(
+                "Fetch weather",
+                new Extractor2<String, String, Double>() {
             @Override
             public Double extract(String accessToken, String postcode) {
                 return 26D;

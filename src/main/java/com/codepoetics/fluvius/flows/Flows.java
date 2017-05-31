@@ -77,10 +77,14 @@ public final class Flows {
             this.target = target;
         }
 
-        public Flow<O> using(Extractor<I, O> extractor) {
+        public Flow<O> using(String name, Extractor<I, O> extractor) {
             return from(source).to(target).using(
-                    "Extract " + target.getName() + " from " + source.getName(),
+                    name,
                     new ExtractorFunction<I, O>(extractor, source));
+        }
+
+        public Flow<O> using(Extractor<I, O> extractor) {
+            return using("Extract " + target.getName() + " from " + source.getName(), extractor);
         }
     }
 
@@ -95,10 +99,13 @@ public final class Flows {
             this.target = target;
         }
 
-        public Flow<O> using(Extractor2<I1, I2, O> extractor) {
+        public Flow<O> using(String name, Extractor2<I1, I2, O> extractor) {
             return from(source1, source2).to(target).using(
-                    "Extract " + target.getName() + " from " + source1.getName() + " and " + source2.getName(),
+                    name,
                     new ExtractorFunction2<I1, I2, O>(extractor, source1, source2));
+        }
+        public Flow<O> using(Extractor2<I1, I2, O> extractor) {
+            return using("Extract " + target.getName() + " from " + source1.getName() + " and " + source2.getName(), extractor);
         }
     }
 
