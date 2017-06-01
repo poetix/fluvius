@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface FlowVisitor {
+public interface FlowVisitor<V> {
 
-    <T> Action visitSingle(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation);
-    Action visitSequence(List<Action> actions);
-    Action visitBranch(Action defaultAction, Map<String, ConditionalAction> conditionalActions);
+    <T> V visitSingle(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation);
+    <T> V visitSequence(List<V> items, Set<Key<?>> requiredKeys, Key<T> providedKey);
+    <T> V visitBranch(V defaultBranch, Map<String, ConditionalValue<V>> conditionalBranches, Set<Key<?>> requiredKeys, Key<T> providedKey);
     Condition visitCondition(Condition condition);
 
 }

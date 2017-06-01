@@ -1,10 +1,7 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.description.DescribableFlow;
-import com.codepoetics.fluvius.api.description.FlowDescriber;
 import com.codepoetics.fluvius.api.scratchpad.Key;
-import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
@@ -31,33 +28,28 @@ public class BranchFlow<T> extends AbstractFlow<T> {
             return ifTrue;
         }
 
-        public ConditionalAction toConditionalAction(FlowVisitor visitor) {
-            return new RealConditionalAction(visitor.visitCondition(condition), ifTrue.visit(visitor));
+        public <V> ConditionalValue<V> toConditionalAction(FlowVisitor<V> visitor) {
+            return new RealConditionalValue<>(visitor.visitCondition(condition), ifTrue.visit(visitor));
         }
     }
 
-    private static final class RealConditionalAction implements ConditionalAction {
+    private static final class RealConditionalValue<V> implements ConditionalValue<V> {
         private final Condition condition;
-        private final Action action;
+        private final V value;
 
-        private RealConditionalAction(Condition condition, Action action) {
+        private RealConditionalValue(Condition condition, V value) {
             this.condition = condition;
-            this.action = action;
+            this.value = value;
         }
 
         @Override
-        public String getDescription() {
-            return condition.getDescription();
+        public Condition getCondition() {
+            return condition;
         }
 
         @Override
-        public boolean test(Scratchpad scratchpad) {
-            return condition.test(scratchpad);
-        }
-
-        @Override
-        public Scratchpad run(Scratchpad scratchpad) {
-            return action.run(scratchpad);
+        public V getValue() {
+            return value;
         }
     }
 
@@ -99,23 +91,14 @@ public class BranchFlow<T> extends AbstractFlow<T> {
     }
 
     @Override
-    public <V extends FlowVisitor> Action visit(V visitor) {
-        Map<String, ConditionalAction> branchActions = new LinkedHashMap<>();
+    public <V> V visit(FlowVisitor<V> visitor) {
+        Map<String, ConditionalValue<V>> branchActions = new LinkedHashMap<>();
         for (final ConditionalFlow<T> conditionalFlow : branches.values()) {
             branchActions.put(
                     conditionalFlow.getCondition().getDescription(),
                     conditionalFlow.toConditionalAction(visitor));
         }
-        return visitor.visitBranch(defaultFlow.visit(visitor), branchActions);
-    }
-
-    @Override
-    public <D extends FlowDescriber<D>> D describe(FlowDescriber<D> describer) {
-        Map<String, DescribableFlow> describableBranches = new LinkedHashMap<>();
-        for (ConditionalFlow<T> branchFlow : branches.values()) {
-            describableBranches.put(branchFlow.getCondition().getDescription(), branchFlow.getIfTrue());
-        }
-        return describer.describeBranch(defaultFlow, describableBranches, getRequiredKeys(), getProvidedKey());
+        return visitor.visitBranch(defaultFlow.visit(visitor), branchActions, getRequiredKeys(), getProvidedKey());
     }
 
     @Override

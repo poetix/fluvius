@@ -3,7 +3,6 @@ package com.codepoetics.fluvius.flows;
 import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowVisitor;
-import com.codepoetics.fluvius.api.description.FlowDescriber;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
@@ -57,17 +56,12 @@ public class SequenceFlow<T> extends AbstractFlow<T> {
     }
 
     @Override
-    public <V extends FlowVisitor> Action visit(V visitor) {
-        List<Action> actions = new ArrayList<>();
+    public <V> V visit(FlowVisitor<V> visitor) {
+        List<V> items = new ArrayList<>();
         for (Flow<?> flow: allFlows()) {
-            actions.add(flow.visit(visitor));
+            items.add(flow.visit(visitor));
         }
-        return visitor.visitSequence(actions);
-    }
-
-    @Override
-    public <D extends FlowDescriber<D>> D describe(FlowDescriber<D> describer) {
-        return describer.describeSequence(allFlows(), getRequiredKeys(), getProvidedKey());
+        return visitor.visitSequence(items, getRequiredKeys(), getProvidedKey());
     }
 
     @Override

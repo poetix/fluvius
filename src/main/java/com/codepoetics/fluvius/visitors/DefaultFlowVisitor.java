@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-final class DefaultFlowVisitor implements FlowVisitor {
+final class DefaultFlowVisitor implements FlowVisitor<Action> {
 
     @Override
     public <T> Action visitSingle(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
@@ -15,12 +15,12 @@ final class DefaultFlowVisitor implements FlowVisitor {
     }
 
     @Override
-    public Action visitSequence(List<Action> actions) {
+    public <T> Action visitSequence(List<Action> actions, Set<Key<?>> requiredKeys, Key<T> providedKey) {
         return SequenceAction.of(actions);
     }
 
     @Override
-    public Action visitBranch(Action defaultAction, Map<String, ConditionalAction> conditionalActions) {
+    public <T> Action visitBranch(Action defaultAction, Map<String, ConditionalValue<Action>> conditionalActions, Set<Key<?>> requiredKeys, Key<T> providedKey) {
         return BranchAction.of(defaultAction, conditionalActions);
     }
 

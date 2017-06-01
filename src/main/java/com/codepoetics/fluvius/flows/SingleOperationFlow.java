@@ -1,7 +1,6 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.description.FlowDescriber;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 import java.util.Set;
@@ -20,13 +19,8 @@ public class SingleOperationFlow<T> extends AbstractFlow<T> {
     }
 
     @Override
-    public <V extends FlowVisitor> Action visit(V visitor) {
+    public <V> V visit(FlowVisitor<V> visitor) {
         return visitor.visitSingle(getRequiredKeys(), getProvidedKey(), operation);
-    }
-
-    @Override
-    public <D extends FlowDescriber<D>> D describe(FlowDescriber<D> describer) {
-        return describer.describeSingle(operation.getName(), getRequiredKeys(), getProvidedKey());
     }
 
     @Override

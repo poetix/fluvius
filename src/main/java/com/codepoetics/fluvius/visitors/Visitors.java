@@ -20,14 +20,14 @@ public final class Visitors {
         return new DefaultFlowVisitor();
     }
 
-    public static FlowVisitor logging(FlowVisitor target) {
+    public static FlowVisitor logging(FlowVisitor<Action> target) {
         return new LoggingFlowVisitor(target);
     }
 
-    private static final class LoggingFlowVisitor implements FlowVisitor {
-        private final FlowVisitor innerVisitor;
+    private static final class LoggingFlowVisitor implements FlowVisitor<Action> {
+        private final FlowVisitor<Action> innerVisitor;
 
-        private LoggingFlowVisitor(FlowVisitor innerVisitor) {
+        private LoggingFlowVisitor(FlowVisitor<Action> innerVisitor) {
             this.innerVisitor = innerVisitor;
         }
 
@@ -37,13 +37,13 @@ public final class Visitors {
         }
 
         @Override
-        public Action visitSequence(List<Action> actions) {
-            return innerVisitor.visitSequence(actions);
+        public <T> Action visitSequence(List<Action> actions, Set<Key<?>> requiredKeys, Key<T> providedKey) {
+            return innerVisitor.visitSequence(actions, requiredKeys, providedKey);
         }
 
         @Override
-        public Action visitBranch(Action defaultAction, Map<String, ConditionalAction> conditionalActions) {
-            return innerVisitor.visitBranch(defaultAction, conditionalActions);
+        public <T> Action visitBranch(Action defaultAction, Map<String, ConditionalValue<Action>> conditionalActions, Set<Key<?>> requiredKeys, Key<T> providedKey) {
+            return innerVisitor.visitBranch(defaultAction, conditionalActions, requiredKeys, providedKey);
         }
 
         @Override

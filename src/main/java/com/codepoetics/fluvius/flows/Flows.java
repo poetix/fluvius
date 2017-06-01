@@ -6,7 +6,8 @@ import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
-import com.codepoetics.fluvius.describers.PrettyPrintingFlowDescriber;
+import com.codepoetics.fluvius.describers.FlowDescriber;
+import com.codepoetics.fluvius.describers.PrettyPrintingDescriptionWriter;
 import com.codepoetics.fluvius.exceptions.MissingKeysException;
 import com.codepoetics.fluvius.operations.Operations;
 
@@ -18,7 +19,9 @@ public final class Flows {
     }
 
     public static String prettyPrint(Flow<?> flow) {
-        return flow.describe(PrettyPrintingFlowDescriber.create()).getDescription();
+        PrettyPrintingDescriptionWriter descriptionWriter = PrettyPrintingDescriptionWriter.create();
+        FlowDescriber.describe(flow).writeTo(descriptionWriter);
+        return descriptionWriter.toString();
     }
 
     public static final class InputKeysCapture {
@@ -116,7 +119,7 @@ public final class Flows {
         return new TargetCapture<>(target);
     }
 
-    public static <T> T run(Flow<T> flow, Scratchpad initialScratchpad, FlowVisitor flowVisitor) {
+    public static <T> T run(Flow<T> flow, Scratchpad initialScratchpad, FlowVisitor<Action> flowVisitor) {
         Set<Key<?>> missingKeys = new HashSet<>();
         for (Key<?> inputKey: flow.getRequiredKeys()) {
             if (!initialScratchpad.containsKey(inputKey)) {
