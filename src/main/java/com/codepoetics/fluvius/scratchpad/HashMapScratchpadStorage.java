@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.scratchpad;
 
-import com.codepoetics.fluvius.api.Key;
-import com.codepoetics.fluvius.api.ScratchpadStorage;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
 import java.util.HashMap;

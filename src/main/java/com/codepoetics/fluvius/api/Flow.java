@@ -1,5 +1,8 @@
 package com.codepoetics.fluvius.api;
 
+import com.codepoetics.fluvius.api.description.DescribableFlow;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+
 import java.util.Set;
 
 public interface Flow<T> extends DescribableFlow {

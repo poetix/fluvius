@@ -1,10 +1,16 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.api.description.DescribableFlow;
+import com.codepoetics.fluvius.api.description.FlowDescriber;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class BranchFlow<T> extends AbstractFlow<T> {
 
@@ -61,7 +67,7 @@ public class BranchFlow<T> extends AbstractFlow<T> {
         Preconditions.checkNotNull("ifTrue", ifTrue);
 
         Map<String, ConditionalFlow<T>> branches = new LinkedHashMap<>();
-        branches.put(condition.getDescription(), new ConditionalFlow<T>(condition, ifTrue));
+        branches.put(condition.getDescription(), new ConditionalFlow<>(condition, ifTrue));
         return create(defaultFlow, branches);
     }
 
@@ -86,7 +92,7 @@ public class BranchFlow<T> extends AbstractFlow<T> {
     private final Flow<T> defaultFlow;
     private final Map<String, ConditionalFlow<T>> branches;
 
-    public BranchFlow(Set<Key<?>> inputKeys, Key<T> outputKey, Flow<T> defaultFlow, Map<String, ConditionalFlow<T>> branches) {
+    private BranchFlow(Set<Key<?>> inputKeys, Key<T> outputKey, Flow<T> defaultFlow, Map<String, ConditionalFlow<T>> branches) {
         super(inputKeys, outputKey);
         this.defaultFlow = defaultFlow;
         this.branches = branches;
@@ -115,7 +121,7 @@ public class BranchFlow<T> extends AbstractFlow<T> {
     @Override
     public Flow<T> orIf(Condition condition, Flow<T> ifTrue) {
         Map<String, ConditionalFlow<T>> branches = new LinkedHashMap<>(this.branches);
-        branches.put(condition.getDescription(), new ConditionalFlow<T>(condition, ifTrue));
+        branches.put(condition.getDescription(), new ConditionalFlow<>(condition, ifTrue));
         return create(defaultFlow, branches);
     }
 

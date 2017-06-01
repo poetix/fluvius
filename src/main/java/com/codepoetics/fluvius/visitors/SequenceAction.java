@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.visitors;
 
 import com.codepoetics.fluvius.api.Action;
-import com.codepoetics.fluvius.api.Scratchpad;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 import java.util.List;
 

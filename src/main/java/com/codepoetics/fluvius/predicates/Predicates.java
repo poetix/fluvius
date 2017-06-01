@@ -1,9 +1,9 @@
 package com.codepoetics.fluvius.predicates;
 
-import com.codepoetics.fluvius.api.Key;
-import com.codepoetics.fluvius.api.Scratchpad;
-import com.codepoetics.fluvius.api.ScratchpadPredicate;
-import com.codepoetics.fluvius.api.ValuePredicate;
+import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
+import com.codepoetics.fluvius.api.functional.ValuePredicate;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 public final class Predicates {
 

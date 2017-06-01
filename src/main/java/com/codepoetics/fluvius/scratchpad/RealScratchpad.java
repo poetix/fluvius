@@ -1,9 +1,9 @@
 package com.codepoetics.fluvius.scratchpad;
 
-import com.codepoetics.fluvius.api.Key;
-import com.codepoetics.fluvius.api.KeyValue;
-import com.codepoetics.fluvius.api.Scratchpad;
-import com.codepoetics.fluvius.api.ScratchpadStorage;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.KeyValue;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
+import com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage;
 
 final class RealScratchpad implements Scratchpad {
 

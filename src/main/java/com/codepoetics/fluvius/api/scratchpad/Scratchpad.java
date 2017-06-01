@@ -1,4 +1,4 @@
-package com.codepoetics.fluvius.api;
+package com.codepoetics.fluvius.api.scratchpad;
 
 public interface Scratchpad {
 

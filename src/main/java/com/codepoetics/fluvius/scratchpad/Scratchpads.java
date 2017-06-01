@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.scratchpad;
 
-import com.codepoetics.fluvius.api.KeyValue;
-import com.codepoetics.fluvius.api.Scratchpad;
+import com.codepoetics.fluvius.api.scratchpad.KeyValue;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 public final class Scratchpads {
 

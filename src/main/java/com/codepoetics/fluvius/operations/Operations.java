@@ -1,8 +1,8 @@
 package com.codepoetics.fluvius.operations;
 
 import com.codepoetics.fluvius.api.Operation;
-import com.codepoetics.fluvius.api.Scratchpad;
-import com.codepoetics.fluvius.api.ScratchpadFunction;
+import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 public final class Operations {
 

@@ -1,9 +1,9 @@
 package com.codepoetics.fluvius.visitors;
 
 import com.codepoetics.fluvius.api.Action;
-import com.codepoetics.fluvius.api.Key;
 import com.codepoetics.fluvius.api.Operation;
-import com.codepoetics.fluvius.api.Scratchpad;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 final class SingleOperationAction<T> implements Action {
 

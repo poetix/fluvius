@@ -1,8 +1,8 @@
 package com.codepoetics.fluvius.scratchpad;
 
-import com.codepoetics.fluvius.api.Key;
-import com.codepoetics.fluvius.api.KeyValue;
-import com.codepoetics.fluvius.api.ScratchpadStorage;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.KeyValue;
+import com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage;
 
 public final class Keys {
 
@@ -10,7 +10,7 @@ public final class Keys {
     }
 
     public static <T> Key<T> create(String name) {
-        return new RealKey<T>(name);
+        return new RealKey<>(name);
     }
 
     private static final class RealKeyValue implements KeyValue {

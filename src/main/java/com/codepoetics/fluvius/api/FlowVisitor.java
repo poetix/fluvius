@@ -1,5 +1,7 @@
 package com.codepoetics.fluvius.api;
 
+import com.codepoetics.fluvius.api.scratchpad.Key;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

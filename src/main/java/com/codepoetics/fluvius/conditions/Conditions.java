@@ -1,6 +1,10 @@
 package com.codepoetics.fluvius.conditions;
 
-import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.api.Condition;
+import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
+import com.codepoetics.fluvius.api.functional.ValuePredicate;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.predicates.Predicates;
 
 public final class Conditions {
@@ -8,7 +12,7 @@ public final class Conditions {
     private Conditions() {
     }
 
-    public static Condition fromPredicate(String description, ScratchpadPredicate predicate) {
+    private static Condition fromPredicate(String description, ScratchpadPredicate predicate) {
         return new PredicateCondition(description, predicate);
     }
 

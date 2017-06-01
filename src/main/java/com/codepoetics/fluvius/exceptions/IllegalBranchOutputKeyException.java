@@ -1,6 +1,6 @@
 package com.codepoetics.fluvius.exceptions;
 
-import com.codepoetics.fluvius.api.Key;
+import com.codepoetics.fluvius.api.scratchpad.Key;
 
 public class IllegalBranchOutputKeyException extends RuntimeException {
 

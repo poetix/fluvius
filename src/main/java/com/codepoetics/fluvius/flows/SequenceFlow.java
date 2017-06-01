@@ -1,6 +1,10 @@
 package com.codepoetics.fluvius.flows;
 
-import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.api.Action;
+import com.codepoetics.fluvius.api.Flow;
+import com.codepoetics.fluvius.api.FlowVisitor;
+import com.codepoetics.fluvius.api.description.FlowDescriber;
+import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
 import java.util.*;

@@ -2,7 +2,7 @@ package com.codepoetics.fluvius.visitors;
 
 import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.ConditionalAction;
-import com.codepoetics.fluvius.api.Scratchpad;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ final class BranchAction implements Action {
         return new BranchAction(defaultAction, branchActions);
     }
 
-    BranchAction(Action defaultAction, Map<String, ConditionalAction> branchActions) {
+    private BranchAction(Action defaultAction, Map<String, ConditionalAction> branchActions) {
         this.defaultAction = defaultAction;
         this.branchActions = branchActions;
     }

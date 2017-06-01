@@ -1,13 +1,16 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.api.functional.Extractor;
+import com.codepoetics.fluvius.api.functional.Extractor2;
+import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
+import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.describers.PrettyPrintingFlowDescriber;
 import com.codepoetics.fluvius.exceptions.MissingKeysException;
 import com.codepoetics.fluvius.operations.Operations;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public final class Flows {
 
@@ -60,11 +63,11 @@ public final class Flows {
         }
 
         public <I> SourceTargetCapture<I, O> from(Key<I> source) {
-            return new SourceTargetCapture<I, O>(source, target);
+            return new SourceTargetCapture<>(source, target);
         }
 
         public <I1, I2> DoubleSourceTargetCapture<I1, I2, O> from(Key<I1> source1, Key<I2> source2) {
-            return new DoubleSourceTargetCapture<I1, I2, O>(source1, source2, target);
+            return new DoubleSourceTargetCapture<>(source1, source2, target);
         }
     }
 
@@ -80,7 +83,7 @@ public final class Flows {
         public Flow<O> using(String name, Extractor<I, O> extractor) {
             return from(source).to(target).using(
                     name,
-                    new ExtractorFunction<I, O>(extractor, source));
+                    new ExtractorFunction<>(extractor, source));
         }
 
         public Flow<O> using(Extractor<I, O> extractor) {
@@ -102,14 +105,14 @@ public final class Flows {
         public Flow<O> using(String name, Extractor2<I1, I2, O> extractor) {
             return from(source1, source2).to(target).using(
                     name,
-                    new ExtractorFunction2<I1, I2, O>(extractor, source1, source2));
+                    new ExtractorFunction2<>(extractor, source1, source2));
         }
         public Flow<O> using(Extractor2<I1, I2, O> extractor) {
             return using("Extract " + target.getName() + " from " + source1.getName() + " and " + source2.getName(), extractor);
         }
     }
 
-    public static <O> TargetCapture<O> extracting(Key<O> target) {
+    public static <O> TargetCapture<O> obtaining(Key<O> target) {
         return new TargetCapture<>(target);
     }
 
@@ -159,5 +162,29 @@ public final class Flows {
         public O apply(Scratchpad scratchpad) {
             return extractor.extract(scratchpad.get(source1), scratchpad.get(source2));
         }
+    }
+
+    public static <T> BranchBuilder<T> branch(final Condition condition, final Flow<T> ifTrue) {
+        return new BranchBuilder<T>() {
+            private final Map<Condition, Flow<T>> branches = new LinkedHashMap<>();
+            {
+                branches.put(condition, ifTrue);
+            }
+
+            @Override
+            public BranchBuilder<T> orIf(Condition condition, Flow<T> ifTrue) {
+                branches.put(condition, ifTrue);
+                return this;
+            }
+
+            @Override
+            public Flow<T> otherwise(Flow<T> defaultFlow) {
+                Flow<T> result = defaultFlow;
+                for (Map.Entry<Condition, Flow<T>> branchEntry : branches.entrySet()) {
+                    result = result.orIf(branchEntry.getKey(), branchEntry.getValue());
+                }
+                return result;
+            }
+        };
     }
 }
