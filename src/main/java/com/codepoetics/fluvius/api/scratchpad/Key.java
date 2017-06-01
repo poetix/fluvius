@@ -1,6 +1,8 @@
 package com.codepoetics.fluvius.api.scratchpad;
 
-public interface Key<T> {
+import java.io.Serializable;
+
+public interface Key<T> extends Serializable {
     String getName();
     KeyValue of(T value);
 }

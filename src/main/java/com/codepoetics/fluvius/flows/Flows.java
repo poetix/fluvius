@@ -1,8 +1,8 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.functional.Extractor;
-import com.codepoetics.fluvius.api.functional.Extractor2;
+import com.codepoetics.fluvius.api.functional.F1;
+import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
@@ -80,14 +80,14 @@ public final class Flows {
             this.target = target;
         }
 
-        public Flow<O> using(String name, Extractor<I, O> extractor) {
+        public Flow<O> using(String name, F1<I, O> f1) {
             return from(source).to(target).using(
                     name,
-                    new ExtractorFunction<>(extractor, source));
+                    new ExtractorFunction<>(f1, source));
         }
 
-        public Flow<O> using(Extractor<I, O> extractor) {
-            return using("Extract " + target.getName() + " from " + source.getName(), extractor);
+        public Flow<O> using(F1<I, O> f1) {
+            return using("Extract " + target.getName() + " from " + source.getName(), f1);
         }
     }
 
@@ -102,12 +102,12 @@ public final class Flows {
             this.target = target;
         }
 
-        public Flow<O> using(String name, Extractor2<I1, I2, O> extractor) {
+        public Flow<O> using(String name, F2<I1, I2, O> extractor) {
             return from(source1, source2).to(target).using(
                     name,
                     new ExtractorFunction2<>(extractor, source1, source2));
         }
-        public Flow<O> using(Extractor2<I1, I2, O> extractor) {
+        public Flow<O> using(F2<I1, I2, O> extractor) {
             return using("Extract " + target.getName() + " from " + source1.getName() + " and " + source2.getName(), extractor);
         }
     }
@@ -133,26 +133,26 @@ public final class Flows {
     }
 
     private static class ExtractorFunction<I, O> implements ScratchpadFunction<O> {
-        private final Extractor<I, O> extractor;
+        private final F1<I, O> f1;
         private final Key<I> source;
 
-        private ExtractorFunction(Extractor<I, O> extractor, Key<I> source) {
-            this.extractor = extractor;
+        private ExtractorFunction(F1<I, O> f1, Key<I> source) {
+            this.f1 = f1;
             this.source = source;
         }
 
         @Override
         public O apply(Scratchpad scratchpad) {
-            return extractor.extract(scratchpad.get(source));
+            return f1.apply(scratchpad.get(source));
         }
     }
 
     private static class ExtractorFunction2<I1, I2, O> implements ScratchpadFunction<O> {
-        private final Extractor2<I1, I2, O> extractor;
+        private final F2<I1, I2, O> extractor;
         private final Key<I1> source1;
         private final Key<I2> source2;
 
-        private ExtractorFunction2(Extractor2<I1, I2, O> extractor, Key<I1> source1, Key<I2> source2) {
+        private ExtractorFunction2(F2<I1, I2, O> extractor, Key<I1> source1, Key<I2> source2) {
             this.extractor = extractor;
             this.source1 = source1;
             this.source2 = source2;
@@ -160,7 +160,7 @@ public final class Flows {
 
         @Override
         public O apply(Scratchpad scratchpad) {
-            return extractor.extract(scratchpad.get(source1), scratchpad.get(source2));
+            return extractor.apply(scratchpad.get(source1), scratchpad.get(source2));
         }
     }
 

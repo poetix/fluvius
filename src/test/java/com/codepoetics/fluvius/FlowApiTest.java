@@ -3,10 +3,10 @@ package com.codepoetics.fluvius;
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowVisitor;
-import com.codepoetics.fluvius.api.functional.Extractor;
-import com.codepoetics.fluvius.api.functional.Extractor2;
+import com.codepoetics.fluvius.api.functional.F1;
+import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
-import com.codepoetics.fluvius.api.functional.ValuePredicate;
+import com.codepoetics.fluvius.api.functional.P1;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.conditions.Conditions;
@@ -49,45 +49,45 @@ public class FlowApiTest {
         }
     }
 
-    private static final Key<String> userName = Keys.create("userName");
-    private static final Key<String> password = Keys.create("password");
-    private static final Key<String> postcode = Keys.create("postcode");
-    private static final Key<AuthorisationResult> authorisationResult = Keys.create("authorisationResult");
-    private static final Key<String> accessToken = Keys.create("accessToken");
-    private static final Key<Double> temperature = Keys.create("temperature");
-    private static final Key<String> weatherMessage = Keys.create("weatherMessage");
+    private static final Key<String> userName = Keys.named("userName");
+    private static final Key<String> password = Keys.named("password");
+    private static final Key<String> postcode = Keys.named("postcode");
+    private static final Key<AuthorisationResult> authorisationResult = Keys.named("authorisationResult");
+    private static final Key<String> accessToken = Keys.named("accessToken");
+    private static final Key<Double> temperature = Keys.named("temperature");
+    private static final Key<String> weatherMessage = Keys.named("weatherMessage");
 
     private static final Flow<AuthorisationResult> authorize = Flows
             .obtaining(authorisationResult)
             .from(userName, password)
             .using(
             "Check credentials",
-            new Extractor2<String, String, AuthorisationResult>() {
+            new F2<String, String, AuthorisationResult>() {
                 @Override
-                public AuthorisationResult extract(String username, String password) {
+                public AuthorisationResult apply(String username, String password) {
                     return (password.equals("the real password"))
                             ? new AuthorisationResult(true, "ACCESS TOKEN")
                             : new AuthorisationResult(false, null);
                 }
             });
 
-    private static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new Extractor<AuthorisationResult, String>() {
+    private static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new F1<AuthorisationResult, String>() {
         @Override
-        public String extract(AuthorisationResult input) {
+        public String apply(AuthorisationResult input) {
             return input.getAccessToken();
         }
     });
 
-    private static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new ValuePredicate<AuthorisationResult>() {
+    private static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new P1<AuthorisationResult>() {
         @Override
         public boolean test(AuthorisationResult value) {
             return value.isAuthorised();
         }
     });
 
-    private static final Flow<String> formatError = Flows.obtaining(weatherMessage).from(userName).using("Format error message", new Extractor<String, String>() {
+    private static final Flow<String> formatError = Flows.obtaining(weatherMessage).from(userName).using("Format error message", new F1<String, String>() {
         @Override
-        public String extract(String userName) {
+        public String apply(String userName) {
             return "Sorry, " + userName + ", your credentials were not valid";
         }
     });
@@ -98,9 +98,9 @@ public class FlowApiTest {
             .from(accessToken, postcode)
             .using(
                     "Fetch weather",
-                    new Extractor2<String, String, Double>() {
+                    new F2<String, String, Double>() {
                         @Override
-                        public Double extract(String accessToken, String postcode) {
+                        public Double apply(String accessToken, String postcode) {
                             return 26D;
                         }
                     });
@@ -141,5 +141,41 @@ public class FlowApiTest {
         assertEquals(
                 "Fred, the temperature at VB6 5UX is 26.0 degrees",
                 Flows.run(combined, input.with(password.of("the real password")), LOGGING_VISITOR));
+    }
+
+    @Test
+    public void dependencyExample() {
+        Flow<String> getAccessToken = Flows
+                .obtaining(accessToken)
+                .from(userName, password)
+                .using("Authorize user", new F2<String, String, String>() {
+                    @Override
+                    public String apply(String username, String password) {
+                        return "ACCESS TOKEN";
+                    }
+                });
+
+        Flow<Double> getLocalTemperature = Flows
+                .obtaining(temperature)
+                .from(accessToken, postcode)
+                .using("Get local temperature", new F2<String, String, Double>() {
+                    @Override
+                    public Double apply(String accessCode, String postcode) {
+                        return 26D;
+                    }
+                });
+
+        Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
+
+        System.out.println(Flows.prettyPrint(completeFlow));
+
+        Flows.run(
+                completeFlow,
+                Scratchpads.create(
+                    userName.of("Arthur"),
+                    password.of("Special secret password"),
+                    postcode.of("VB6 5UX")),
+                Visitors.logging(Visitors.getDefault())
+        );
     }
 }

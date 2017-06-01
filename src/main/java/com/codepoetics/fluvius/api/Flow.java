@@ -3,9 +3,10 @@ package com.codepoetics.fluvius.api;
 import com.codepoetics.fluvius.api.description.DescribableFlow;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public interface Flow<T> extends DescribableFlow {
+public interface Flow<T> extends DescribableFlow, Serializable {
 
     Set<Key<?>> getRequiredKeys();
     Key<T> getProvidedKey();

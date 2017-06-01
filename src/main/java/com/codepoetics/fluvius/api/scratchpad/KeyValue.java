@@ -1,6 +1,8 @@
 package com.codepoetics.fluvius.api.scratchpad;
 
-public interface KeyValue {
+import java.io.Serializable;
+
+public interface KeyValue extends Serializable {
 
     void store(ScratchpadStorage storage);
 

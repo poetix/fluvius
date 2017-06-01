@@ -4,13 +4,15 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
 import com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage;
 
+import java.util.UUID;
+
 public final class Keys {
 
     private Keys() {
     }
 
-    public static <T> Key<T> create(String name) {
-        return new RealKey<>(name);
+    public static <T> Key<T> named(String name) {
+        return new RealKey<>(name, UUID.randomUUID());
     }
 
     private static final class RealKeyValue implements KeyValue {
@@ -37,9 +39,11 @@ public final class Keys {
     private static final class RealKey<T> implements Key<T> {
 
         private final String name;
+        private final UUID id;
 
-        private RealKey(String name) {
+        private RealKey(String name, UUID id) {
             this.name = name;
+            this.id = id;
         }
 
         @Override
@@ -50,6 +54,13 @@ public final class Keys {
         @Override
         public KeyValue of(T value) {
             return new RealKeyValue(this, value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o == this ||
+                    (o instanceof RealKey
+                            && ((RealKey) o).id.equals(id));
         }
 
         @Override

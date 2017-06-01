@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.predicates;
 
 import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
-import com.codepoetics.fluvius.api.functional.ValuePredicate;
+import com.codepoetics.fluvius.api.functional.P1;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
@@ -10,7 +10,7 @@ public final class Predicates {
     private Predicates() {
     }
 
-    public static <T> ScratchpadPredicate keyMatches(final Key<T> key, final ValuePredicate<T> predicate) {
+    public static <T> ScratchpadPredicate keyMatches(final Key<T> key, final P1<T> predicate) {
         return new MatchingKeyValuePredicate<>(predicate, key);
     }
 
@@ -18,8 +18,8 @@ public final class Predicates {
         return keyMatches(key, equalTo(expected));
     }
 
-    public static <T> ValuePredicate<T> equalTo(final T expected) {
-        return new ValuePredicate<T>() {
+    public static <T> P1<T> equalTo(final T expected) {
+        return new P1<T>() {
             @Override
             public boolean test(T value) {
                 return value.equals(expected);
@@ -28,10 +28,10 @@ public final class Predicates {
     }
 
     private static final class MatchingKeyValuePredicate<T> implements ScratchpadPredicate {
-        private final ValuePredicate<T> predicate;
+        private final P1<T> predicate;
         private final Key<T> key;
 
-        private MatchingKeyValuePredicate(ValuePredicate<T> predicate, Key<T> key) {
+        private MatchingKeyValuePredicate(P1<T> predicate, Key<T> key) {
             this.predicate = predicate;
             this.key = key;
         }

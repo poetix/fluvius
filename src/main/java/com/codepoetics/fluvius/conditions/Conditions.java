@@ -2,7 +2,7 @@ package com.codepoetics.fluvius.conditions;
 
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
-import com.codepoetics.fluvius.api.functional.ValuePredicate;
+import com.codepoetics.fluvius.api.functional.P1;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.predicates.Predicates;
@@ -40,7 +40,7 @@ public final class Conditions {
         return fromPredicate(key.getName() + " = " + expected, Predicates.keyEquals(key, expected));
     }
 
-    public static <T> Condition keyMatches(Key<T> key, String description, ValuePredicate<T> predicate) {
+    public static <T> Condition keyMatches(Key<T> key, String description, P1<T> predicate) {
         return fromPredicate(key.getName() + " " + description, Predicates.keyMatches(key, predicate));
     }
 }

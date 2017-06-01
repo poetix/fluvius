@@ -1,6 +1,8 @@
 package com.codepoetics.fluvius.api.scratchpad;
 
-public interface ScratchpadStorage {
+import java.io.Serializable;
+
+public interface ScratchpadStorage extends Serializable {
 
     boolean containsKey(Key<?> key);
     void put(Key<?> key, Object value);
