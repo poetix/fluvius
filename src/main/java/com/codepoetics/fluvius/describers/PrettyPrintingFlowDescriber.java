@@ -25,7 +25,6 @@ public class PrettyPrintingFlowDescriber implements FlowDescriber<PrettyPrinting
         this.sequencePrefix = sequencePrefix;
     }
 
-    @Override
     public String getDescription() {
         return builder.toString();
     }
@@ -60,13 +59,33 @@ public class PrettyPrintingFlowDescriber implements FlowDescriber<PrettyPrinting
     private PrettyPrintingFlowDescriber label(String label) {
         return newline().append(label).append(": ");
     }
+    private PrettyPrintingFlowDescriber sequenceLabel(int sequenceIndex) {
+        newline().append(sequencePrefix);
+        if (!sequencePrefix.isEmpty()) {
+            append(".");
+        }
+        return append(sequenceIndex).append(": ");
+    }
+    private PrettyPrintingFlowDescriber branchLabel(char branchIndex, String description) {
+        return newline().append(sequencePrefix).append(branchIndex).append(") ").append(description).append(": ");
+    }
 
     private PrettyPrintingFlowDescriber indent() {
         return new PrettyPrintingFlowDescriber(builder, indentLevel + 1, sequencePrefix);
     }
 
-    private PrettyPrintingFlowDescriber withPrefix(String prefix) {
-        return new PrettyPrintingFlowDescriber(builder, indentLevel, prefix + sequencePrefix);
+    private PrettyPrintingFlowDescriber withPrefix(int sequenceIndex) {
+        String newPrefix = sequencePrefix.isEmpty()
+                ? Integer.toString(sequenceIndex)
+                : sequencePrefix + "." + sequenceIndex;
+        return new PrettyPrintingFlowDescriber(builder, indentLevel, newPrefix);
+    }
+
+    private PrettyPrintingFlowDescriber withPrefix(char branchPrefix) {
+        String newPrefix = sequencePrefix.isEmpty()
+                ? Character.toString(branchPrefix)
+                : sequencePrefix + branchPrefix;
+        return new PrettyPrintingFlowDescriber(builder, indentLevel, newPrefix);
     }
 
     private PrettyPrintingFlowDescriber stateRequirements(Set<Key<?>> requiredKeys, Key<?> providedKey) {
@@ -81,11 +100,11 @@ public class PrettyPrintingFlowDescriber implements FlowDescriber<PrettyPrinting
     @Override
     public PrettyPrintingFlowDescriber describeSequence(List<? extends DescribableFlow> flows, Set<Key<?>> requiredKeys, Key<?> providedKey) {
         PrettyPrintingFlowDescriber inSequence = append("Sequence").stateRequirements(requiredKeys, providedKey).append(":").indent();
-        for (int i=0; i < flows.size(); i++) {
-            DescribableFlow flow = flows.get(i);
-            String sequenceLabel = sequencePrefix + Integer.toString(i + 1);
-            inSequence.label(sequenceLabel);
-            flow.describe(inSequence.withPrefix(sequenceLabel + "."));
+        int sequenceIndex = 1;
+        for (DescribableFlow flow : flows) {
+            inSequence.sequenceLabel(sequenceIndex);
+            flow.describe(inSequence.withPrefix(sequenceIndex));
+            sequenceIndex++;
         }
         return this;
     }
@@ -93,12 +112,14 @@ public class PrettyPrintingFlowDescriber implements FlowDescriber<PrettyPrinting
     @Override
     public PrettyPrintingFlowDescriber describeBranch(DescribableFlow defaultFlow, Map<String, DescribableFlow> describableBranches, Set<Key<?>> requiredKeys, Key<?> providedKey) {
         PrettyPrintingFlowDescriber inBranch = append("Branch").stateRequirements(requiredKeys, providedKey).append(":").indent();
+        char branchLabel = 'a';
         for (Map.Entry<String, DescribableFlow> entry : describableBranches.entrySet()) {
-            inBranch.label("If " + entry.getKey());
-            entry.getValue().describe(inBranch);
+            inBranch.branchLabel(branchLabel, "If " + entry.getKey());
+            entry.getValue().describe(inBranch.withPrefix(branchLabel));
+            branchLabel++;
         }
-        inBranch.label("Otherwise");
-        defaultFlow.describe(inBranch);
+        inBranch.branchLabel(branchLabel, "Otherwise");
+        defaultFlow.describe(inBranch.withPrefix(branchLabel));
         return this;
     }
 }

@@ -60,7 +60,7 @@ public class BranchFlow<T> extends AbstractFlow<T> {
         Preconditions.checkNotNull("condition", condition);
         Preconditions.checkNotNull("ifTrue", ifTrue);
 
-        Map<String, ConditionalFlow<T>> branches = new HashMap<>();
+        Map<String, ConditionalFlow<T>> branches = new LinkedHashMap<>();
         branches.put(condition.getDescription(), new ConditionalFlow<T>(condition, ifTrue));
         return create(defaultFlow, branches);
     }
@@ -94,7 +94,7 @@ public class BranchFlow<T> extends AbstractFlow<T> {
 
     @Override
     public <V extends FlowVisitor> Action visit(V visitor) {
-        Map<String, ConditionalAction> branchActions = new HashMap<>();
+        Map<String, ConditionalAction> branchActions = new LinkedHashMap<>();
         for (final ConditionalFlow<T> conditionalFlow : branches.values()) {
             branchActions.put(
                     conditionalFlow.getCondition().getDescription(),
@@ -105,11 +105,18 @@ public class BranchFlow<T> extends AbstractFlow<T> {
 
     @Override
     public <D extends FlowDescriber<D>> D describe(FlowDescriber<D> describer) {
-        Map<String, DescribableFlow> describableBranches = new HashMap<>();
+        Map<String, DescribableFlow> describableBranches = new LinkedHashMap<>();
         for (ConditionalFlow<T> branchFlow : branches.values()) {
             describableBranches.put(branchFlow.getCondition().getDescription(), branchFlow.getIfTrue());
         }
         return describer.describeBranch(defaultFlow, describableBranches, getRequiredKeys(), getProvidedKey());
+    }
+
+    @Override
+    public Flow<T> orIf(Condition condition, Flow<T> ifTrue) {
+        Map<String, ConditionalFlow<T>> branches = new LinkedHashMap<>(this.branches);
+        branches.put(condition.getDescription(), new ConditionalFlow<T>(condition, ifTrue));
+        return create(defaultFlow, branches);
     }
 
 
