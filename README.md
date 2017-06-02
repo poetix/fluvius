@@ -1,4 +1,7 @@
-# fluvius
+# Fluvius
+
+[![Build Status](https://travis-ci.org/poetix/octarine.svg?branch=master)](https://travis-ci.org/poetix/fluvius)
+
 
 *Fluvius* provides a simple API for co-ordinating sequences of actions, which may include branching logic (but no more complex control flow than that).
 
