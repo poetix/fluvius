@@ -9,6 +9,6 @@ public final class Scratchpads {
     }
 
     public static Scratchpad create(KeyValue...keyValues) {
-        return RealScratchpad.using(HashMapScratchpadStorage.empty()).with(keyValues);
+        return RealScratchpad.create(keyValues);
     }
 }

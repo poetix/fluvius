@@ -13,13 +13,16 @@ import com.codepoetics.fluvius.conditions.Conditions;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Keys;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
+import com.codepoetics.fluvius.utilities.Serialisation;
 import com.codepoetics.fluvius.visitors.Visitors;
 import org.junit.Test;
+
+import java.io.Serializable;
 
 import static com.codepoetics.fluvius.flows.Flows.branch;
 import static org.junit.Assert.assertEquals;
 
-public class FlowApiTest {
+public class FlowApiTest implements Serializable {
 
     private static final FlowVisitor LOGGING_VISITOR = Visitors.logging(Visitors.getDefault());
 
@@ -175,6 +178,42 @@ public class FlowApiTest {
                     userName.of("Arthur"),
                     password.of("Special secret password"),
                     postcode.of("VB6 5UX")),
+                Visitors.logging(Visitors.getDefault())
+        );
+    }
+
+    @Test
+    public void flowsSerialise() {
+        Flow<String> getAccessToken = Flows
+                .obtaining(accessToken)
+                .from(userName, password)
+                .using("Authorize user", new F2<String, String, String>() {
+                    @Override
+                    public String apply(String username, String password) {
+                        return "ACCESS TOKEN";
+                    }
+                });
+
+        Flow<Double> getLocalTemperature = Flows
+                .obtaining(temperature)
+                .from(accessToken, postcode)
+                .using("Get local temperature", new F2<String, String, Double>() {
+                    @Override
+                    public Double apply(String accessCode, String postcode) {
+                        return 26D;
+                    }
+                });
+
+        Flow<Double> completeFlow = Serialisation.roundtrip(getAccessToken.then(getLocalTemperature));
+
+        System.out.println(Flows.prettyPrint(completeFlow));
+
+        Flows.run(
+                completeFlow,
+                Scratchpads.create(
+                        userName.of("Arthur"),
+                        password.of("Special secret password"),
+                        postcode.of("VB6 5UX")),
                 Visitors.logging(Visitors.getDefault())
         );
     }

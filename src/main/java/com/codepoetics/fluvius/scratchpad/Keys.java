@@ -3,8 +3,12 @@ package com.codepoetics.fluvius.scratchpad;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
 import com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage;
+import com.codepoetics.fluvius.preconditions.Preconditions;
 
+import java.util.Objects;
 import java.util.UUID;
+
+import static com.codepoetics.fluvius.preconditions.Preconditions.checkNotNull;
 
 public final class Keys {
 
@@ -12,7 +16,7 @@ public final class Keys {
     }
 
     public static <T> Key<T> named(String name) {
-        return new RealKey<>(name, UUID.randomUUID());
+        return new RealKey<>(checkNotNull("name", name), UUID.randomUUID());
     }
 
     private static final class RealKeyValue implements KeyValue {
@@ -27,7 +31,7 @@ public final class Keys {
 
         @Override
         public void store(ScratchpadStorage storage) {
-            storage.put(key, value);
+            storage.put((Key<Object>) key, value);
         }
 
         @Override
@@ -53,7 +57,7 @@ public final class Keys {
 
         @Override
         public KeyValue of(T value) {
-            return new RealKeyValue(this, value);
+            return new RealKeyValue(this, checkNotNull("value", value));
         }
 
         @Override
@@ -61,6 +65,11 @@ public final class Keys {
             return o == this ||
                     (o instanceof RealKey
                             && ((RealKey) o).id.equals(id));
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, id);
         }
 
         @Override
