@@ -24,7 +24,7 @@ public final class Loggers {
   private static final class ConsoleLogger implements FlowLogger {
 
     private void write(final String message, final Object... params) {
-      System.out.println(getTime() + " " + String.format("message", params));
+      System.out.println(getTime() + " " + String.format(message, params));
     }
 
     private String getTime() {
@@ -35,33 +35,33 @@ public final class Loggers {
 
     @Override
     public void logOperationStarted(final String name, final Scratchpad scratchpad) {
-      write("Action %s started with scratchpad %s", name, scratchpad);
+      write("Operation '%s' started with scratchpad %s", name, scratchpad);
     }
 
     @Override
     public void logOperationCompleted(final String name, final Key<?> outputKey, final Object output) {
-      write("Action %s completed, writing value %s to key %s", name, output, outputKey.getName());
+      write("Operation '%s' completed, writing value %s to key %s", name, output, outputKey.getName());
     }
 
     @Override
     public void logOperationException(final String name, final Throwable exception) {
-      write("Action %s failed with exception %s", name, exception);
+      write("Operation '%s' failed with exception %s", name, exception);
       exception.printStackTrace();
     }
 
     @Override
     public void logConditionStarted(final String description, final Scratchpad scratchpad) {
-      write("Condition %s started with scratchpad %s", description, scratchpad);
+      write("Condition '%s' started with scratchpad %s", description, scratchpad);
     }
 
     @Override
     public void logConditionCompleted(final String description, final boolean result) {
-      write("Condition %s completed with result %s", description, result);
+      write("Condition '%s' completed with result %s", description, result);
     }
 
     @Override
     public void logConditionException(final String description, final Throwable exception) {
-      write("Condition %s failed with exception %s", description, exception);
+      write("Condition '%s' failed with exception %s", description, exception);
       exception.printStackTrace();
     }
   }
