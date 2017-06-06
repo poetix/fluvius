@@ -4,28 +4,35 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 
 import java.util.Set;
 
+/**
+ * Thrown when a Flow is executed but the supplied Scratchpad does not contain all of the keys required by the Flow.
+ */
 public class MissingKeysException extends RuntimeException {
-    private final Set<Key<?>> missingKeys;
 
-    public MissingKeysException(Set<Key<?>> missingKeys) {
-        this.missingKeys = missingKeys;
+  /**
+   * Create a MissingKeysException.
+   * @param missingKeys The Set of Keys which were missing.
+   * @return The exception.
+   */
+  public static MissingKeysException create(final Set<Key<?>> missingKeys) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Missing keys: ");
+    boolean isFirst = true;
+
+    for (Key<?> key : missingKeys) {
+      if (isFirst) {
+        isFirst = false;
+      } else {
+        sb.append(",");
+      }
+      sb.append(key.getName());
     }
 
-    @Override
-    public String getMessage() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Missing keys: ");
-        boolean isFirst = true;
+    return new MissingKeysException(sb.toString());
+  }
 
-        for (Key<?> key : missingKeys) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sb.append(",");
-            }
-            sb.append(key.getName());
-        }
+  private MissingKeysException(final String message) {
+    super(message);
+  }
 
-        return sb.toString();
-    }
 }

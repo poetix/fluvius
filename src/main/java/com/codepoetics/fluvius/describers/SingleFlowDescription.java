@@ -7,18 +7,18 @@ import java.util.List;
 
 final class SingleFlowDescription implements FlowDescription {
 
-    private final String name;
-    private final List<String> requiredKeyNames;
-    private final String providedKeyName;
+  private final String name;
+  private final List<String> requiredKeyNames;
+  private final String providedKeyName;
 
-    SingleFlowDescription(String name, List<String> requiredKeyNames, String providedKeyName) {
-        this.name = name;
-        this.requiredKeyNames = requiredKeyNames;
-        this.providedKeyName = providedKeyName;
-    }
+  SingleFlowDescription(final String name, final List<String> requiredKeyNames, final String providedKeyName) {
+    this.name = name;
+    this.requiredKeyNames = requiredKeyNames;
+    this.providedKeyName = providedKeyName;
+  }
 
-    @Override
-    public void writeTo(DescriptionWriter descriptionWriter) {
-        descriptionWriter.writeSingleFlow(name, requiredKeyNames, providedKeyName);
-    }
+  @Override
+  public void writeTo(final DescriptionWriter descriptionWriter) {
+    descriptionWriter.writeSingleFlow(requiredKeyNames, providedKeyName, name);
+  }
 }
