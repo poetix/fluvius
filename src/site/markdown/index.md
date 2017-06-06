@@ -1,10 +1,13 @@
 # Fluvius
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.codepoetics/fluvius.svg)](http://search.maven.org/#search%7Cga%7C1%fluvius)
+[![Build Status](https://travis-ci.org/poetix/fluvius.svg?branch=master)](https://travis-ci.org/poetix/fluvius)
+
 *Fluvius* provides a simple API for co-ordinating sequences of actions, which may include branching logic (but no more complex control flow than that).
 
 Here's an example sequence, for processing a request to update a user's details.
 
-```
+<pre>
 Sequence:
     1: Check user's credentials
     2: Branch
@@ -12,7 +15,7 @@ Sequence:
             2a.1: Update user's details
             2a.2: Format success message
         2b) Otherwise: Format failure message
-```
+</pre>
 
 At the top-level, this sequence might be defined as follows in Java:
 
@@ -89,11 +92,11 @@ System.out.println(Flows.prettyPrint(completeFlow));
 
 Note the use of the `then` method on `Flow` to join two flows together. The pretty-printer will represent the combined flow as follows:
 
-```
+<pre>
 Sequence (requires [userName,password,postcode], provides temperature):
     1: Authorize user (requires [userName,password], provides accessToken)
     2: Get local temperature (requires [accessToken,postcode], provides temperature)
-```
+</pre>
 
 We can see that in order to run the whole sequence, we need to supply a scratchpad with values populated for `userName`, `password` and `postcode`. The first step in the sequence uses only `userName` and `password`, and writes a value for `accessToken` into the scratchpad. The second step uses this `accessToken`, but also requires the `postcode` value.
 
@@ -112,9 +115,9 @@ Double result = Flows.run(
 
 The flow is assembled into an executable `Action` by a `FlowVisitor`, and this `Action` is run to obtain a result. The default visitor simply assembles the pieces of the flow together, but we can supply visitors that perform other actions such as logging flow steps or dispatching them to be run by a local or remote executor. In this case, we've added logging in to the execution behaviour we want, so that we can see how the flow runs. Here's what that prints out:
 
-```
-INFO: Running action Authorize user with scratchpad {userName=Arthur, password=Special secret password, postcode=VB6 5UX}
-INFO: Action Authorize user returned result ACCESS TOKEN
-INFO: Running action Get local temperature with scratchpad {accessToken=ACCESS TOKEN, password=Special secret password, postcode=VB6 5UX, userName=Arthur}
-INFO: Action Get local temperature returned result 26.0
-```
+<pre>
+2017-06-06T15:21:29.962 Operation 'Authorize user' started with scratchpad {userName=Arthur, password=Special secret password, postcode=VB6 5UX}
+2017-06-06T15:21:29.970 Operation 'Authorize user' completed, writing value ACCESS TOKEN to key accessToken
+2017-06-06T15:21:29.971 Operation 'Get local temperature' started with scratchpad {userName=Arthur, password=Special secret password, postcode=VB6 5UX, accessToken=ACCESS TOKEN}
+2017-06-06T15:21:29.971 Operation 'Get local temperature' completed, writing value 26.0 to key temperature
+</pre>
