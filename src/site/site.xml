@@ -18,7 +18,7 @@
             <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
             <breadcrumbDivider>»</breadcrumbDivider>
             <gitHub>
-                <projectId>poetix/fluido</projectId>
+                <projectId>poetix/fluvius</projectId>
                 <ribbonOrientation>right</ribbonOrientation>
                 <ribbonColor>black</ribbonColor>
             </gitHub>
