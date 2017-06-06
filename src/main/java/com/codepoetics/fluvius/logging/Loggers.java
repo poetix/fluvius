@@ -29,7 +29,7 @@ public final class Loggers {
 
     private String getTime() {
       Calendar cal = Calendar.getInstance();
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
       return sdf.format(cal.getTime());
     }
 
