@@ -28,6 +28,19 @@ public final class Visitors {
   }
 
   /**
+   * Wrap a FlowVisitor, decorating it with mutation-forbidding behaviour.
+   * <p>
+   * This will have some performance impact, but may be useful in hunting down obscure bugs due to illicit modification
+   * of already-recorded values.
+   * </p>
+   * @param wrapped The wrapped FlowVisitor.
+   * @return The mutation-checking FlowVisitor.
+   */
+  public static <V> FlowVisitor<V> mutationChecking(final FlowVisitor<V> wrapped) {
+    return new MutationCheckingVisitor<>(wrapped);
+  }
+
+  /**
    * Wrap a FlowVisitor which constructs an Action which can be executed, decorating it with logging behaviour.
    *
    * @param wrapped The wrapped FlowVisitor.
@@ -59,7 +72,8 @@ public final class Visitors {
 
     @Override
     public <T> Action visitSingle(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-      return new LoggingAction(flowLogger, operation.getName(), providedKey, innerVisitor.visitSingle(requiredKeys, providedKey, operation));
+      return new LoggingAction(flowLogger, operation.getName(), providedKey,
+          innerVisitor.visitSingle(requiredKeys, providedKey, operation));
     }
 
     @Override

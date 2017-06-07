@@ -25,7 +25,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
 
   @Override
   public DescriptionWriter writeSingleFlow(final List<String> requiredKeyNames, final String providedKeyName, final String name) {
-    return append(name).stateRequirements(requiredKeyNames, providedKeyName);
+    return append(name).append(" ").stateRequirements(requiredKeyNames, providedKeyName);
   }
 
   @Override

@@ -18,6 +18,6 @@ public final class Scratchpads {
    * @return The created Scratchpad.
    */
   public static Scratchpad create(final KeyValue... keyValues) {
-    return RealScratchpad.create(keyValues);
+    return HashMapBackedScratchpad.create(keyValues);
   }
 }
