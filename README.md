@@ -1,6 +1,6 @@
 # Fluvius
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.codepoetics/fluvius.svg)](http://search.maven.org/#search%7Cga%7C1%fluvius)
+[![Maven Central](https://img.shields.io/maven-central/v/com.codepoetics/fluvius.svg)](http://search.maven.org/#search%7Cga%7C1%7Cfluvius)
 [![Build Status](https://travis-ci.org/poetix/fluvius.svg?branch=master)](https://travis-ci.org/poetix/fluvius)
 
 *Fluvius* provides a simple API for co-ordinating sequences of actions, which may include branching logic (but no more complex control flow than that).
