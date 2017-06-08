@@ -31,7 +31,7 @@ class BranchFlow<T> extends AbstractFlow<T> {
       return ifTrue;
     }
 
-    public <V> Conditional<V> toConditionalAction(final FlowVisitor<V> visitor) {
+    public <V> Conditional<V> toConditional(final FlowVisitor<V> visitor) {
       return new RealConditional<>(visitor.visitCondition(condition), ifTrue.visit(visitor));
     }
   }
@@ -99,7 +99,7 @@ class BranchFlow<T> extends AbstractFlow<T> {
     for (final ConditionalFlow<T> conditionalFlow : branches.values()) {
       branchActions.put(
           conditionalFlow.getCondition().getDescription(),
-          conditionalFlow.toConditionalAction(visitor));
+          conditionalFlow.toConditional(visitor));
     }
     return visitor.visitBranch(getRequiredKeys(), getProvidedKey(), defaultFlow.visit(visitor), branchActions);
   }

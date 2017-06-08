@@ -113,4 +113,13 @@ public class ScratchpadTests {
 
     assertEquals(scratchpad, Serialisation.roundtrip(scratchpad));
   }
+
+  @Test(expected=IllegalArgumentException.class)
+  public void keysCannotBeOverwrittenInLockedScratchpad() {
+    Scratchpad locked = Scratchpads.create(name.of("Arthur Putey")).locked().with(age.of(42));
+    assertEquals(Integer.valueOf(42), locked.get(age));
+
+    // throws IllegalArgumentException
+    locked.with(name.of("Peter Arthy"));
+  }
 }

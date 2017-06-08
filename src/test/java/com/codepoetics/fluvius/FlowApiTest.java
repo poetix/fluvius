@@ -1,5 +1,6 @@
 package com.codepoetics.fluvius;
 
+import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowVisitor;
@@ -20,11 +21,13 @@ import org.junit.Test;
 import java.io.Serializable;
 
 import static com.codepoetics.fluvius.flows.Flows.branch;
+import static com.codepoetics.fluvius.visitors.Visitors.logging;
+import static com.codepoetics.fluvius.visitors.Visitors.mutationChecking;
 import static org.junit.Assert.assertEquals;
 
 public class FlowApiTest implements Serializable {
 
-  private static final FlowVisitor LOGGING_VISITOR = Visitors.logging(Visitors.getDefault());
+  private static final FlowVisitor<Action> LOGGING_VISITOR = mutationChecking(logging(Visitors.getDefault()));
 
   public static final class AuthorisationResult {
     private final boolean isAuthorised;
@@ -174,7 +177,7 @@ public class FlowApiTest implements Serializable {
 
     Flows.run(
         completeFlow,
-        Visitors.logging(Visitors.getDefault()), Scratchpads.create(
+        logging(Visitors.getDefault()), Scratchpads.create(
             userName.of("Arthur"),
             password.of("Special secret password"),
             postcode.of("VB6 5UX"))
@@ -209,10 +212,22 @@ public class FlowApiTest implements Serializable {
 
     Flows.run(
         completeFlow,
-        Visitors.logging(Visitors.getDefault()), Scratchpads.create(
+        logging(Visitors.getDefault()), Scratchpads.create(
             userName.of("Arthur"),
             password.of("Special secret password"),
             postcode.of("VB6 5UX"))
     );
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void flowsCannotOverwriteAlreadyWrittenKeys() {
+    Flow<String> changeAccessToken = Flows.obtaining(accessToken).from(accessToken).using(new F1<String, String>() {
+      @Override
+      public String apply(final String input) {
+        return input + ", so there!";
+      }
+    });
+
+    Flows.run(changeAccessToken, LOGGING_VISITOR, accessToken.of("I have access"));
   }
 }

@@ -18,6 +18,7 @@ public final class Serialisation {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static <T> T deserialize(final byte[] input) {
     try (ByteArrayInputStream bis = new ByteArrayInputStream(input)) {
       ObjectInputStream in = new ObjectInputStream(bis);

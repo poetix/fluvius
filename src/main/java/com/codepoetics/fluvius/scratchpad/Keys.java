@@ -77,6 +77,7 @@ public final class Keys {
       this.value = value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void store(final ScratchpadStorage storage) {
       storage.put((Key<Object>) key, value);
