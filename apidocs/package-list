@@ -8,6 +8,7 @@ com.codepoetics.fluvius.describers
 com.codepoetics.fluvius.exceptions
 com.codepoetics.fluvius.flows
 com.codepoetics.fluvius.logging
+com.codepoetics.fluvius.mutation
 com.codepoetics.fluvius.operations
 com.codepoetics.fluvius.preconditions
 com.codepoetics.fluvius.predicates
