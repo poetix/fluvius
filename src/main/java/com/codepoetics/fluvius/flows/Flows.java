@@ -73,7 +73,7 @@ public final class Flows {
     }
 
     Action action = flow.visit(flowVisitor);
-    Scratchpad finalScratchpad = action.run(initialScratchpad);
+    Scratchpad finalScratchpad = action.run(initialScratchpad.locked());
 
     return finalScratchpad.get(flow.getProvidedKey());
   }

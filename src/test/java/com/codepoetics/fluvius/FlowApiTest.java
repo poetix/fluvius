@@ -218,4 +218,16 @@ public class FlowApiTest implements Serializable {
             postcode.of("VB6 5UX"))
     );
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void flowsCannotOverwriteAlreadyWrittenKeys() {
+    Flow<String> changeAccessToken = Flows.obtaining(accessToken).from(accessToken).using(new F1<String, String>() {
+      @Override
+      public String apply(final String input) {
+        return input + ", so there!";
+      }
+    });
+
+    Flows.run(changeAccessToken, LOGGING_VISITOR, accessToken.of("I have access"));
+  }
 }

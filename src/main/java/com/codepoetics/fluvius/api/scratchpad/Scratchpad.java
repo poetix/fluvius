@@ -9,6 +9,12 @@ import java.util.Map;
 public interface Scratchpad extends Serializable {
 
   /**
+   * Returns a "locked" version of this Scratchpad, in which written values cannot be overwritten.
+   * @return The locked Scratchpad.
+   */
+  Scratchpad locked();
+
+  /**
    * Tests whether this Scratchpad contains the specified Key.
    *
    * @param key The Key to test for.
