@@ -10,6 +10,8 @@ import com.codepoetics.fluvius.api.functional.P1;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
+import com.codepoetics.fluvius.api.tracing.TraceEventListener;
+import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.conditions.Conditions;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Keys;
@@ -19,6 +21,7 @@ import com.codepoetics.fluvius.visitors.Visitors;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import static com.codepoetics.fluvius.flows.Flows.branch;
 import static com.codepoetics.fluvius.visitors.Visitors.logging;
@@ -142,11 +145,12 @@ public class FlowApiTest implements Serializable {
 
     assertEquals(
         "Sorry, Fred, your credentials were not valid",
-        Flows.run(combined, LOGGING_VISITOR, input));
+        Flows.compile(combined, LOGGING_VISITOR).run(UUID.randomUUID(), input));
 
     assertEquals(
         "Fred, the temperature at VB6 5UX is 26.0 degrees",
-        Flows.run(combined, LOGGING_VISITOR, input.with(password.of("the real password"))));
+        Flows.compile(combined, LOGGING_VISITOR)
+          .run(UUID.randomUUID(), input.with(password.of("the real password"))));
   }
 
   @Test
@@ -175,12 +179,11 @@ public class FlowApiTest implements Serializable {
 
     System.out.println(Flows.prettyPrint(completeFlow));
 
-    Flows.run(
-        completeFlow,
-        logging(Visitors.getDefault()), Scratchpads.create(
+    Flows.compile(completeFlow, logging(Visitors.getDefault()))
+        .run(UUID.randomUUID(),
             userName.of("Arthur"),
             password.of("Special secret password"),
-            postcode.of("VB6 5UX"))
+            postcode.of("VB6 5UX")
     );
   }
 
@@ -210,13 +213,68 @@ public class FlowApiTest implements Serializable {
 
     System.out.println(Flows.prettyPrint(completeFlow));
 
-    Flows.run(
-        completeFlow,
-        logging(Visitors.getDefault()), Scratchpads.create(
+    Flows.compile(completeFlow, logging(Visitors.getDefault()))
+        .run(UUID.randomUUID(),
             userName.of("Arthur"),
             password.of("Special secret password"),
-            postcode.of("VB6 5UX"))
+            postcode.of("VB6 5UX")
     );
+  }
+
+  @Test
+  public void tracing() {
+    Flow<String> getAccessToken = Flows
+        .obtaining(accessToken)
+        .from(userName, password)
+        .using("Authorize user", new F2<String, String, String>() {
+          @Override
+          public String apply(final String username, final String password) {
+            return "ACCESS TOKEN";
+          }
+        });
+
+    Flow<Double> getLocalTemperature = Flows
+        .obtaining(temperature)
+        .from(accessToken, postcode)
+        .using("Get local temperature", new F2<String, String, Double>() {
+          @Override
+          public Double apply(final String accessCode, final String postcode) {
+            return 26D;
+          }
+        });
+
+    Flow<Double> completeFlow = Serialisation.roundtrip(getAccessToken.then(getLocalTemperature));
+
+    System.out.println(Flows.prettyPrint(completeFlow));
+
+    TraceEventListener listener = new TraceEventListener() {
+      @Override
+      public void stepStarted(UUID flowId, UUID id, Scratchpad scratchpad) {
+        System.out.println("Step " + id + " started with scratchpad " + scratchpad);
+      }
+
+      @Override
+      public void stepSucceeded(UUID flowId, UUID id, Object result) {
+        System.out.println("Step " + id + " succeeded with result " + result);
+      }
+
+      @Override
+      public void stepFailed(UUID flowId, UUID id, Throwable throwable) {
+        System.out.println("Step " + id + " failed with exception " + throwable);
+      }
+    };
+
+    TracedFlowExecution<Double> tracedFlowExecution = Flows.compileTracing(completeFlow, listener, LOGGING_VISITOR);
+
+    System.out.println(tracedFlowExecution.getTraceMap());
+
+    tracedFlowExecution
+        .run(
+            UUID.randomUUID(),
+            userName.of("Arthur"),
+            password.of("Special secret password"),
+            postcode.of("VB6 5UX")
+        );
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -228,6 +286,6 @@ public class FlowApiTest implements Serializable {
       }
     });
 
-    Flows.run(changeAccessToken, LOGGING_VISITOR, accessToken.of("I have access"));
+    Flows.compile(changeAccessToken, LOGGING_VISITOR).run(UUID.randomUUID(), accessToken.of("I have access"));
   }
 }

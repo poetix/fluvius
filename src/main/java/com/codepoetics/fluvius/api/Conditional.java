@@ -1,5 +1,7 @@
 package com.codepoetics.fluvius.api;
 
+import com.codepoetics.fluvius.api.functional.F1;
+
 /**
  * A value with an attached Condition.
  *
@@ -19,4 +21,6 @@ public interface Conditional<V> {
    * @return The value.
    */
   V getValue();
+
+  <V2> Conditional<V2> map(F1<? super V, ? extends V2> mapper);
 }

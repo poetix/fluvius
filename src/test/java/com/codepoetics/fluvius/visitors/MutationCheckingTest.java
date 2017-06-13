@@ -7,10 +7,7 @@ import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Keys;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MutationCheckingTest {
 
@@ -55,7 +52,7 @@ public class MutationCheckingTest {
 
     Map<String, MutableThing[]> myMutableThings = createMutableThings();
 
-    Flows.run(evilFlow, Visitors.mutationChecking(Visitors.getDefault()), mutableThings.of(myMutableThings));
+    Flows.compile(evilFlow, Visitors.mutationChecking(Visitors.getDefault())).run(UUID.randomUUID(), mutableThings.of(myMutableThings));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -70,7 +67,7 @@ public class MutationCheckingTest {
 
     Map<String, MutableThing[]> myMutableThings = createMutableThings();
 
-    Flows.run(evilFlow, Visitors.mutationChecking(Visitors.getDefault()), mutableThings.of(myMutableThings));
+    Flows.compile(evilFlow, Visitors.mutationChecking(Visitors.getDefault())).run(UUID.randomUUID(), mutableThings.of(myMutableThings));
   }
 
   private Map<String, MutableThing[]> createMutableThings() {

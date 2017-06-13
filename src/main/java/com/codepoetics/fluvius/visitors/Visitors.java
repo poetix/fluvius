@@ -9,6 +9,7 @@ import com.codepoetics.fluvius.logging.Loggers;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Utility class for working with FlowVisitors.
@@ -82,7 +83,7 @@ public final class Visitors {
     }
 
     @Override
-    public <T> Action visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final Map<String, Conditional<Action>> conditionalActions) {
+    public <T> Action visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final List<Conditional<Action>> conditionalActions) {
       return innerVisitor.visitBranch(requiredKeys, providedKey, defaultAction, conditionalActions);
     }
 
@@ -107,14 +108,14 @@ public final class Visitors {
     }
 
     @Override
-    public Scratchpad run(final Scratchpad scratchpad) {
-      flowLogger.logOperationStarted(name, scratchpad);
+    public Scratchpad run(UUID flowId, final Scratchpad scratchpad) {
+      flowLogger.logOperationStarted(flowId, name, scratchpad);
       try {
-        Scratchpad result = action.run(scratchpad);
-        flowLogger.logOperationCompleted(name, outputKey, result.get(outputKey));
+        Scratchpad result = action.run(flowId, scratchpad);
+        flowLogger.logOperationCompleted(flowId, name, outputKey, result.get(outputKey));
         return result;
       } catch (RuntimeException e) {
-        flowLogger.logOperationException(name, e);
+        flowLogger.logOperationException(flowId, name, e);
         throw e;
       }
     }
@@ -136,14 +137,14 @@ public final class Visitors {
     }
 
     @Override
-    public boolean test(final Scratchpad scratchpad) {
-      flowLogger.logConditionStarted(condition.getDescription(), scratchpad);
+    public boolean test(UUID flowId, final Scratchpad scratchpad) {
+      flowLogger.logConditionStarted(flowId, condition.getDescription(), scratchpad);
       try {
-        boolean result = condition.test(scratchpad);
-        flowLogger.logConditionCompleted(condition.getDescription(), result);
+        boolean result = condition.test(flowId, scratchpad);
+        flowLogger.logConditionCompleted(flowId, condition.getDescription(), result);
         return result;
       } catch (RuntimeException e) {
-        flowLogger.logConditionException(condition.getDescription(), e);
+        flowLogger.logConditionException(flowId, condition.getDescription(), e);
         throw e;
       }
     }

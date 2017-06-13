@@ -4,6 +4,7 @@ import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 import java.util.List;
+import java.util.UUID;
 
 final class SequenceAction implements Action {
 
@@ -18,10 +19,10 @@ final class SequenceAction implements Action {
   }
 
   @Override
-  public Scratchpad run(final Scratchpad scratchpad) {
+  public Scratchpad run(UUID flowId, final Scratchpad scratchpad) {
     Scratchpad result = scratchpad;
     for (Action action : actions) {
-      result = action.run(result);
+      result = action.run(flowId, result);
     }
     return result;
   }

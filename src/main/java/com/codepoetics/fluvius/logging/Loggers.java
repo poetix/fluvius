@@ -6,6 +6,7 @@ import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
  * Utility class providing a FlowLogger which writes messages to the console.
@@ -23,8 +24,8 @@ public final class Loggers {
 
   private static final class ConsoleLogger implements FlowLogger {
 
-    private void write(final String message, final Object... params) {
-      System.out.println(getTime() + " " + String.format(message, params));
+    private void write(UUID flowId, final String message, final Object... params) {
+      System.out.println(getTime() + "/" + flowId + " " + String.format(message, params));
     }
 
     private String getTime() {
@@ -34,34 +35,34 @@ public final class Loggers {
     }
 
     @Override
-    public void logOperationStarted(final String name, final Scratchpad scratchpad) {
-      write("Operation '%s' started with scratchpad %s", name, scratchpad);
+    public void logOperationStarted(UUID flowId, final String name, final Scratchpad scratchpad) {
+      write(flowId, "Operation '%s' started with scratchpad %s", name, scratchpad);
     }
 
     @Override
-    public void logOperationCompleted(final String name, final Key<?> outputKey, final Object output) {
-      write("Operation '%s' completed, writing value %s to key %s", name, output, outputKey.getName());
+    public void logOperationCompleted(UUID flowId, final String name, final Key<?> outputKey, final Object output) {
+      write(flowId, "Operation '%s' completed, writing value %s to key %s", name, output, outputKey.getName());
     }
 
     @Override
-    public void logOperationException(final String name, final Throwable exception) {
-      write("Operation '%s' failed with exception %s", name, exception);
+    public void logOperationException(UUID flowId, final String name, final Throwable exception) {
+      write(flowId, "Operation '%s' failed with exception %s", name, exception);
       exception.printStackTrace();
     }
 
     @Override
-    public void logConditionStarted(final String description, final Scratchpad scratchpad) {
-      write("Condition '%s' started with scratchpad %s", description, scratchpad);
+    public void logConditionStarted(UUID flowId, final String description, final Scratchpad scratchpad) {
+      write(flowId, "Condition '%s' started with scratchpad %s", description, scratchpad);
     }
 
     @Override
-    public void logConditionCompleted(final String description, final boolean result) {
-      write("Condition '%s' completed with result %s", description, result);
+    public void logConditionCompleted(UUID flowId, final String description, final boolean result) {
+      write(flowId, "Condition '%s' completed with result %s", description, result);
     }
 
     @Override
-    public void logConditionException(final String description, final Throwable exception) {
-      write("Condition '%s' failed with exception %s", description, exception);
+    public void logConditionException(UUID flowId, final String description, final Throwable exception) {
+      write(flowId, "Condition '%s' failed with exception %s", description, exception);
       exception.printStackTrace();
     }
   }

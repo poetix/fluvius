@@ -7,6 +7,8 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.predicates.Predicates;
 
+import java.util.UUID;
+
 /**
  * Utility class for working with Conditions.
  */
@@ -66,7 +68,7 @@ public final class Conditions {
     }
 
     @Override
-    public boolean test(final Scratchpad scratchpad) {
+    public boolean test(UUID flowId, final Scratchpad scratchpad) {
       return predicate.test(scratchpad);
     }
   }

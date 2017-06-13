@@ -3,17 +3,23 @@ package com.codepoetics.fluvius.flows;
 import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
+import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.FlowVisitor;
+import com.codepoetics.fluvius.api.logging.FlowLogger;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
+import com.codepoetics.fluvius.api.tracing.TraceEventListener;
+import com.codepoetics.fluvius.api.tracing.TraceMap;
+import com.codepoetics.fluvius.api.tracing.TracedAction;
+import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.describers.FlowDescriber;
 import com.codepoetics.fluvius.describers.PrettyPrintingDescriptionWriter;
-import com.codepoetics.fluvius.exceptions.MissingKeysException;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
+import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
+import com.codepoetics.fluvius.visitors.Visitors;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
 /**
  * Provides the public API for constructing flows.
@@ -56,6 +62,26 @@ public final class Flows {
     return Fluent.targetCapture(target);
   }
 
+  public static <T> FlowExecution<T> compile(final Flow<T> flow) {
+    return compile(flow, Visitors.getDefault());
+  }
+
+  public static <T> FlowExecution<T> compile(final Flow<T> flow, final FlowVisitor<Action> flowVisitor) {
+    return KeyCheckingFlowExecution.forFlow(flow, flowVisitor);
+  }
+
+  public static <T> FlowExecution<T> compileLogging(final Flow<T> flow, FlowLogger logger) {
+    return compile(flow, Visitors.logging(Visitors.getDefault(), logger));
+  }
+
+  public static <T> TracedFlowExecution<T> compileTracing(final Flow<T> flow, TraceEventListener listener) {
+    return compileTracing(flow, listener, Visitors.getDefault());
+  }
+
+  public static <T> TracedFlowExecution<T> compileTracing(final Flow<T> flow, TraceEventListener listener, FlowVisitor<Action> flowVisitor) {
+    return TraceMapCapturingFlowExecution.forFlow(flow, TracingFlowVisitor.wrapping(listener, flowVisitor));
+  }
+
   /**
    * Run the supplied Flow, using the given FlowVisitor to construct an execution plan, providing it with the given initial Scratchpad.
    *
@@ -65,17 +91,9 @@ public final class Flows {
    * @param <T>               The type of the Flow result.
    * @return The result of running the Flow.
    */
+  @Deprecated
   public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final Scratchpad initialScratchpad) {
-    Set<Key<?>> missingKeys = getMissingKeys(flow, initialScratchpad);
-
-    if (!missingKeys.isEmpty()) {
-      throw MissingKeysException.create(missingKeys);
-    }
-
-    Action action = flow.visit(flowVisitor);
-    Scratchpad finalScratchpad = action.run(initialScratchpad.locked());
-
-    return finalScratchpad.get(flow.getProvidedKey());
+    return KeyCheckingFlowExecution.forFlow(flow, flowVisitor).run(UUID.randomUUID(), initialScratchpad);
   }
 
   /**
@@ -87,18 +105,9 @@ public final class Flows {
    * @param <T>         The type of the Flow result.
    * @return The result of running the Flow.
    */
+  @Deprecated
   public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final KeyValue... keyValues) {
     return run(flow, flowVisitor, Scratchpads.create(keyValues));
-  }
-
-  private static <T> Set<Key<?>> getMissingKeys(final Flow<T> flow, final Scratchpad initialScratchpad) {
-    Set<Key<?>> missingKeys = new HashSet<>();
-    for (Key<?> inputKey : flow.getRequiredKeys()) {
-      if (!initialScratchpad.containsKey(inputKey)) {
-        missingKeys.add(inputKey);
-      }
-    }
-    return missingKeys;
   }
 
   /**
@@ -113,4 +122,37 @@ public final class Flows {
     return BranchBuilder.startingWith(condition, ifTrue);
   }
 
+  private static final class TraceMapCapturingFlowExecution<T> implements TracedFlowExecution<T> {
+
+    public static <T> TracedFlowExecution<T> forFlow(Flow<T> flow, FlowVisitor<TracedAction> visitor) {
+      TracedAction action = flow.visit(visitor);
+      return new TraceMapCapturingFlowExecution<>(
+          KeyCheckingFlowExecution.forAction(action, flow.getRequiredKeys(), flow.getProvidedKey()),
+          action.getTraceMap()
+      );
+    }
+
+    private final FlowExecution<T> execution;
+    private final TraceMap traceMap;
+
+    private TraceMapCapturingFlowExecution(FlowExecution<T> execution, TraceMap traceMap) {
+      this.execution = execution;
+      this.traceMap = traceMap;
+    }
+
+    @Override
+    public TraceMap getTraceMap() {
+      return traceMap;
+    }
+
+    @Override
+    public T run(UUID flowId, Scratchpad initialScratchpad) {
+      return execution.run(flowId, initialScratchpad);
+    }
+
+    @Override
+    public T run(UUID flowId, KeyValue... initialKeyValues) {
+      return execution.run(flowId, initialKeyValues);
+    }
+  }
 }

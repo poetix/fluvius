@@ -20,7 +20,7 @@ final class DefaultFlowVisitor implements FlowVisitor<Action> {
   }
 
   @Override
-  public <T> Action visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final Map<String, Conditional<Action>> conditionalActions) {
+  public <T> Action visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final List<Conditional<Action>> conditionalActions) {
     return BranchAction.of(defaultAction, conditionalActions);
   }
 

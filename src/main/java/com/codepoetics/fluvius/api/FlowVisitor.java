@@ -45,7 +45,7 @@ public interface FlowVisitor<V> {
    * @param <T>                 The type of the value returned by the visited Flow.
    * @return The constructed value.
    */
-  <T> V visitBranch(Set<Key<?>> requiredKeys, Key<T> providedKey, V defaultBranch, Map<String, Conditional<V>> conditionalBranches);
+  <T> V visitBranch(Set<Key<?>> requiredKeys, Key<T> providedKey, V defaultBranch, List<Conditional<V>> conditionalBranches);
 
   /**
    * Called when this FlowVisitor visits a Condition. This may be used to decorate a Condition, e.g. with logging behaviour.

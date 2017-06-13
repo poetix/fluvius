@@ -5,6 +5,8 @@ import com.codepoetics.fluvius.api.Operation;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
+import java.util.UUID;
+
 final class SingleOperationAction<T> implements Action {
 
   static <T> Action of(final Key<T> outputKey, final Operation<T> operation) {
@@ -20,7 +22,7 @@ final class SingleOperationAction<T> implements Action {
   }
 
   @Override
-  public Scratchpad run(final Scratchpad scratchpad) {
+  public Scratchpad run(UUID flowId, final Scratchpad scratchpad) {
     return scratchpad.with(outputKey.of(operation.run(scratchpad)));
   }
 }

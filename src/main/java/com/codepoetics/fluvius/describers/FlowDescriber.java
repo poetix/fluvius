@@ -35,10 +35,10 @@ public class FlowDescriber implements FlowVisitor<FlowDescription> {
   }
 
   @Override
-  public <T> FlowDescription visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final FlowDescription defaultBranch, final Map<String, Conditional<FlowDescription>> conditionalBranches) {
+  public <T> FlowDescription visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final FlowDescription defaultBranch, final List<Conditional<FlowDescription>> conditionalBranches) {
     Map<String, FlowDescription> branchDescriptions = new LinkedHashMap<>();
-    for (Map.Entry<String, Conditional<FlowDescription>> entry : conditionalBranches.entrySet()) {
-      branchDescriptions.put(entry.getKey(), entry.getValue().getValue());
+    for (Conditional<FlowDescription> conditional : conditionalBranches) {
+      branchDescriptions.put(conditional.getCondition().getDescription(), conditional.getValue());
     }
     return new BranchFlowDescription(toKeyNames(requiredKeys), providedKey.getName(), defaultBranch, branchDescriptions);
   }

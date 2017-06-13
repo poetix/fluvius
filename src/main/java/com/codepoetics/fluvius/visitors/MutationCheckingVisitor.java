@@ -27,7 +27,7 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
 
   @Override
   public <T> V visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final V defaultBranch,
-                           final Map<String, Conditional<V>> conditionalBranches) {
+                           final List<Conditional<V>> conditionalBranches) {
     return innerVisitor.visitBranch(requiredKeys, providedKey, defaultBranch, conditionalBranches);
   }
 
@@ -75,9 +75,9 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
     }
 
     @Override
-    public boolean test(final Scratchpad scratchpad) {
+    public boolean test(UUID flowId, final Scratchpad scratchpad) {
       Map<Key<?>, Object> before = getMutableState(scratchpad);
-      boolean result = innerCondition.test(scratchpad);
+      boolean result = innerCondition.test(flowId, scratchpad);
       Map<Key<?>, Object> after = getMutableState(scratchpad);
       testForMutation(before, after);
       return result;
