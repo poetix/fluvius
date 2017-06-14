@@ -22,13 +22,13 @@ public interface TraceMap {
    * Get the keys required by the mapped flow step.
    * @return The keys required by the mapped flow step.
    */
-  Set<Key<?>> getRequiredKeys();
+  Set<String> getRequiredKeys();
 
   /**
    * Get the key provided by the mapped flow step.
    * @return The key provided by the mapped flow step.
    */
-  Key<?> getProvidedKey();
+  String getProvidedKey();
 
   /**
    * Get a textual description of the mapped flow step.

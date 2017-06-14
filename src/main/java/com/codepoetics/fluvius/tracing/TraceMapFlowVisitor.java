@@ -13,12 +13,12 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
 
   @Override
   public <T> TraceMap visitSingle(Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
-    return new ConcreteTraceMap(UUID.randomUUID(), requiredKeys, providedKey, operation.getName(), Collections.<TraceMap>emptyList());
+    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), operation.getName(), Collections.<TraceMap>emptyList());
   }
 
   @Override
   public <T> TraceMap visitSequence(Set<Key<?>> requiredKeys, Key<T> providedKey, List<TraceMap> items) {
-    return new ConcreteTraceMap(UUID.randomUUID(), requiredKeys, providedKey, "Sequence", items);
+    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), "Sequence", items);
   }
 
   @Override
@@ -40,7 +40,15 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
         "Otherwise: " + defaultBranch.getDescription(),
         defaultBranch.getChildren()
     ));
-    return new ConcreteTraceMap(UUID.randomUUID(), requiredKeys, providedKey, "Branch", children);
+    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), "Branch", children);
+  }
+
+  private Set<String> toKeyNames(Set<Key<?>> keys) {
+    Set<String> result = new HashSet<>(keys.size());
+    for (Key<?> key : keys) {
+      result.add(key.getName());
+    }
+    return result;
   }
 
   @Override
@@ -51,12 +59,12 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
   private static final class ConcreteTraceMap implements TraceMap {
 
     private final UUID id;
-    private final Set<Key<?>> requiredKeys;
-    private final Key<?> providedKey;
+    private final Set<String> requiredKeys;
+    private final String providedKey;
     private final String description;
     private final List<TraceMap> children;
 
-    private ConcreteTraceMap(UUID id, Set<Key<?>> requiredKeys, Key<?> providedKey, String description, List<TraceMap> children) {
+    private ConcreteTraceMap(UUID id, Set<String> requiredKeys, String providedKey, String description, List<TraceMap> children) {
       this.id = id;
       this.requiredKeys = requiredKeys;
       this.providedKey = providedKey;
@@ -70,12 +78,12 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
     }
 
     @Override
-    public Set<Key<?>> getRequiredKeys() {
+    public Set<String> getRequiredKeys() {
       return requiredKeys;
     }
 
     @Override
-    public Key<?> getProvidedKey() {
+    public String getProvidedKey() {
       return providedKey;
     }
 

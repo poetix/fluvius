@@ -8,10 +8,7 @@ import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
 import com.codepoetics.fluvius.api.tracing.TracedAction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A {@link FlowVisitor} that creates a {@link TraceMap} and notifies a {@link TraceEventListener} of step execution.
@@ -127,7 +124,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
 
     @Override
     public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
-      listener.stepStarted(flowId, stepId, scratchpad);
+      listener.stepStarted(flowId, stepId, keysToNames(scratchpad.toMap()));
       try {
         Scratchpad result = action.run(flowId, scratchpad);
         listener.stepSucceeded(flowId, stepId, result.get(providedKey));
@@ -136,6 +133,14 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
         listener.stepFailed(flowId, stepId, e);
         throw e;
       }
+    }
+
+    private Map<String, Object> keysToNames(Map<Key<?>, Object> scratchpadState) {
+      Map<String, Object> result = new LinkedHashMap<>();
+      for (Map.Entry<Key<?>, Object> entry : scratchpadState.entrySet()) {
+        result.put(entry.getKey().getName(), entry.getValue());
+      }
+      return result;
     }
   }
 

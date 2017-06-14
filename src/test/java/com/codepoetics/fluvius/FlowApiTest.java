@@ -21,6 +21,7 @@ import com.codepoetics.fluvius.visitors.Visitors;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.codepoetics.fluvius.flows.Flows.branch;
@@ -249,7 +250,7 @@ public class FlowApiTest implements Serializable {
 
     TraceEventListener listener = new TraceEventListener() {
       @Override
-      public void stepStarted(UUID flowId, UUID id, Scratchpad scratchpad) {
+      public void stepStarted(UUID flowId, UUID id, Map<String, Object> scratchpad) {
         System.out.println("Step " + id + " started with scratchpad " + scratchpad);
       }
 

@@ -2,6 +2,7 @@ package com.codepoetics.fluvius.api.tracing;
 
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -13,9 +14,9 @@ public interface TraceEventListener {
    * Called when a flow step starts.
    * @param flowId The id of the running flow.
    * @param stepId The id of the step being started.
-   * @param scratchpad The complete scratchpad being passed into the step.
+   * @param scratchpadState The complete scratchpad being passed into the step.
    */
-  void stepStarted(UUID flowId, UUID stepId, Scratchpad scratchpad);
+  void stepStarted(UUID flowId, UUID stepId, Map<String, Object> scratchpadState);
 
   /**
    * Called when a flow step completes successfully.
