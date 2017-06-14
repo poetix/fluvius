@@ -1,14 +1,8 @@
 package com.codepoetics.fluvius.history;
 
 import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.history.*;
-import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
-import com.codepoetics.fluvius.api.tracing.TraceMap;
-import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
-import com.codepoetics.fluvius.execution.AbstractFlowExecution;
-import com.codepoetics.fluvius.flows.Flows;
-
-import java.util.UUID;
 
 public final class History {
 
@@ -38,40 +32,12 @@ public final class History {
     return DefaultFlowHistoryRepository.using(eventRepository, traceMapRepository);
   }
 
-  public static <T, V> FlowExecution<T> compileRecording(final Flow<T> flow, final FlowHistoryRepository<V> repository, final FlowVisitor<Action> flowVisitor) {
-    return RecordingFlowExecution.forFlow(flow, repository, flowVisitor);
+  public static <T> FlowExecution<T> compileRecording(final Flow<T> flow, final FlowHistoryRepository<?> repository, final FlowVisitor<Action> flowVisitor) {
+    return RecordingFlowCompiler.using(repository, flowVisitor).compile(flow);
   }
 
-  private static final class RecordingFlowExecution<T, V> extends AbstractFlowExecution<T> {
-
-    private static <T, V> FlowExecution<T> forFlow(final Flow<T> flow, final FlowHistoryRepository<V> repository, final FlowVisitor<Action> flowVisitor) {
-      return new RecordingFlowExecution<>(
-          Flows.compileTracing(flow, repository, flowVisitor),
-          repository);
-    }
-
-    private final TracedFlowExecution<T> tracedFlowExecution;
-    private final FlowHistoryRepository<V> repository;
-
-    private RecordingFlowExecution(final TracedFlowExecution<T> tracedFlowExecution, final FlowHistoryRepository<V> repository) {
-      this.tracedFlowExecution = tracedFlowExecution;
-      this.repository = repository;
-    }
-
-    @Override
-    public T run(final UUID flowId, final Scratchpad initialScratchpad) {
-      final TraceMap traceMap = tracedFlowExecution.getTraceMap();
-      repository.storeTraceMap(flowId, traceMap);
-
-      return tracedFlowExecution.run(flowId, initialScratchpad);
-    }
-
-    @Override
-    public Runnable asAsync(final UUID flowId, final FlowResultCallback<T> callback, final Scratchpad initialScratchpad) {
-      final TraceMap traceMap = tracedFlowExecution.getTraceMap();
-      repository.storeTraceMap(flowId, traceMap);
-
-      return tracedFlowExecution.asAsync(flowId, callback, initialScratchpad);
-    }
+  public static <T> FlowCompiler makeCompiler(final FlowHistoryRepository<T> repository, final FlowVisitor<Action> visitor) {
+    return RecordingFlowCompiler.using(repository, visitor);
   }
+
 }

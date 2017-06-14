@@ -4,8 +4,10 @@ import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.FlowVisitor;
+import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
+import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.visitors.Visitors;
 import org.junit.Test;
@@ -18,8 +20,11 @@ import static com.codepoetics.fluvius.visitors.Visitors.mutationChecking;
 
 public class InMemoryRepositoryTest {
 
-  private static final FlowVisitor<Action> LOGGING_VISITOR = mutationChecking(logging(Visitors.getDefault()));
   private final FlowHistoryRepository<String> repository = History.createInMemoryRepository(EventDataSerialisers.toStringSerialiser());
+  private final FlowCompiler compiler = Compilers.builder()
+      .loggingToConsole()
+      .recordingTo(repository)
+      .build();
 
   @Test
   public void inMemoryRepositoryStoresFlowHistory() {
@@ -45,7 +50,7 @@ public class InMemoryRepositoryTest {
 
     final Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
 
-    final FlowExecution<Double> execution = History.compileRecording(completeFlow, repository, LOGGING_VISITOR);
+    final FlowExecution<Double> execution = compiler.compile(completeFlow);
 
     final UUID flowId = UUID.randomUUID();
 

@@ -1,4 +1,4 @@
-package com.codepoetics.fluvius.flows;
+package com.codepoetics.fluvius.execution;
 
 import com.codepoetics.fluvius.api.*;
 import com.codepoetics.fluvius.api.scratchpad.Key;

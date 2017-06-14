@@ -4,10 +4,12 @@ import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.FlowVisitor;
+import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.history.EventDataSerialiser;
 import com.codepoetics.fluvius.api.history.FlowHistory;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
+import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.history.EventDataSerialisers;
 import com.codepoetics.fluvius.history.History;
@@ -30,6 +32,11 @@ public class JsonViewsTest {
   private final ObjectMapper mapper = new ObjectMapper();
   private final EventDataSerialiser<JsonNode> serialiser = JsonEventDataSerialiser.using(mapper);
   private final FlowHistoryRepository<JsonNode> repository = History.createInMemoryRepository(serialiser);
+  private final FlowCompiler compiler = Compilers.builder()
+      .loggingToConsole()
+      .mutationChecking()
+      .recordingTo(repository)
+      .build();
 
   @Test
   public void inMemoryRepositoryStoresFlowHistory() throws JsonProcessingException {
@@ -55,7 +62,7 @@ public class JsonViewsTest {
 
     final Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
 
-    final FlowExecution<Double> execution = History.compileRecording(completeFlow, repository, LOGGING_VISITOR);
+    final FlowExecution<Double> execution = compiler.compile(completeFlow);
 
     final UUID flowId = UUID.randomUUID();
 

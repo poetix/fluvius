@@ -27,7 +27,7 @@ public final class InMemoryFlowEventStore<T> implements FlowEventStore<T> {
   }
 
   @Override
-  public List<FlowEvent<T>> retrieveEvents(final UUID flowID) {
+  public synchronized List<FlowEvent<T>> retrieveEvents(final UUID flowID) {
     return store.containsKey(flowID)
         ? store.get(flowID)
         : Collections.<FlowEvent<T>>emptyList();

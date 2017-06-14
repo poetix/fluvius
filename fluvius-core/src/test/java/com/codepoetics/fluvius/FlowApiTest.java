@@ -2,12 +2,16 @@ package com.codepoetics.fluvius;
 
 import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Flow;
+import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.FlowVisitor;
+import com.codepoetics.fluvius.api.compilation.FlowCompiler;
+import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
 import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
+import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 import com.codepoetics.fluvius.utilities.Serialisation;
@@ -26,7 +30,10 @@ import static org.junit.Assert.assertEquals;
 
 public class FlowApiTest implements Serializable {
 
-  private static final FlowVisitor<Action> LOGGING_VISITOR = mutationChecking(logging(Visitors.getDefault()));
+  private static final FlowCompiler compiler = Compilers.builder()
+      .loggingToConsole()
+      .mutationChecking()
+      .build();
 
   @Test
   public void testFlowApi() {
@@ -45,14 +52,14 @@ public class FlowApiTest implements Serializable {
         postcode.of("VB6 5UX")
     );
 
+    FlowExecution<String> execution = compiler.compile(combined);
     assertEquals(
         "Sorry, Fred, your credentials were not valid",
-        Flows.compile(combined, LOGGING_VISITOR).run(UUID.randomUUID(), input));
+        execution.run(input));
 
     assertEquals(
         "Fred, the temperature at VB6 5UX is 26.0 degrees",
-        Flows.compile(combined, LOGGING_VISITOR)
-          .run(UUID.randomUUID(), input.with(password.of("the real password"))));
+        execution.run(input.with(password.of("the real password"))));
   }
 
   @Test
@@ -81,8 +88,8 @@ public class FlowApiTest implements Serializable {
 
     System.out.println(Flows.prettyPrint(completeFlow));
 
-    Flows.compile(completeFlow, logging(Visitors.getDefault()))
-        .run(UUID.randomUUID(),
+    compiler.compile(completeFlow)
+        .run(
             userName.of("Arthur"),
             password.of("Special secret password"),
             postcode.of("VB6 5UX")
@@ -115,8 +122,8 @@ public class FlowApiTest implements Serializable {
 
     System.out.println(Flows.prettyPrint(completeFlow));
 
-    Flows.compile(completeFlow, logging(Visitors.getDefault()))
-        .run(UUID.randomUUID(),
+    compiler.compile(completeFlow)
+        .run(
             userName.of("Arthur"),
             password.of("Special secret password"),
             postcode.of("VB6 5UX")
@@ -166,7 +173,13 @@ public class FlowApiTest implements Serializable {
       }
     };
 
-    final TracedFlowExecution<Double> tracedFlowExecution = Flows.compileTracing(completeFlow, listener, LOGGING_VISITOR);
+    TracedFlowCompiler compiler = Compilers.builder()
+        .loggingToConsole()
+        .mutationChecking()
+        .tracingWith(listener)
+        .build();
+
+    final TracedFlowExecution<Double> tracedFlowExecution = compiler.compile(completeFlow);
 
     System.out.println(tracedFlowExecution.getTraceMap());
 
@@ -188,6 +201,6 @@ public class FlowApiTest implements Serializable {
       }
     });
 
-    Flows.compile(changeAccessToken, LOGGING_VISITOR).run(UUID.randomUUID(), accessToken.of("I have access"));
+    compiler.compile(changeAccessToken).run(accessToken.of("I have access"));
   }
 }
