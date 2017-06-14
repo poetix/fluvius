@@ -34,6 +34,12 @@ public interface TraceMap {
   String getDescription();
 
   /**
+   * Get the type of the mapped flow step.
+   * @return The type of the mapped flow step.
+   */
+  FlowStepType getType();
+
+  /**
    * Get the children of the mapped flow step.
    * @return The children of the mapped flow step.
    */

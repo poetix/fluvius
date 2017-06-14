@@ -5,6 +5,7 @@ import com.codepoetics.fluvius.api.Conditional;
 import com.codepoetics.fluvius.api.FlowVisitor;
 import com.codepoetics.fluvius.api.Operation;
 import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
 
 import java.util.*;
@@ -13,12 +14,12 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
 
   @Override
   public <T> TraceMap visitSingle(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), operation.getName(), Collections.<TraceMap>emptyList());
+    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), operation.getName(), FlowStepType.STEP, Collections.<TraceMap>emptyList());
   }
 
   @Override
   public <T> TraceMap visitSequence(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<TraceMap> items) {
-    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), "Sequence", items);
+    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), "Sequence", FlowStepType.SEQUENCE, items);
   }
 
   @Override
@@ -31,6 +32,7 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
           conditionalTraceMap.getRequiredKeys(),
           conditionalTraceMap.getProvidedKey(),
           "If " + conditional.getCondition().getDescription() + ": " + conditionalTraceMap.getDescription(),
+          conditionalTraceMap.getType(),
           conditionalTraceMap.getChildren()));
     }
     children.add(new ConcreteTraceMap(
@@ -38,9 +40,10 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
         defaultBranch.getRequiredKeys(),
         defaultBranch.getProvidedKey(),
         "Otherwise: " + defaultBranch.getDescription(),
+        defaultBranch.getType(),
         defaultBranch.getChildren()
     ));
-    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), "Branch", children);
+    return new ConcreteTraceMap(UUID.randomUUID(), toKeyNames(requiredKeys), providedKey.getName(), "Branch", FlowStepType.BRANCH, children);
   }
 
   private Set<String> toKeyNames(final Set<Key<?>> keys) {
@@ -62,13 +65,15 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
     private final Set<String> requiredKeys;
     private final String providedKey;
     private final String description;
+    private final FlowStepType type;
     private final List<TraceMap> children;
 
-    private ConcreteTraceMap(final UUID id, final Set<String> requiredKeys, final String providedKey, final String description, final List<TraceMap> children) {
+    private ConcreteTraceMap(final UUID id, final Set<String> requiredKeys, final String providedKey, final String description, FlowStepType type, final List<TraceMap> children) {
       this.id = id;
       this.requiredKeys = requiredKeys;
       this.providedKey = providedKey;
       this.description = description;
+      this.type = type;
       this.children = children;
     }
 
@@ -90,6 +95,11 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
     @Override
     public String getDescription() {
       return description;
+    }
+
+    @Override
+    public FlowStepType getType() {
+      return type;
     }
 
     @Override

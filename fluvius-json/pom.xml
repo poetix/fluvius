@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.codepoetics</groupId>
+            <artifactId>fluvius-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
