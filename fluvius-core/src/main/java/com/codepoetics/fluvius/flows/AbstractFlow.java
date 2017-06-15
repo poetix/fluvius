@@ -4,8 +4,7 @@ import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 abstract class AbstractFlow<T> implements Flow<T> {
 
@@ -35,6 +34,13 @@ abstract class AbstractFlow<T> implements Flow<T> {
   @Override
   public Flow<T> orIf(final Condition condition, final Flow<T> ifTrue) {
     return BranchFlow.create(this, condition, ifTrue);
+  }
+
+  @Override
+  public List<Flow<?>> getAllFlows() {
+    List<Flow<?>> flows = new ArrayList<>(1);
+    flows.add(this);
+    return flows;
   }
 
 }

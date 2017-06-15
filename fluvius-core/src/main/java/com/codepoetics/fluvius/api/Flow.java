@@ -3,6 +3,7 @@ package com.codepoetics.fluvius.api;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,4 +54,10 @@ public interface Flow<T> extends Serializable {
    * @return The constructed Flow.
    */
   Flow<T> orIf(Condition condition, Flow<T> ifTrue);
+
+  /**
+   * Flatten this flow into a list of flows.
+   * @return A list of flows containing either this flow, or (if this flow is a sequence) all of the flows in this flow.
+   */
+  List<Flow<?>> getAllFlows();
 }

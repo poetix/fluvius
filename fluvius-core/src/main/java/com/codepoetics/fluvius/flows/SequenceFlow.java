@@ -1,7 +1,6 @@
 package com.codepoetics.fluvius.flows;
 
-import com.codepoetics.fluvius.api.Flow;
-import com.codepoetics.fluvius.api.FlowVisitor;
+import com.codepoetics.fluvius.api.*;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.preconditions.Preconditions;
 
@@ -13,10 +12,15 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     Preconditions.checkNotNull("first", first);
     Preconditions.checkNotNull("last", last);
 
-    return create(first, Collections.<Flow<?>>emptyList(), last);
+      return create(first, Collections.<Flow<?>>emptyList(), last);
   }
 
   private static <T> Flow<T> create(final Flow<?> first, final List<Flow<?>> middle, final Flow<T> last) {
+    List<Flow<?>> flatLast = last.getAllFlows();
+    if (flatLast.size() > 1) {
+      return create(first, middle, flatLast);
+    }
+
     final Set<Key<?>> requiredKeys = first.getRequiredKeys();
     final Set<Key<?>> providedKeys = new HashSet<>();
     providedKeys.add(first.getProvidedKey());
@@ -33,6 +37,14 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     requiredKeys.addAll(requiredKeysForLast);
 
     return new SequenceFlow<>(requiredKeys, first, middle, last);
+  }
+
+  private static <T> Flow<T> create(Flow<?> first, List<Flow<?>> middle, List<Flow<?>> flatLast) {
+    List<Flow<?>> newMiddle = new ArrayList<>(middle);
+    newMiddle.addAll(flatLast);
+    Flow<T> newLast = (Flow<T>) newMiddle.get(newMiddle.size() - 1);
+    newMiddle.remove(newMiddle.size() - 1);
+    return create(first, newMiddle, newLast);
   }
 
   private final Flow<?> first;
@@ -69,4 +81,10 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     newMiddle.add(last);
     return create(first, newMiddle, next);
   }
+
+  @Override
+  public List<Flow<?>> getAllFlows() {
+    return allFlows();
+  }
+
 }
