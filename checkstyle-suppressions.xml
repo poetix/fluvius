@@ -4,7 +4,6 @@
         "http://checkstyle.sourceforge.net/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-    <suppress checks="JavadocPackage" files="[/\\]src[/\\].*"/>
     <suppress checks="LineLength" files="[/\\]src[/\\].*"/>
     <suppress checks="HiddenField" files="[/\\]src[/\\].*"/>
     <suppress checks="AvoidStarImport" files="[/\\]src[/\\].*"/>
