@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20170616" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>fluvius &#x2013; Dependency Information</title>
+    <title>fluvius &#x2013; Project Modules</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.6.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
     <link rel="stylesheet" href="./css/print.css" media="print" />
@@ -90,12 +90,12 @@
     <li><a href="project-info.html" title="Project Information"><span class="icon-chevron-down"></span>Project Information</a>
       <ul class="nav nav-list">
     <li><a href="dependency-convergence.html" title="Dependency Convergence"><span class="none"></span>Dependency Convergence</a>  </li>
-    <li class="active"><a href="#"><span class="none"></span>Dependency Information</a>
-  </li>
+    <li><a href="dependency-info.html" title="Dependency Information"><span class="none"></span>Dependency Information</a>  </li>
     <li><a href="dependency-management.html" title="Dependency Management"><span class="none"></span>Dependency Management</a>  </li>
     <li><a href="distribution-management.html" title="Distribution Management"><span class="none"></span>Distribution Management</a>  </li>
     <li><a href="index.html" title="About"><span class="none"></span>About</a>  </li>
-    <li><a href="modules.html" title="Project Modules"><span class="none"></span>Project Modules</a>  </li>
+    <li class="active"><a href="#"><span class="none"></span>Project Modules</a>
+  </li>
     <li><a href="plugin-management.html" title="Plugin Management"><span class="none"></span>Plugin Management</a>  </li>
     <li><a href="plugins.html" title="Plugins"><span class="none"></span>Plugins</a>  </li>
     <li><a href="team-list.html" title="Team"><span class="none"></span>Team</a>  </li>
@@ -116,37 +116,18 @@
         </div>
         <div id="bodyColumn"  class="span10" >
 <div class="section">
-<h2><a name="Dependency_Information"></a>Dependency Information</h2><a name="Dependency_Information"></a>
-<div class="section">
-<h3><a name="Apache_Maven"></a>Apache Maven</h3><a name="Apache_Maven"></a>
-<div class="source"><pre class="prettyprint linenums">&lt;dependency&gt;
-  &lt;groupId&gt;com.codepoetics&lt;/groupId&gt;
-  &lt;artifactId&gt;fluvius&lt;/artifactId&gt;
-  &lt;version&gt;1.3-SNAPSHOT&lt;/version&gt;
-  &lt;type&gt;pom&lt;/type&gt;
-&lt;/dependency&gt;</pre></div></div>
-<div class="section">
-<h3><a name="Apache_Buildr"></a>Apache Buildr</h3><a name="Apache_Buildr"></a>
-<div class="source"><pre class="prettyprint linenums">'com.codepoetics:fluvius:pom:1.3-SNAPSHOT'</pre></div></div>
-<div class="section">
-<h3><a name="Apache_Ivy"></a>Apache Ivy</h3><a name="Apache_Ivy"></a>
-<div class="source"><pre class="prettyprint linenums">&lt;dependency org=&quot;com.codepoetics&quot; name=&quot;fluvius&quot; rev=&quot;1.3-SNAPSHOT&quot;&gt;
-  &lt;artifact name=&quot;fluvius&quot; type=&quot;pom&quot; /&gt;
-&lt;/dependency&gt;</pre></div></div>
-<div class="section">
-<h3><a name="Groovy_Grape"></a>Groovy Grape</h3><a name="Groovy_Grape"></a>
-<div class="source"><pre class="prettyprint linenums">@Grapes(
-@Grab(group='com.codepoetics', module='fluvius', version='1.3-SNAPSHOT')
-)</pre></div></div>
-<div class="section">
-<h3><a name="GradleGrails"></a>Gradle/Grails</h3><a name="GradleGrails"></a>
-<div class="source"><pre class="prettyprint linenums">compile 'com.codepoetics:fluvius:1.3-SNAPSHOT'</pre></div></div>
-<div class="section">
-<h3><a name="Scala_SBT"></a>Scala SBT</h3><a name="Scala_SBT"></a>
-<div class="source"><pre class="prettyprint linenums">libraryDependencies += &quot;com.codepoetics&quot; % &quot;fluvius&quot; % &quot;1.3-SNAPSHOT&quot;</pre></div></div>
-<div class="section">
-<h3><a name="Leiningen"></a>Leiningen</h3><a name="Leiningen"></a>
-<div class="source"><pre class="prettyprint linenums">[com.codepoetics/fluvius &quot;1.3-SNAPSHOT&quot;]</pre></div></div></div>
+<h2><a name="Project_Modules"></a>Project Modules</h2><a name="Project_Modules"></a>
+<p>This project has declared the following modules:</p>
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>Name</th>
+<th>Description</th></tr>
+<tr class="b">
+<td><a href="fluvius-core/index.html">fluvius-core</a></td>
+<td>A simple co-ordination API for Java 7</td></tr>
+<tr class="a">
+<td><a href="fluvius-json/index.html">fluvius-json</a></td>
+<td>A simple co-ordination API for Java 7</td></tr></table></div>
         </div>
       </div>
     </div>

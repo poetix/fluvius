@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20170616" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>fluvius &#x2013; Dependency Information</title>
+    <title>fluvius &#x2013; Project Dependency Management</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.6.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
     <link rel="stylesheet" href="./css/print.css" media="print" />
@@ -90,9 +90,9 @@
     <li><a href="project-info.html" title="Project Information"><span class="icon-chevron-down"></span>Project Information</a>
       <ul class="nav nav-list">
     <li><a href="dependency-convergence.html" title="Dependency Convergence"><span class="none"></span>Dependency Convergence</a>  </li>
-    <li class="active"><a href="#"><span class="none"></span>Dependency Information</a>
+    <li><a href="dependency-info.html" title="Dependency Information"><span class="none"></span>Dependency Information</a>  </li>
+    <li class="active"><a href="#"><span class="none"></span>Dependency Management</a>
   </li>
-    <li><a href="dependency-management.html" title="Dependency Management"><span class="none"></span>Dependency Management</a>  </li>
     <li><a href="distribution-management.html" title="Distribution Management"><span class="none"></span>Distribution Management</a>  </li>
     <li><a href="index.html" title="About"><span class="none"></span>About</a>  </li>
     <li><a href="modules.html" title="Project Modules"><span class="none"></span>Project Modules</a>  </li>
@@ -116,37 +116,47 @@
         </div>
         <div id="bodyColumn"  class="span10" >
 <div class="section">
-<h2><a name="Dependency_Information"></a>Dependency Information</h2><a name="Dependency_Information"></a>
+<h2><a name="Project_Dependency_Management"></a>Project Dependency Management</h2><a name="Project_Dependency_Management"></a>
 <div class="section">
-<h3><a name="Apache_Maven"></a>Apache Maven</h3><a name="Apache_Maven"></a>
-<div class="source"><pre class="prettyprint linenums">&lt;dependency&gt;
-  &lt;groupId&gt;com.codepoetics&lt;/groupId&gt;
-  &lt;artifactId&gt;fluvius&lt;/artifactId&gt;
-  &lt;version&gt;1.3-SNAPSHOT&lt;/version&gt;
-  &lt;type&gt;pom&lt;/type&gt;
-&lt;/dependency&gt;</pre></div></div>
-<div class="section">
-<h3><a name="Apache_Buildr"></a>Apache Buildr</h3><a name="Apache_Buildr"></a>
-<div class="source"><pre class="prettyprint linenums">'com.codepoetics:fluvius:pom:1.3-SNAPSHOT'</pre></div></div>
-<div class="section">
-<h3><a name="Apache_Ivy"></a>Apache Ivy</h3><a name="Apache_Ivy"></a>
-<div class="source"><pre class="prettyprint linenums">&lt;dependency org=&quot;com.codepoetics&quot; name=&quot;fluvius&quot; rev=&quot;1.3-SNAPSHOT&quot;&gt;
-  &lt;artifact name=&quot;fluvius&quot; type=&quot;pom&quot; /&gt;
-&lt;/dependency&gt;</pre></div></div>
-<div class="section">
-<h3><a name="Groovy_Grape"></a>Groovy Grape</h3><a name="Groovy_Grape"></a>
-<div class="source"><pre class="prettyprint linenums">@Grapes(
-@Grab(group='com.codepoetics', module='fluvius', version='1.3-SNAPSHOT')
-)</pre></div></div>
-<div class="section">
-<h3><a name="GradleGrails"></a>Gradle/Grails</h3><a name="GradleGrails"></a>
-<div class="source"><pre class="prettyprint linenums">compile 'com.codepoetics:fluvius:1.3-SNAPSHOT'</pre></div></div>
-<div class="section">
-<h3><a name="Scala_SBT"></a>Scala SBT</h3><a name="Scala_SBT"></a>
-<div class="source"><pre class="prettyprint linenums">libraryDependencies += &quot;com.codepoetics&quot; % &quot;fluvius&quot; % &quot;1.3-SNAPSHOT&quot;</pre></div></div>
-<div class="section">
-<h3><a name="Leiningen"></a>Leiningen</h3><a name="Leiningen"></a>
-<div class="source"><pre class="prettyprint linenums">[com.codepoetics/fluvius &quot;1.3-SNAPSHOT&quot;]</pre></div></div></div>
+<h3><a name="compile"></a>compile</h3><a name="compile"></a>
+<p>The following is a list of compile dependencies in the DependencyManagement of this project. These dependencies can be included in the submodules to compile and run the submodule:</p>
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>GroupId</th>
+<th>ArtifactId</th>
+<th>Version</th>
+<th>Type</th>
+<th>License</th></tr>
+<tr class="b">
+<td>com.codepoetics</td>
+<td><a class="externalLink" href="http://github.com/poetix/fluvius/fluvius-core">fluvius-core</a></td>
+<td>1.3-SNAPSHOT</td>
+<td>jar</td>
+<td>-</td></tr>
+<tr class="a">
+<td>com.codepoetics</td>
+<td><a class="externalLink" href="http://github.com/poetix/fluvius/fluvius-json">fluvius-json</a></td>
+<td>1.3-SNAPSHOT</td>
+<td>jar</td>
+<td>-</td></tr>
+<tr class="b">
+<td>com.fasterxml.jackson.core</td>
+<td><a class="externalLink" href="http://github.com/FasterXML/jackson">jackson-databind</a></td>
+<td>2.7.0</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
+<tr class="a">
+<td>junit</td>
+<td><a class="externalLink" href="http://junit.org">junit</a></td>
+<td>4.12</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License 1.0</a></td></tr>
+<tr class="b">
+<td>org.mockito</td>
+<td><a class="externalLink" href="http://www.mockito.org">mockito-all</a></td>
+<td>1.10.19</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://github.com/mockito/mockito/blob/master/LICENSE">The MIT License</a></td></tr></table></div></div>
         </div>
       </div>
     </div>
