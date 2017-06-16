@@ -1,0 +1,21 @@
+#!/bin/bash
+
+mvn site
+git checkout gh-pages
+
+cp -R fluvius-core/target/site target/site/fluvius-core
+cp -R fluvius-json/target/site target/site/fluvius-json
+
+rm -rf fluvius-core
+rm -rf fluvius-json
+cp -R target/site/* .
+git add fluvius-core
+git add fluvius-json
+git add *.html
+git add js
+git add css
+git add img
+git add images
+git add fonts
+git add checkstyle.rss
+git commit -m "Update site"

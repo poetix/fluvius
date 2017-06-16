@@ -47,12 +47,12 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
     eventStore.storeEvent(new SerialisedStepFailedEvent(flowId, stepId, System.currentTimeMillis(), dataSerialiser.serialiseThrowable(throwable)));
   }
 
-  private static abstract class SerialisedFlowEvent<T> implements FlowEvent<T> {
+  private abstract static class SerialisedFlowEvent<T> implements FlowEvent<T> {
     private final UUID flowId;
     private final UUID stepId;
     private final long timestamp;
 
-    protected SerialisedFlowEvent(final UUID flowId, final UUID stepId, final long timestamp) {
+    private SerialisedFlowEvent(final UUID flowId, final UUID stepId, final long timestamp) {
       this.flowId = flowId;
       this.stepId = stepId;
       this.timestamp = timestamp;

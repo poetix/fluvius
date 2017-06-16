@@ -12,7 +12,7 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     Preconditions.checkNotNull("first", first);
     Preconditions.checkNotNull("last", last);
 
-      return create(first, Collections.<Flow<?>>emptyList(), last);
+    return create(first, Collections.<Flow<?>>emptyList(), last);
   }
 
   private static <T> Flow<T> create(final Flow<?> first, final List<Flow<?>> middle, final Flow<T> last) {
@@ -39,6 +39,7 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     return new SequenceFlow<>(requiredKeys, first, middle, last);
   }
 
+  @SuppressWarnings("unchecked")
   private static <T> Flow<T> create(Flow<?> first, List<Flow<?>> middle, List<Flow<?>> flatLast) {
     List<Flow<?>> newMiddle = new ArrayList<>(middle);
     newMiddle.addAll(flatLast);

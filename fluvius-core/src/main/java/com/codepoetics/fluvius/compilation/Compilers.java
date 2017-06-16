@@ -18,11 +18,19 @@ import com.codepoetics.fluvius.logging.Loggers;
 import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
 import com.codepoetics.fluvius.visitors.Visitors;
 
+/**
+ * Utility class providing a fluent "builder" API for assembling {@link FlowCompiler}s with the required properties.
+ */
 public final class Compilers {
 
   private Compilers() {
   }
 
+  /**
+   * Obtain a fluent "builder" for specifying the properties of a {@link FlowCompiler}.
+   *
+   * @return A fluent "builder" for specifying the properties of a {@link FlowCompiler}.
+   */
   public static Builder<FlowCompiler> builder() {
     return new Builder<>(Visitors.getDefault(), new F1<FlowVisitor<Action>, FlowCompiler>() {
       @Override
@@ -32,6 +40,10 @@ public final class Compilers {
     });
   }
 
+  /**
+   * A fluent builder for specifying the properties of a {@link FlowCompiler} or {@link TracedFlowCompiler}.
+   * @param <C> The type of the compiler to build.
+   */
   public static final class Builder<C> {
     private final FlowVisitor<Action> visitor;
     private final F1<FlowVisitor<Action>, C> compilerMaker;
@@ -41,20 +53,41 @@ public final class Compilers {
       this.compilerMaker = compilerMaker;
     }
 
+    /**
+     * Specifies that {@link FlowExecution}s compiled by the constructed compiler will log messages to the console.
+     *
+     * @return A builder that will build the compiler as specified.
+     */
     public Builder<C> loggingToConsole() {
       return loggingTo(Loggers.getConsoleLogger());
     }
 
+    /**
+     * Specifies that {@link FlowExecution}s compiled by the constructed compiler will log messages to the provided {@link FlowLogger}.
+     *
+     * @return A builder that will build the compiler as specified.
+     */
     public Builder<C> loggingTo(FlowLogger logger) {
       return new Builder<>(Visitors.logging(visitor, logger), compilerMaker);
     }
 
+    /**
+     * Specifies that {@link FlowExecution}s compiled by the constructed compiler will try to enforce the rule that values stored in the {@link com.codepoetics.fluvius.api.scratchpad.Scratchpad} cannot be mutated.
+     *
+     * @return A builder that will build the compiler as specified.
+     */
     public Builder<C> mutationChecking() {
       return new Builder<>(Visitors.mutationChecking(visitor), compilerMaker);
     }
 
+    /**
+     * Specifies that {@link FlowExecution}s compiled by the constructed compiler will record a trace of their execution history to the provided {@link FlowHistoryRepository}.
+     *
+     * @param repository The repository to which exeuction traces will be written.
+     * @return A builder that will build the compiler as specified.
+     */
     public Builder<FlowCompiler> recordingTo(final FlowHistoryRepository<?> repository) {
-      return new Builder<FlowCompiler>(visitor, new F1<FlowVisitor<Action>, FlowCompiler>() {
+      return new Builder<>(visitor, new F1<FlowVisitor<Action>, FlowCompiler>() {
         @Override
         public FlowCompiler apply(FlowVisitor<Action> input) {
           return History.makeCompiler(repository, visitor);
@@ -62,6 +95,12 @@ public final class Compilers {
       });
     }
 
+    /**
+     * Specifies the {@link FlowExecution}s compiled by the constructed {@link TracedFlowCompiler} will emit trace messages to the provided {@link TraceEventListener}.
+     *
+     * @param eventListener The event listener that will receiver trace messages from {@link FlowExecution}s compiled by the constructed compiler.
+     * @return A builder that will build the compiler as specified.
+     */
     public Builder<TracedFlowCompiler> tracingWith(final TraceEventListener eventListener) {
       return new Builder<>(visitor, new F1<FlowVisitor<Action>, TracedFlowCompiler>() {
         @Override
@@ -76,6 +115,11 @@ public final class Compilers {
       });
     }
 
+    /**
+     * Build and return the compiler as specified.
+     *
+     * @return The constructed compiler.
+     */
     public C build() {
       return compilerMaker.apply(visitor);
     }

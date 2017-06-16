@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A map of the trace of a flow.
+ * A map of the possible execution paths of a flow.
  */
 public interface TraceMap {
 

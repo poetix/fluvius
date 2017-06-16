@@ -1,9 +1,7 @@
 package com.codepoetics.fluvius;
 
-import com.codepoetics.fluvius.api.Action;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
-import com.codepoetics.fluvius.api.FlowVisitor;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
 import com.codepoetics.fluvius.api.functional.F1;
@@ -15,7 +13,6 @@ import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 import com.codepoetics.fluvius.utilities.Serialisation;
-import com.codepoetics.fluvius.visitors.Visitors;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -24,8 +21,6 @@ import java.util.UUID;
 
 import static com.codepoetics.fluvius.FlowExample.*;
 import static com.codepoetics.fluvius.flows.Flows.branch;
-import static com.codepoetics.fluvius.visitors.Visitors.logging;
-import static com.codepoetics.fluvius.visitors.Visitors.mutationChecking;
 import static org.junit.Assert.assertEquals;
 
 public class FlowApiTest implements Serializable {
