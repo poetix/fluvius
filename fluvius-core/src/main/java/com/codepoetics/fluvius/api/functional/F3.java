@@ -18,6 +18,7 @@ public interface F3<A, B, C, OUTPUT> extends Serializable {
    * @param second The second input to the function.
    * @param third  The third input to the function.
    * @return The output of the function.
+   * @throws Exception Any exception thrown during the execution of the function.
    */
-  OUTPUT apply(A first, B second, C third);
+  OUTPUT apply(A first, B second, C third) throws Exception;
 }

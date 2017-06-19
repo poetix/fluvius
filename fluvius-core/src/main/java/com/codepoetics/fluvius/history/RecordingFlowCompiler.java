@@ -47,7 +47,7 @@ final class RecordingFlowCompiler implements FlowCompiler {
     }
 
     @Override
-    public T run(final UUID flowId, final Scratchpad initialScratchpad) {
+    public T run(final UUID flowId, final Scratchpad initialScratchpad) throws Exception {
       final TraceMap traceMap = tracedFlowExecution.getTraceMap();
       repository.storeTraceMap(flowId, traceMap);
 

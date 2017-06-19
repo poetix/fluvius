@@ -22,8 +22,8 @@ public class EventDataSerialisers {
     }
 
     @Override
-    public Object serialiseThrowable(final Throwable throwable) {
-      return throwable;
+    public Object serialiseException(final Exception exception) {
+      return exception;
     }
   }
 
@@ -34,8 +34,8 @@ public class EventDataSerialisers {
     }
 
     @Override
-    public String serialiseThrowable(final Throwable throwable) {
-      return throwable.getMessage();
+    public String serialiseException(final Exception exception) {
+      return exception.getMessage();
     }
   }
 }

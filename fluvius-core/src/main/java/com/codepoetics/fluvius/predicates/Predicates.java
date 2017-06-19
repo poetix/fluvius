@@ -1,9 +1,11 @@
 package com.codepoetics.fluvius.predicates;
 
+import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.functional.P1;
 import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
+import com.codepoetics.fluvius.conditions.Conditions;
 
 /**
  * Utility class for constructing predicates.
@@ -11,6 +13,20 @@ import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 public final class Predicates {
 
   private Predicates() {
+  }
+
+  /**
+   * Construct a ScratchpadPredicate that will be true if the value written for the specified key is a failure reason.
+   * @param key The key to test.
+   * @return The constructed ScratchpadPredicate.
+   */
+  public static ScratchpadPredicate isFailure(final Key<?> key) {
+    return new ScratchpadPredicate() {
+      @Override
+      public boolean test(Scratchpad value) {
+        return !value.isSuccessful(key);
+      }
+    };
   }
 
   /**

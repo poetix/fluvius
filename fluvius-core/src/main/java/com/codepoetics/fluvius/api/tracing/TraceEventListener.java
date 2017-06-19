@@ -28,8 +28,8 @@ public interface TraceEventListener {
    * Called when a flow step terminates with an exception.
    * @param flowId The id of the running flow.
    * @param stepId The id of the step which has failed.
-   * @param throwable The exception that was thrown.
+   * @param exception The exception that was thrown.
    */
-  void stepFailed(UUID flowId, UUID stepId, Throwable throwable);
+  void stepFailed(UUID flowId, UUID stepId, Exception exception);
 
 }

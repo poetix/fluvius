@@ -2,7 +2,9 @@ package com.codepoetics.fluvius.json.history;
 
 import com.codepoetics.fluvius.api.history.EventDataSerialiser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public final class JsonEventDataSerialiser implements EventDataSerialiser<JsonNode> {
 
@@ -22,7 +24,7 @@ public final class JsonEventDataSerialiser implements EventDataSerialiser<JsonNo
   }
 
   @Override
-  public JsonNode serialiseThrowable(Throwable throwable) {
-    return mapper.valueToTree(throwable);
+  public JsonNode serialiseException(Exception exception) {
+    return mapper.valueToTree(exception);
   }
 }

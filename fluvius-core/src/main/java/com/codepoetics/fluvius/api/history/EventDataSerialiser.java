@@ -18,9 +18,8 @@ public interface EventDataSerialiser<T> {
   /**
    * Serialise an exception thrown during flow execution to the expected type.
    *
-   * @param throwable The exception to serialise.
+   * @param exception The exception to serialise.
    * @return The serialised exception.
    */
-  T serialiseThrowable(Throwable throwable);
-
+  T serialiseException(Exception exception);
 }

@@ -16,6 +16,7 @@ public interface F2<A, B, OUTPUT> extends Serializable {
    * @param first  The first input to the function.
    * @param second The second input to the function.
    * @return The output of the function.
+   * @throws Exception Any exception thrown during execution of the function.
    */
-  OUTPUT apply(A first, B second);
+  OUTPUT apply(A first, B second) throws Exception;
 }

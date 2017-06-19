@@ -22,7 +22,7 @@ public class InMemoryRepositoryTest {
       .build();
 
   @Test
-  public void inMemoryRepositoryStoresFlowHistory() {
+  public void inMemoryRepositoryStoresFlowHistory() throws Exception {
     final Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)

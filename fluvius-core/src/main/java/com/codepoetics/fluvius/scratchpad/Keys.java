@@ -50,6 +50,11 @@ public final class Keys {
     }
 
     @Override
+    public KeyValue ofFailure(Throwable reason) {
+      return new RealKeyValue(this, checkNotNull("reason", reason));
+    }
+
+    @Override
     public boolean equals(final Object other) {
       return other == this
           || (other instanceof RealKey
@@ -80,7 +85,11 @@ public final class Keys {
     @SuppressWarnings("unchecked")
     @Override
     public void store(final ScratchpadStorage storage) {
-      storage.put((Key<Object>) key, value);
+      if (value instanceof Throwable) {
+        storage.storeFailure(key, (Throwable) value);
+      } else {
+        storage.storeSuccess((Key<Object>) key, value);
+      }
     }
 
     @Override

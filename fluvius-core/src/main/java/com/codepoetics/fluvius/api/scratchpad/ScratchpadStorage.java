@@ -12,6 +12,14 @@ public interface ScratchpadStorage {
    * @param value The value to write.
    * @param <T>   The type of the key/value pair to write.
    */
-  <T> void put(Key<T> key, T value);
+  <T> void storeSuccess(Key<T> key, T value);
+
+  /**
+   * Write a "failure" reason into a Scratchpad's storage.
+   *
+   * @param key The Key to write.
+   * @param reason The failure reason to write.
+   */
+  void storeFailure(Key<?> key, Throwable reason);
 
 }

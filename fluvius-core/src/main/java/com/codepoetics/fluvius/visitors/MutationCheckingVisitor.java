@@ -50,9 +50,14 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
     }
 
     @Override
-    public T run(final Scratchpad scratchpad) {
+    public T run(final Scratchpad scratchpad) throws Exception {
       final Map<Key<?>, Object> before = getMutableState(scratchpad);
-      final T result = innerOperation.run(scratchpad);
+      T result = null;
+      try {
+        result = innerOperation.run(scratchpad);
+      } catch (Exception e) {
+        throw e;
+      }
       final Map<Key<?>, Object> after = getMutableState(scratchpad);
       testForMutation(before, after);
       return result;

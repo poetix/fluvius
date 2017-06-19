@@ -1,20 +1,25 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
+import com.codepoetics.fluvius.api.functional.RecoveryFunction;
+import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.logging.FlowLogger;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
+import com.codepoetics.fluvius.conditions.Conditions;
 import com.codepoetics.fluvius.describers.FlowDescriber;
 import com.codepoetics.fluvius.describers.PrettyPrintingDescriptionWriter;
 import com.codepoetics.fluvius.execution.KeyCheckingFlowExecution;
 import com.codepoetics.fluvius.execution.TraceMapCapturingFlowExecution;
+import com.codepoetics.fluvius.operations.Operations;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
 import com.codepoetics.fluvius.visitors.Visitors;
 
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -88,7 +93,7 @@ public final class Flows {
    * @return The result of running the Flow.
    */
   @Deprecated
-  public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final Scratchpad initialScratchpad) {
+  public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final Scratchpad initialScratchpad) throws Exception {
     return KeyCheckingFlowExecution.forFlow(flow, flowVisitor).run(UUID.randomUUID(), initialScratchpad);
   }
 
@@ -103,7 +108,7 @@ public final class Flows {
    */
   @SuppressWarnings("deprecation")
   @Deprecated
-  public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final KeyValue... keyValues) {
+  public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final KeyValue... keyValues) throws Exception {
     return run(flow, flowVisitor, Scratchpads.create(keyValues));
   }
 
@@ -117,6 +122,46 @@ public final class Flows {
    */
   public static <T> BranchBuilder<T> branch(final Condition condition, final Flow<T> ifTrue) {
     return BranchBuilder.startingWith(condition, ifTrue);
+  }
+
+  /**
+   * The second stage of a fluent API for defining branching {@link Flow}s that respond to success/failure of the previous flow.
+   * @param <V> The type of the value to be returned by the branching {@link Flow} constructed using this API.
+   */
+  public interface SuccessCapture<V> {
+    /**
+     * Capture the {@link Flow} to be executed if the previous Flow failed.
+     * @param failureFlow The flow to be executed if the previous Flow failed.
+     * @return The constructed branching {@link Flow}.
+     */
+    Flow<V> otherwise(Flow<V> failureFlow);
+  }
+
+  /**
+   * Construct a branching {@link Flow} that responds to the success or failure of a previous flow.
+   *
+   * @param key The key to which the result of the previous flow will have been written.
+   * @return The next stage in the fluent API that constructs the branching {@link Flow}.
+   */
+  public static <V> SuccessCapture<V> onSuccess(final Key<?> key, final Flow<V> successFlow) {
+    return new SuccessCapture<V>() {
+      @Override
+      public Flow<V> otherwise(final Flow<V> failureFlow) {
+        return Flows.branch(
+            Conditions.keyRecordsFailure(key), failureFlow)
+            .otherwise(successFlow);
+      }
+    };
+  }
+
+  /**
+   * Construct a {@link Flow} that recovers from an exception returned by a previous flow.
+   *
+   * @param failureKey The key against which the failure reason was recorded.
+   * @return The next state in the fluent API that constructs the recovery Flow.
+   */
+  public static FailureKeyCapture recoverFrom(final Key<?> failureKey) {
+    return new FailureKeyCapture(failureKey);
   }
 
 

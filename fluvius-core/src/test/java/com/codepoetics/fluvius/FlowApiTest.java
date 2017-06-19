@@ -31,7 +31,7 @@ public class FlowApiTest implements Serializable {
       .build();
 
   @Test
-  public void testFlowApi() {
+  public void testFlowApi() throws Exception {
     final Flow<String> combined = authorize
         .then(branch(
             FlowExample.isAuthorised, extractAccessToken
@@ -58,7 +58,7 @@ public class FlowApiTest implements Serializable {
   }
 
   @Test
-  public void dependencyExample() {
+  public void dependencyExample() throws Exception {
     final Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
@@ -92,7 +92,7 @@ public class FlowApiTest implements Serializable {
   }
 
   @Test
-  public void flowsSerialise() {
+  public void flowsSerialise() throws Exception {
     final Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
@@ -126,7 +126,7 @@ public class FlowApiTest implements Serializable {
   }
 
   @Test
-  public void tracing() {
+  public void tracing() throws Exception {
     final Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
@@ -163,8 +163,8 @@ public class FlowApiTest implements Serializable {
       }
 
       @Override
-      public void stepFailed(final UUID flowId, final UUID id, final Throwable throwable) {
-        System.out.println("Step " + id + " failed with exception " + throwable);
+      public void stepFailed(final UUID flowId, final UUID id, final Exception exception) {
+        System.out.println("Step " + id + " failed with exception " + exception);
       }
     };
 
@@ -188,7 +188,7 @@ public class FlowApiTest implements Serializable {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void flowsCannotOverwriteAlreadyWrittenKeys() {
+  public void flowsCannotOverwriteAlreadyWrittenKeys() throws Exception {
     final Flow<String> changeAccessToken = Flows.obtaining(accessToken).from(accessToken).using(new F1<String, String>() {
       @Override
       public String apply(final String input) {

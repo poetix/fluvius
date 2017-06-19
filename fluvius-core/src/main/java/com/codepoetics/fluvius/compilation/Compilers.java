@@ -32,12 +32,16 @@ public final class Compilers {
    * @return A fluent "builder" for specifying the properties of a {@link FlowCompiler}.
    */
   public static Builder<FlowCompiler> builder() {
-    return new Builder<>(Visitors.getDefault(), new F1<FlowVisitor<Action>, FlowCompiler>() {
+    return new Builder<>(Visitors.getDefault(), new CompilerMaker<FlowCompiler>() {
       @Override
-      public FlowCompiler apply(FlowVisitor<Action> input) {
+      public FlowCompiler makeCompiler(FlowVisitor<Action> input) {
         return new VisitingCompiler(input);
       }
     });
+  }
+
+  private interface CompilerMaker<C> {
+    C makeCompiler(FlowVisitor<Action> visitor);
   }
 
   /**
@@ -46,9 +50,9 @@ public final class Compilers {
    */
   public static final class Builder<C> {
     private final FlowVisitor<Action> visitor;
-    private final F1<FlowVisitor<Action>, C> compilerMaker;
+    private final CompilerMaker<C> compilerMaker;
 
-    private Builder(FlowVisitor<Action> visitor, F1<FlowVisitor<Action>, C> compilerMaker) {
+    private Builder(FlowVisitor<Action> visitor, CompilerMaker<C> compilerMaker) {
       this.visitor = visitor;
       this.compilerMaker = compilerMaker;
     }
@@ -87,9 +91,9 @@ public final class Compilers {
      * @return A builder that will build the compiler as specified.
      */
     public Builder<FlowCompiler> recordingTo(final FlowHistoryRepository<?> repository) {
-      return new Builder<>(visitor, new F1<FlowVisitor<Action>, FlowCompiler>() {
+      return new Builder<>(visitor, new CompilerMaker<FlowCompiler>() {
         @Override
-        public FlowCompiler apply(FlowVisitor<Action> input) {
+        public FlowCompiler makeCompiler(FlowVisitor<Action> input) {
           return History.makeCompiler(repository, visitor);
         }
       });
@@ -102,9 +106,9 @@ public final class Compilers {
      * @return A builder that will build the compiler as specified.
      */
     public Builder<TracedFlowCompiler> tracingWith(final TraceEventListener eventListener) {
-      return new Builder<>(visitor, new F1<FlowVisitor<Action>, TracedFlowCompiler>() {
+      return new Builder<>(visitor, new CompilerMaker<TracedFlowCompiler>() {
         @Override
-        public TracedFlowCompiler apply(final FlowVisitor<Action> input) {
+        public TracedFlowCompiler makeCompiler(final FlowVisitor<Action> input) {
           return new TracedFlowCompiler() {
             @Override
             public <T> TracedFlowExecution<T> compile(Flow<T> flow) {
@@ -121,7 +125,7 @@ public final class Compilers {
      * @return The constructed compiler.
      */
     public C build() {
-      return compilerMaker.apply(visitor);
+      return compilerMaker.makeCompiler(visitor);
     }
   }
 

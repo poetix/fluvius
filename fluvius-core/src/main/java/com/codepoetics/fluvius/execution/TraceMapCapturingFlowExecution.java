@@ -43,7 +43,7 @@ public final class TraceMapCapturingFlowExecution<T> extends AbstractFlowExecuti
   }
 
   @Override
-  public T run(final UUID flowId, final Scratchpad initialScratchpad) {
+  public T run(final UUID flowId, final Scratchpad initialScratchpad) throws Exception {
     return execution.run(flowId, initialScratchpad);
   }
 

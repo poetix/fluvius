@@ -5,6 +5,7 @@ import com.codepoetics.fluvius.api.Conditional;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowVisitor;
 import com.codepoetics.fluvius.api.functional.F1;
+import com.codepoetics.fluvius.api.functional.Mapper;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException;
 import com.codepoetics.fluvius.preconditions.Preconditions;
@@ -55,7 +56,7 @@ class BranchFlow<T> extends AbstractFlow<T> {
     }
 
     @Override
-    public <V2> Conditional<V2> map(final F1<? super V, ? extends V2> mapper) {
+    public <V2> Conditional<V2> map(final Mapper<? super V, ? extends V2> mapper) {
       return new RealConditional<>(condition, mapper.apply(value));
     }
   }

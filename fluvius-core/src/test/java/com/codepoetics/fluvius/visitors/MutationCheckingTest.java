@@ -41,7 +41,7 @@ public class MutationCheckingTest {
   private static final Key<String> output = Keys.named("output");
 
   @Test(expected = IllegalStateException.class)
-  public void youCannotHideFromTheMutationChecker() {
+  public void youCannotHideFromTheMutationChecker() throws Exception {
     final Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
       @Override
       public String apply(final Map<String, MutableThing[]> input) {
@@ -56,7 +56,7 @@ public class MutationCheckingTest {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void youStillCannotHideFromTheMutationChecker() {
+  public void youStillCannotHideFromTheMutationChecker() throws Exception {
     final Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
       @Override
       public String apply(final Map<String, MutableThing[]> input) {

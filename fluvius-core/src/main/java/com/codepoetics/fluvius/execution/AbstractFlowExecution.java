@@ -11,17 +11,17 @@ import java.util.UUID;
 public abstract class AbstractFlowExecution<T> implements FlowExecution<T> {
 
   @Override
-  public T run(final Scratchpad initialScratchpad) {
+  public T run(final Scratchpad initialScratchpad) throws Exception {
     return run(UUID.randomUUID(), initialScratchpad);
   }
 
   @Override
-  public T run(final KeyValue... initialKeyValues) {
+  public T run(final KeyValue... initialKeyValues) throws Exception {
     return run(UUID.randomUUID(), initialKeyValues);
   }
 
   @Override
-  public T run(final UUID flowId, final KeyValue... initialKeyValues) {
+  public T run(final UUID flowId, final KeyValue... initialKeyValues) throws Exception {
     return run(flowId, Scratchpads.create(initialKeyValues));
   }
 

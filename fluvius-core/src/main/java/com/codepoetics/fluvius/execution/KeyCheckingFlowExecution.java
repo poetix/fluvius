@@ -62,7 +62,7 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
   }
 
   @Override
-  public T run(final UUID flowId, final Scratchpad initialScratchpad) {
+  public T run(final UUID flowId, final Scratchpad initialScratchpad) throws Exception {
     final Set<Key<?>> missingKeys = getMissingKeys(initialScratchpad);
 
     if (!missingKeys.isEmpty()) {
@@ -70,11 +70,16 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
     }
 
     final Scratchpad finalScratchpad = action.run(flowId, initialScratchpad.locked());
-    return finalScratchpad.get(providedKey);
+
+    if (finalScratchpad.isSuccessful(providedKey)) {
+      return finalScratchpad.get(providedKey);
+    } else {
+      throw (finalScratchpad.getFailureReason(providedKey));
+    }
   }
 
   @Override
-  public T run(final UUID flowId, final KeyValue... initialKeyValues) {
+  public T run(final UUID flowId, final KeyValue... initialKeyValues) throws Exception {
     return run(flowId, Scratchpads.create(initialKeyValues));
   }
 

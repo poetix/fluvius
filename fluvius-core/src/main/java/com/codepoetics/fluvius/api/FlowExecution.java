@@ -17,7 +17,7 @@ public interface FlowExecution<T> {
    * @param initialScratchpad The initial scratchpad to run the flow against.
    * @return The result of running the flow.
    */
-  T run(Scratchpad initialScratchpad);
+  T run(Scratchpad initialScratchpad) throws Exception;
 
   /**
    * Run the compiled {@link com.codepoetics.fluvius.api.Flow} against the provided initial scratchpad.
@@ -26,7 +26,7 @@ public interface FlowExecution<T> {
    * @param initialScratchpad The initial scratchpad to run the flow against.
    * @return The result of running the flow.
    */
-  T run(UUID flowId, Scratchpad initialScratchpad);
+  T run(UUID flowId, Scratchpad initialScratchpad) throws Exception;
 
   /**
    * Run the compiled {@link com.codepoetics.fluvius.api.Flow} against an initial scratchpad created with the provided values, assigning the flow a randomly-generated UUID.
@@ -34,7 +34,7 @@ public interface FlowExecution<T> {
    * @param initialKeyValues The initial key values to write into the scratchpad.
    * @return The result of running the flow.
    */
-  T run(KeyValue... initialKeyValues);
+  T run(KeyValue... initialKeyValues) throws Exception;
 
   /**
    * Run the compiled {@link com.codepoetics.fluvius.api.Flow} against an initial scratchpad created with the provided values.
@@ -43,7 +43,7 @@ public interface FlowExecution<T> {
    * @param initialKeyValues The initial key values to write into the scratchpad.
    * @return The result of running the flow.
    */
-  T run(UUID flowId, KeyValue...initialKeyValues);
+  T run(UUID flowId, KeyValue...initialKeyValues) throws Exception;
 
   /**
    * Create a {@link Runnable} that will execute this flow against the provided initial scratchpad, assigning the flow a randomly-generated UUID, and reporting results to the provided {@link FlowResultCallback}

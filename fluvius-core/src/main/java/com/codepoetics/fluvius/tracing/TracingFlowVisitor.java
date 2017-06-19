@@ -2,6 +2,7 @@ package com.codepoetics.fluvius.tracing;
 
 import com.codepoetics.fluvius.api.*;
 import com.codepoetics.fluvius.api.functional.F1;
+import com.codepoetics.fluvius.api.functional.Mapper;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.TraceEventListener;
@@ -16,7 +17,7 @@ import java.util.*;
 public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
 
   private static final FlowVisitor<TraceMap> traceMapVisitor = new TraceMapFlowVisitor();
-  private static final F1<TracedAction, TraceMap> toTraceMap = new F1<TracedAction, TraceMap>() {
+  private static final Mapper<TracedAction, TraceMap> toTraceMap = new Mapper<TracedAction, TraceMap>() {
     @Override
     public TraceMap apply(final TracedAction input) {
       return input.getTraceMap();
@@ -127,14 +128,13 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     @Override
     public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
       listener.stepStarted(flowId, stepId, keysToNames(scratchpad.toMap()));
-      try {
-        final Scratchpad result = action.run(flowId, scratchpad);
+      final Scratchpad result = action.run(flowId, scratchpad);
+      if (result.isSuccessful(providedKey)) {
         listener.stepSucceeded(flowId, stepId, result.get(providedKey));
-        return result;
-      } catch (final RuntimeException e) {
-        listener.stepFailed(flowId, stepId, e);
-        throw e;
+      } else {
+        listener.stepFailed(flowId, stepId, result.getFailureReason(providedKey));
       }
+      return result;
     }
 
     private Map<String, Object> keysToNames(final Map<Key<?>, Object> scratchpadState) {

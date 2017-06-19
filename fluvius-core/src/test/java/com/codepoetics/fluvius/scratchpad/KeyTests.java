@@ -27,7 +27,7 @@ public class KeyTests {
     final KeyValue value = age.of(42);
     value.store(storage);
 
-    verify(storage).put(age, 42);
+    verify(storage).storeSuccess(age, 42);
   }
 
   @Test(expected = NullPointerException.class)

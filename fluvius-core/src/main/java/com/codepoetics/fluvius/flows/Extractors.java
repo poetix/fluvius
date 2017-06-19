@@ -34,7 +34,7 @@ final class Extractors {
     }
 
     @Override
-    public OUTPUT apply(final Scratchpad scratchpad) {
+    public OUTPUT apply(final Scratchpad scratchpad) throws Exception {
       return f1.apply(scratchpad.get(source));
     }
   }
@@ -51,7 +51,7 @@ final class Extractors {
     }
 
     @Override
-    public OUTPUT apply(final Scratchpad scratchpad) {
+    public OUTPUT apply(final Scratchpad scratchpad) throws Exception {
       return f2.apply(scratchpad.get(source1), scratchpad.get(source2));
     }
   }
@@ -70,7 +70,7 @@ final class Extractors {
     }
 
     @Override
-    public OUTPUT apply(final Scratchpad scratchpad) {
+    public OUTPUT apply(final Scratchpad scratchpad) throws Exception {
       return f3.apply(scratchpad.get(source1), scratchpad.get(source2), scratchpad.get(source3));
     }
   }

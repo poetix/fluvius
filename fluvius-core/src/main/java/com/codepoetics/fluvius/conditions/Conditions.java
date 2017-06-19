@@ -29,6 +29,15 @@ public final class Conditions {
   }
 
   /**
+   * Create a Condition which tests whether a failure is recorded in the Scratchpad against the given {@link Key}.
+   * @param key The key to test.
+   * @return The constructed Condition.
+   */
+  public static Condition keyRecordsFailure(final Key<?> key) {
+    return fromPredicate("Failure recorded for key '" + key.getName() + "'", Predicates.isFailure(key));
+  }
+
+  /**
    * Create a Condition which tests that the Scratchpad contains the expected value at the given Key.
    *
    * @param key      The Key to test.

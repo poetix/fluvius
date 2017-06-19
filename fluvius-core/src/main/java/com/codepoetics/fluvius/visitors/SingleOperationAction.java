@@ -23,6 +23,10 @@ final class SingleOperationAction<T> implements Action {
 
   @Override
   public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
-    return scratchpad.with(outputKey.of(operation.run(scratchpad)));
+    try {
+      return scratchpad.with(outputKey.of(operation.run(scratchpad)));
+    } catch (Exception e) {
+      return scratchpad.with(outputKey.ofFailure(e));
+    }
   }
 }

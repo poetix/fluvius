@@ -43,8 +43,8 @@ public class DefaultFlowHistoryRepository<T> implements FlowHistoryRepository<T>
   }
 
   @Override
-  public void stepFailed(final UUID flowId, final UUID stepId, final Throwable throwable) {
-    eventRepository.stepFailed(flowId, stepId, throwable);
+  public void stepFailed(final UUID flowId, final UUID stepId, final Exception exception) {
+    eventRepository.stepFailed(flowId, stepId, exception);
   }
 
   private static final class ConcreteFlowHistory<T> implements FlowHistory<T> {

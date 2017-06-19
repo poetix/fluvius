@@ -23,5 +23,5 @@ public interface Operation<T> extends Serializable {
    * @param scratchpad The Scratchpad to run this Operation against.
    * @return The resulting value.
    */
-  T run(Scratchpad scratchpad);
+  T run(Scratchpad scratchpad) throws Exception;
 }

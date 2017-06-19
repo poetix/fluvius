@@ -43,8 +43,8 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
 
   @SuppressWarnings("unchecked")
   @Override
-  public void stepFailed(final UUID flowId, final UUID stepId, final Throwable throwable) {
-    eventStore.storeEvent(new SerialisedStepFailedEvent(flowId, stepId, System.currentTimeMillis(), dataSerialiser.serialiseThrowable(throwable)));
+  public void stepFailed(final UUID flowId, final UUID stepId, final Exception exception) {
+    eventStore.storeEvent(new SerialisedStepFailedEvent(flowId, stepId, System.currentTimeMillis(), dataSerialiser.serialiseException(exception)));
   }
 
   private abstract static class SerialisedFlowEvent<T> implements FlowEvent<T> {

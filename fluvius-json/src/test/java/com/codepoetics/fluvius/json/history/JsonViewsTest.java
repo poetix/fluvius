@@ -39,7 +39,7 @@ public class JsonViewsTest {
       .build();
 
   @Test
-  public void inMemoryRepositoryStoresFlowHistory() throws JsonProcessingException {
+  public void inMemoryRepositoryStoresFlowHistory() throws Exception {
     final Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)

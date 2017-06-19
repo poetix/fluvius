@@ -39,7 +39,7 @@ public final class Operations {
     }
 
     @Override
-    public T run(final Scratchpad scratchpad) {
+    public T run(final Scratchpad scratchpad) throws Exception {
       return function.apply(scratchpad);
     }
   }
