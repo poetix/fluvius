@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2017</copyright>
     <item>
-      <title>File: 115,
+      <title>File: 117,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -117,20 +117,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.preconditions.Preconditions.java">com/codepoetics/fluvius/preconditions/Preconditions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.services.package-info.java">com/codepoetics/fluvius/services/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -494,6 +480,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.api.functional.RecoveryFunction.java">com/codepoetics/fluvius/api/functional/RecoveryFunction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.visitors.Visitors.java">com/codepoetics/fluvius/visitors/Visitors.java</a>
                 </td>
                 <td>
@@ -522,7 +522,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.api.services.package-info.java">com/codepoetics/fluvius/api/services/package-info.java</a>
+                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.describers.package-info.java">com/codepoetics/fluvius/describers/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -536,7 +536,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.describers.package-info.java">com/codepoetics/fluvius/describers/package-info.java</a>
+                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.flows.RecoveryResultKeyCapture.java">com/codepoetics/fluvius/flows/RecoveryResultKeyCapture.java</a>
                 </td>
                 <td>
                   0
@@ -621,6 +621,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.history.InMemoryTraceMapRepository.java">com/codepoetics/fluvius/history/InMemoryTraceMapRepository.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException.java">com/codepoetics/fluvius/exceptions/FailedKeyRetrievedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.flows.FailureKeyCapture.java">com/codepoetics/fluvius/flows/FailureKeyCapture.java</a>
                 </td>
                 <td>
                   0
@@ -1054,20 +1082,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.api.services.ServiceCallResult.java">com/codepoetics/fluvius/api/services/ServiceCallResult.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.mutation.package-info.java">com/codepoetics/fluvius/mutation/package-info.java</a>
                 </td>
                 <td>
@@ -1265,6 +1279,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.tracing.TracingFlowVisitor.java">com/codepoetics/fluvius/tracing/TracingFlowVisitor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/poetix/fluvius/fluvius-core/checkstyle.html#com.codepoetics.fluvius.api.functional.Mapper.java">com/codepoetics/fluvius/api/functional/Mapper.java</a>
                 </td>
                 <td>
                   0
