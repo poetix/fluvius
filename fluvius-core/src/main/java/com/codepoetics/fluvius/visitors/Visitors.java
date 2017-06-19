@@ -109,14 +109,14 @@ public final class Visitors {
     @Override
     public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
       flowLogger.logOperationStarted(flowId, name, scratchpad);
-      try {
-        final Scratchpad result = action.run(flowId, scratchpad);
+
+      final Scratchpad result = action.run(flowId, scratchpad);
+      if (result.isSuccessful(outputKey)) {
         flowLogger.logOperationCompleted(flowId, name, outputKey, result.get(outputKey));
-        return result;
-      } catch (final RuntimeException e) {
-        flowLogger.logOperationException(flowId, name, e);
-        throw e;
+      } else {
+        flowLogger.logOperationException(flowId, name, result.getFailureReason(outputKey));
       }
+      return result;
     }
   }
 
