@@ -5,6 +5,7 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A Flow which takes values from a Scratchpad, and provides a new value to be written into the Scratchpad.
@@ -12,6 +13,12 @@ import java.util.Set;
  * @param <T> The type of value returned by the flow.
  */
 public interface Flow<T> extends Serializable {
+
+  /**
+   * Get the unique identifier of this flow.
+   * @return The unique identifier of this flow.
+   */
+  UUID getStepId();
 
   /**
    * Get the required Keys that this Flow expects to find in the Scratchpad.

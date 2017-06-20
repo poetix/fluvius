@@ -1,14 +1,15 @@
 package com.codepoetics.fluvius.api.description;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * An object to which a FlowDescription can give a detailed description of a Flow.
  */
 public interface DescriptionWriter {
-  DescriptionWriter writeSingleFlow(List<String> requiredKeyNames, String providedKeyName, String name);
+  DescriptionWriter writeSingleFlow(UUID stepId, List<String> requiredKeyNames, String providedKeyName, String name);
 
-  DescriptionWriter writeStartSequence(List<String> requiredKeyNames, String providedKeyName);
+  DescriptionWriter writeStartSequence(UUID stepId, List<String> requiredKeyNames, String providedKeyName);
 
   DescriptionWriter writeStartSequenceItem(int sequenceIndex);
 
@@ -16,7 +17,7 @@ public interface DescriptionWriter {
 
   DescriptionWriter writeEndSequence();
 
-  DescriptionWriter writeStartBranch(List<String> requiredKeyNames, String providedKeyName);
+  DescriptionWriter writeStartBranch(UUID stepId, List<String> requiredKeyNames, String providedKeyName);
 
   DescriptionWriter writeStartBranchOption(char branchIndex, String conditionDescription);
 

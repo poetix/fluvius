@@ -13,7 +13,7 @@ public interface TraceMap {
    * Get the id of the mapped flow step.
    * @return The id of the mapped flow step.
    */
-  UUID getId();
+  UUID getStepId();
 
   /**
    * Get the keys required by the mapped flow step.
