@@ -18,7 +18,7 @@ public final class SourceTargetCapture3<A, B, C, OUTPUT> {
   private final Key<C> sourceC;
   private final Key<OUTPUT> target;
 
-  SourceTargetCapture3(final Key<A> sourceA, final Key<B> sourceB, final Key<C> sourceC, final Key<OUTPUT> target) {
+  SourceTargetCapture3(Key<A> sourceA, Key<B> sourceB, Key<C> sourceC, Key<OUTPUT> target) {
     this.sourceA = sourceA;
     this.sourceB = sourceB;
     this.sourceC = sourceC;
@@ -32,7 +32,7 @@ public final class SourceTargetCapture3<A, B, C, OUTPUT> {
    * @param f3   The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(final String name, final F3<A, B, C, OUTPUT> f3) {
+  public Flow<OUTPUT> using(String name, F3<A, B, C, OUTPUT> f3) {
     return Fluent.inputKeysCapture(sourceA, sourceB, sourceC).to(target).using(
         name,
         Extractors.make(sourceA, sourceB, sourceC, f3));
@@ -45,7 +45,7 @@ public final class SourceTargetCapture3<A, B, C, OUTPUT> {
    * @param f3 The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(final F3<A, B, C, OUTPUT> f3) {
+  public Flow<OUTPUT> using(F3<A, B, C, OUTPUT> f3) {
     return using("Obtain " + target.getName()
             + " from " + sourceA.getName()
             + ", " + sourceB.getName()

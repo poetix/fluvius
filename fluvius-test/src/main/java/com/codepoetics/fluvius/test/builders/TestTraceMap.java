@@ -5,7 +5,7 @@ import com.codepoetics.fluvius.api.tracing.TraceMap;
 
 import java.util.*;
 
-public class TestTraceMap implements TraceMap {
+public final class TestTraceMap implements TraceMap {
 
   public static TestTraceMap ofType(FlowStepType type) {
     return new TestTraceMap(type);

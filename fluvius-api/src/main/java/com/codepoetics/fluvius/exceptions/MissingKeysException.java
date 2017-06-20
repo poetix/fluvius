@@ -7,19 +7,19 @@ import java.util.Set;
 /**
  * Thrown when a Flow is executed but the supplied Scratchpad does not contain all of the keys required by the Flow.
  */
-public class MissingKeysException extends RuntimeException {
+public final class MissingKeysException extends RuntimeException {
 
   /**
    * Create a MissingKeysException.
    * @param missingKeys The Set of Keys which were missing.
    * @return The exception.
    */
-  public static MissingKeysException create(final Set<Key<?>> missingKeys) {
-    final StringBuilder sb = new StringBuilder();
+  public static MissingKeysException create(Set<Key<?>> missingKeys) {
+    StringBuilder sb = new StringBuilder();
     sb.append("Missing keys: ");
     boolean isFirst = true;
 
-    for (final Key<?> key : missingKeys) {
+    for (Key<?> key : missingKeys) {
       if (isFirst) {
         isFirst = false;
       } else {
@@ -31,7 +31,7 @@ public class MissingKeysException extends RuntimeException {
     return new MissingKeysException(sb.toString());
   }
 
-  private MissingKeysException(final String message) {
+  private MissingKeysException(String message) {
     super(message);
   }
 

@@ -20,13 +20,13 @@ public final class InMemoryTraceMapRepository implements TraceMapRepository {
   private final ConcurrentMap<UUID, TraceMap> store = new ConcurrentHashMap<>();
 
   @Override
-  public void storeTraceMap(final UUID flowId, final TraceMap traceMap) {
+  public void storeTraceMap(UUID flowId, TraceMap traceMap) {
     store.put(flowId, traceMap);
   }
 
   @Override
-  public TraceMap getTraceMap(final UUID flowId) {
-    final TraceMap result = store.get(flowId);
+  public TraceMap getTraceMap(UUID flowId) {
+    TraceMap result = store.get(flowId);
     if (result == null) {
       throw TraceMapNotFoundException.forFlow(flowId);
     }

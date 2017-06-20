@@ -8,42 +8,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class DefaultFlowHistoryRepository<T> implements FlowHistoryRepository<T> {
+public final class DefaultFlowHistoryRepository<T> implements FlowHistoryRepository<T> {
 
-  public static <T> FlowHistoryRepository<T> using(final FlowEventRepository<T> eventRepository, final TraceMapRepository traceMapRepository) {
+  public static <T> FlowHistoryRepository<T> using(FlowEventRepository<T> eventRepository, TraceMapRepository traceMapRepository) {
     return new DefaultFlowHistoryRepository<>(eventRepository, traceMapRepository);
   }
 
   private final FlowEventRepository<T> eventRepository;
   private final TraceMapRepository traceMapRepository;
 
-  private DefaultFlowHistoryRepository(final FlowEventRepository<T> eventRepository, final TraceMapRepository traceMapRepository) {
+  private DefaultFlowHistoryRepository(FlowEventRepository<T> eventRepository, TraceMapRepository traceMapRepository) {
     this.eventRepository = eventRepository;
     this.traceMapRepository = traceMapRepository;
   }
 
   @Override
-  public void storeTraceMap(final UUID flowId, final TraceMap traceMap) {
+  public void storeTraceMap(UUID flowId, TraceMap traceMap) {
     traceMapRepository.storeTraceMap(flowId, traceMap);
   }
 
   @Override
-  public FlowHistory<T> getFlowHistory(final UUID flowId) {
+  public FlowHistory<T> getFlowHistory(UUID flowId) {
     return new ConcreteFlowHistory<>(flowId, traceMapRepository.getTraceMap(flowId), eventRepository.getEvents(flowId));
   }
 
   @Override
-  public void stepStarted(final UUID flowId, final UUID stepId, final Map<String, Object> scratchpadState) {
+  public void stepStarted(UUID flowId, UUID stepId, Map<String, Object> scratchpadState) {
     eventRepository.stepStarted(flowId, stepId, scratchpadState);
   }
 
   @Override
-  public void stepSucceeded(final UUID flowId, final UUID stepId, final Object result) {
+  public void stepSucceeded(UUID flowId, UUID stepId, Object result) {
     eventRepository.stepSucceeded(flowId, stepId, result);
   }
 
   @Override
-  public void stepFailed(final UUID flowId, final UUID stepId, final Exception exception) {
+  public void stepFailed(UUID flowId, UUID stepId, Exception exception) {
     eventRepository.stepFailed(flowId, stepId, exception);
   }
 
@@ -53,7 +53,7 @@ public class DefaultFlowHistoryRepository<T> implements FlowHistoryRepository<T>
     private final TraceMap traceMap;
     private final List<FlowEvent<T>> flowEvents;
 
-    private ConcreteFlowHistory(final UUID flowId, final TraceMap traceMap, final List<FlowEvent<T>> flowEvents) {
+    private ConcreteFlowHistory(UUID flowId, TraceMap traceMap, List<FlowEvent<T>> flowEvents) {
       this.flowId = flowId;
       this.traceMap = traceMap;
       this.flowEvents = flowEvents;
@@ -75,9 +75,9 @@ public class DefaultFlowHistoryRepository<T> implements FlowHistoryRepository<T>
     }
 
     @Override
-    public <V> List<V> getTranslatedEventHistory(final FlowEventTranslator<T, V> translator) {
-      final List<V> result = new ArrayList<>(flowEvents.size());
-      for (final FlowEvent<T> event : flowEvents) {
+    public <V> List<V> getTranslatedEventHistory(FlowEventTranslator<T, V> translator) {
+      List<V> result = new ArrayList<>(flowEvents.size());
+      for (FlowEvent<T> event : flowEvents) {
         result.add(event.translate(translator));
       }
       return result;
@@ -85,9 +85,9 @@ public class DefaultFlowHistoryRepository<T> implements FlowHistoryRepository<T>
 
     @Override
     public String toString() {
-      final StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
       sb.append("Flow history for ").append(flowId).append("\nTrace map: ").append(traceMap).append("\nHistory:");
-      for (final FlowEvent<T> event : flowEvents) {
+      for (FlowEvent<T> event : flowEvents) {
         sb.append("\n").append(event);
       }
       return sb.toString();

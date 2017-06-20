@@ -12,7 +12,7 @@ abstract class AbstractFlow<T> implements Flow<T> {
   private final Set<Key<?>> requiredKeys;
   private final Key<T> providedKey;
 
-  AbstractFlow(UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey) {
+  AbstractFlow(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey) {
     this.stepId = stepId;
     this.requiredKeys = requiredKeys;
     this.providedKey = providedKey;
@@ -34,12 +34,12 @@ abstract class AbstractFlow<T> implements Flow<T> {
   }
 
   @Override
-  public <N> Flow<N> then(final Flow<N> next) {
+  public <N> Flow<N> then(Flow<N> next) {
     return SequenceFlow.create(this, next);
   }
 
   @Override
-  public Flow<T> orIf(final Condition condition, final Flow<T> ifTrue) {
+  public Flow<T> orIf(Condition condition, Flow<T> ifTrue) {
     return BranchFlow.create(this, condition, ifTrue);
   }
 

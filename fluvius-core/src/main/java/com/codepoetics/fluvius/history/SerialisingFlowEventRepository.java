@@ -9,27 +9,27 @@ import java.util.UUID;
 
 public final class SerialisingFlowEventRepository<T> implements FlowEventRepository<T> {
 
-  public static <T> FlowEventRepository<T> using(final FlowEventStore<T> eventStore, final EventDataSerialiser<T> dataSerialiser) {
+  public static <T> FlowEventRepository<T> using(FlowEventStore<T> eventStore, EventDataSerialiser<T> dataSerialiser) {
     return new SerialisingFlowEventRepository<>(eventStore, dataSerialiser);
   }
 
   private final FlowEventStore<T> eventStore;
   private final EventDataSerialiser<T> dataSerialiser;
 
-  private SerialisingFlowEventRepository(final FlowEventStore<T> eventStore, final EventDataSerialiser<T> dataSerialiser) {
+  private SerialisingFlowEventRepository(FlowEventStore<T> eventStore, EventDataSerialiser<T> dataSerialiser) {
     this.eventStore = eventStore;
     this.dataSerialiser = dataSerialiser;
   }
 
   @Override
-  public List<FlowEvent<T>> getEvents(final UUID flowId) {
+  public List<FlowEvent<T>> getEvents(UUID flowId) {
     return eventStore.retrieveEvents(flowId);
   }
 
   @Override
-  public void stepStarted(final UUID flowId, final UUID stepId, final Map<String, Object> scratchpadState) {
-    final Map<String, T> serialisedState = new LinkedHashMap<>();
-    for (final Map.Entry<String, Object> entry : scratchpadState.entrySet()) {
+  public void stepStarted(UUID flowId, UUID stepId, Map<String, Object> scratchpadState) {
+    Map<String, T> serialisedState = new LinkedHashMap<>();
+    for (Map.Entry<String, Object> entry : scratchpadState.entrySet()) {
       serialisedState.put(entry.getKey(), dataSerialiser.serialise(entry.getValue()));
     }
     eventStore.storeEvent(new SerialisedStepStartedEvent<>(flowId, stepId, System.currentTimeMillis(), serialisedState));
@@ -37,13 +37,13 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
 
   @SuppressWarnings("unchecked")
   @Override
-  public void stepSucceeded(final UUID flowId, final UUID stepId, final Object result) {
+  public void stepSucceeded(UUID flowId, UUID stepId, Object result) {
     eventStore.storeEvent(new SerialisedStepSucceededEvent(flowId, stepId, System.currentTimeMillis(), dataSerialiser.serialise(result)));
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public void stepFailed(final UUID flowId, final UUID stepId, final Exception exception) {
+  public void stepFailed(UUID flowId, UUID stepId, Exception exception) {
     eventStore.storeEvent(new SerialisedStepFailedEvent(flowId, stepId, System.currentTimeMillis(), dataSerialiser.serialiseException(exception)));
   }
 
@@ -52,7 +52,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
     private final UUID stepId;
     private final long timestamp;
 
-    private SerialisedFlowEvent(final UUID flowId, final UUID stepId, final long timestamp) {
+    SerialisedFlowEvent(UUID flowId, UUID stepId, long timestamp) {
       this.flowId = flowId;
       this.stepId = stepId;
       this.timestamp = timestamp;
@@ -78,7 +78,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
 
     private final Map<String, T> scratchpadState;
 
-    private SerialisedStepStartedEvent(final UUID flowId, final UUID stepId, final long timestamp, final Map<String, T> scratchpadState) {
+    private SerialisedStepStartedEvent(UUID flowId, UUID stepId, long timestamp, Map<String, T> scratchpadState) {
       super(flowId, stepId, timestamp);
       this.scratchpadState = scratchpadState;
     }
@@ -89,7 +89,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
     }
 
     @Override
-    public <V> V translate(final FlowEventTranslator<T, V> translator) {
+    public <V> V translate(FlowEventTranslator<T, V> translator) {
       return translator.translateStepStartedEvent(this);
     }
 
@@ -103,7 +103,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
 
     private final T result;
 
-    private SerialisedStepSucceededEvent(final UUID flowId, final UUID stepId, final long timestamp, final T result) {
+    private SerialisedStepSucceededEvent(UUID flowId, UUID stepId, long timestamp, T result) {
       super(flowId, stepId, timestamp);
       this.result = result;
     }
@@ -114,7 +114,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
     }
 
     @Override
-    public <V> V translate(final FlowEventTranslator<T, V> translator) {
+    public <V> V translate(FlowEventTranslator<T, V> translator) {
       return translator.translateStepSucceededEvent(this);
     }
 
@@ -128,7 +128,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
 
     private final T reason;
 
-    private SerialisedStepFailedEvent(final UUID flowId, final UUID stepId, final long timestamp, final T reason) {
+    private SerialisedStepFailedEvent(UUID flowId, UUID stepId, long timestamp, T reason) {
       super(flowId, stepId, timestamp);
       this.reason = reason;
     }
@@ -139,7 +139,7 @@ public final class SerialisingFlowEventRepository<T> implements FlowEventReposit
     }
 
     @Override
-    public <V> V translate(final FlowEventTranslator<T, V> translator) {
+    public <V> V translate(FlowEventTranslator<T, V> translator) {
       return translator.translateStepFailedEvent(this);
     }
 

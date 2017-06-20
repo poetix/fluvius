@@ -25,7 +25,7 @@ public final class Keys {
    * @param <T>  The type of the Key to create.
    * @return The created Key.
    */
-  public static <T> Key<T> named(final String name) {
+  public static <T> Key<T> named(String name) {
     return new RealKey<>(checkNotNull("name", name), UUID.randomUUID());
   }
 
@@ -34,7 +34,7 @@ public final class Keys {
     private final String name;
     private final UUID id;
 
-    private RealKey(final String name, final UUID id) {
+    private RealKey(String name, UUID id) {
       this.name = name;
       this.id = id;
     }
@@ -45,7 +45,7 @@ public final class Keys {
     }
 
     @Override
-    public KeyValue of(final T value) {
+    public KeyValue of(T value) {
       return new RealKeyValue(this, checkNotNull("value", value));
     }
 
@@ -55,7 +55,7 @@ public final class Keys {
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
       return other == this
           || (other instanceof RealKey
               && ((RealKey) other).id.equals(id));
@@ -77,14 +77,14 @@ public final class Keys {
     private final Key<?> key;
     private final Object value;
 
-    private RealKeyValue(final Key<?> key, final Object value) {
+    private RealKeyValue(Key<?> key, Object value) {
       this.key = key;
       this.value = value;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void store(final ScratchpadStorage storage) {
+    public void store(ScratchpadStorage storage) {
       if (value instanceof Throwable) {
         storage.storeFailure(key, (Throwable) value);
       } else {

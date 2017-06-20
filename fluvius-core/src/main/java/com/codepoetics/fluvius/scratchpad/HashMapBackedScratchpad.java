@@ -12,14 +12,14 @@ import java.util.Map;
 
 final class HashMapBackedScratchpad implements Scratchpad {
 
-  static Scratchpad create(final KeyValue... keyValues) {
+  static Scratchpad create(KeyValue... keyValues) {
     return new HashMapBackedScratchpad(false, addValuesToMap(false, new LinkedHashMap<Key<?>, Object>(keyValues.length), keyValues));
   }
 
-  private static Map<Key<?>, Object> addValuesToMap(final boolean isLocked, final Map<Key<?>, Object> map, final KeyValue... keyValues) {
-    final ScratchpadStorage storage = new ScratchpadStorage() {
+  private static Map<Key<?>, Object> addValuesToMap(final boolean isLocked, final Map<Key<?>, Object> map, KeyValue... keyValues) {
+    ScratchpadStorage storage = new ScratchpadStorage() {
       @Override
-      public <T> void storeSuccess(final Key<T> key, final T value) {
+      public <T> void storeSuccess(Key<T> key, T value) {
         if (isLocked && map.containsKey(key)) {
           throw new IllegalArgumentException("Scratchpad is locked, cannot overwrite value for key " + key.getName());
         }
@@ -34,7 +34,7 @@ final class HashMapBackedScratchpad implements Scratchpad {
         map.put(key, reason);
       }
     };
-    for (final KeyValue keyValue : keyValues) {
+    for (KeyValue keyValue : keyValues) {
       keyValue.store(storage);
     }
     return map;
@@ -43,7 +43,7 @@ final class HashMapBackedScratchpad implements Scratchpad {
   private final boolean isLocked;
   private final Map<Key<?>, Object> storage;
 
-  private HashMapBackedScratchpad(final boolean isLocked, final Map<Key<?>, Object> storage) {
+  private HashMapBackedScratchpad(boolean isLocked, Map<Key<?>, Object> storage) {
     this.isLocked = isLocked;
     this.storage = storage;
   }
@@ -54,7 +54,7 @@ final class HashMapBackedScratchpad implements Scratchpad {
   }
 
   @Override
-  public boolean containsKey(final Key<?> key) {
+  public boolean containsKey(Key<?> key) {
     return storage.containsKey(key);
   }
 
@@ -64,7 +64,7 @@ final class HashMapBackedScratchpad implements Scratchpad {
   }
 
   @Override
-  public Scratchpad with(final KeyValue... keyValues) {
+  public Scratchpad with(KeyValue... keyValues) {
     return new HashMapBackedScratchpad(
         isLocked, addValuesToMap(
             isLocked, toMap(), keyValues));
@@ -72,7 +72,7 @@ final class HashMapBackedScratchpad implements Scratchpad {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> T get(final Key<T> key) {
+  public <T> T get(Key<T> key) {
     Object valueAtKey = Preconditions.checkNotNull("value of key " + key.getName(), (T) storage.get(key));
     if (valueAtKey instanceof Throwable) {
       throw new FailedKeyRetrievedException(key.getName(), (Throwable) valueAtKey);
@@ -95,7 +95,7 @@ final class HashMapBackedScratchpad implements Scratchpad {
   }
 
   @Override
-  public boolean equals(final Object other) {
+  public boolean equals(Object other) {
     return this == other
         || (other instanceof HashMapBackedScratchpad
             && ((HashMapBackedScratchpad) other).storage.equals(storage));

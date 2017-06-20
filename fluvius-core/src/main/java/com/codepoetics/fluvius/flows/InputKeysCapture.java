@@ -10,7 +10,7 @@ import java.util.Set;
 public final class InputKeysCapture {
   private final Set<Key<?>> inputKeys;
 
-  InputKeysCapture(final Set<Key<?>> inputKeys) {
+  InputKeysCapture(Set<Key<?>> inputKeys) {
     this.inputKeys = inputKeys;
   }
 
@@ -21,7 +21,7 @@ public final class InputKeysCapture {
    * @param <T>       The type of the output key.
    * @return The next stage in the Fluent API.
    */
-  public <T> OutputKeysCapture<T> to(final Key<T> outputKey) {
+  public <T> OutputKeysCapture<T> to(Key<T> outputKey) {
     return new OutputKeysCapture<>(inputKeys, outputKey);
   }
 }

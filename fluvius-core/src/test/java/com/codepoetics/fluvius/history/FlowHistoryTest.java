@@ -32,27 +32,27 @@ public class FlowHistoryTest {
   public void inMemoryRepositoryStoresFlowHistory() throws Exception {
     RecordingMatcher recorder = new RecordingMatcher();
 
-    final Flow<String> getAccessToken = Flows
+    Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
         .using("Authorize user", new F2<String, String, String>() {
           @Override
-          public String apply(final String username, final String password) {
+          public String apply(String username, String password) {
             return "ACCESS TOKEN";
           }
         });
 
-    final Flow<Double> getLocalTemperature = Flows
+    Flow<Double> getLocalTemperature = Flows
         .obtaining(temperature)
         .from(accessToken, postcode)
         .using("Get local temperature", new F2<String, String, Double>() {
           @Override
-          public Double apply(final String accessCode, final String postcode) {
+          public Double apply(String accessCode, String postcode) {
             return 26D;
           }
         });
 
-    final Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
+    Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
 
     assertThat(
         TraceMaps.getTraceMap(completeFlow),
@@ -68,9 +68,9 @@ public class FlowHistoryTest {
             )
     );
 
-    final FlowExecution<Double> execution = compiler.compile(completeFlow);
+    FlowExecution<Double> execution = compiler.compile(completeFlow);
 
-    final UUID flowId = UUID.randomUUID();
+    UUID flowId = UUID.randomUUID();
 
     execution
         .run(

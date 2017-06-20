@@ -24,44 +24,44 @@ public final class Loggers {
 
   private static final class ConsoleLogger implements FlowLogger {
 
-    private void write(final UUID flowId, final String message, final Object... params) {
+    private void write(UUID flowId, String message, Object... params) {
       System.out.println(getTime() + "/" + flowId + " " + String.format(message, params));
     }
 
     private String getTime() {
-      final Calendar cal = Calendar.getInstance();
-      final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+      Calendar cal = Calendar.getInstance();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
       return sdf.format(cal.getTime());
     }
 
     @Override
-    public void logOperationStarted(final UUID flowId, final String name, final Scratchpad scratchpad) {
+    public void logOperationStarted(UUID flowId, String name, Scratchpad scratchpad) {
       write(flowId, "Operation '%s' started with scratchpad %s", name, scratchpad);
     }
 
     @Override
-    public void logOperationCompleted(final UUID flowId, final String name, final Key<?> outputKey, final Object output) {
+    public void logOperationCompleted(UUID flowId, String name, Key<?> outputKey, Object output) {
       write(flowId, "Operation '%s' completed, writing value %s to key %s", name, output, outputKey.getName());
     }
 
     @Override
-    public void logOperationException(final UUID flowId, final String name, final Throwable exception) {
+    public void logOperationException(UUID flowId, String name, Throwable exception) {
       write(flowId, "Operation '%s' failed with exception %s", name, exception);
       exception.printStackTrace();
     }
 
     @Override
-    public void logConditionStarted(final UUID flowId, final String description, final Scratchpad scratchpad) {
+    public void logConditionStarted(UUID flowId, String description, Scratchpad scratchpad) {
       write(flowId, "Condition '%s' started with scratchpad %s", description, scratchpad);
     }
 
     @Override
-    public void logConditionCompleted(final UUID flowId, final String description, final boolean result) {
+    public void logConditionCompleted(UUID flowId, String description, boolean result) {
       write(flowId, "Condition '%s' completed with result %s", description, result);
     }
 
     @Override
-    public void logConditionException(final UUID flowId, final String description, final Throwable exception) {
+    public void logConditionException(UUID flowId, String description, Throwable exception) {
       write(flowId, "Condition '%s' failed with exception %s", description, exception);
       exception.printStackTrace();
     }

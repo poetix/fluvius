@@ -17,7 +17,7 @@ public final class OutputKeysCapture<T> {
   private final Set<Key<?>> inputKeys;
   private final Key<T> outputKey;
 
-  OutputKeysCapture(final Set<Key<?>> inputKeys, final Key<T> outputKey) {
+  OutputKeysCapture(Set<Key<?>> inputKeys, Key<T> outputKey) {
     this.inputKeys = inputKeys;
     this.outputKey = outputKey;
   }
@@ -28,7 +28,7 @@ public final class OutputKeysCapture<T> {
    * @param operation The Operation to use to obtain the output value.
    * @return The constructed Flow.
    */
-  public Flow<T> using(final Operation<T> operation) {
+  public Flow<T> using(Operation<T> operation) {
     return SingleOperationFlow.create(inputKeys, outputKey, operation);
   }
 
@@ -39,7 +39,7 @@ public final class OutputKeysCapture<T> {
    * @param function The ScratchpadFunction to use to obtain the output value.
    * @return The constructed Flow.
    */
-  public Flow<T> using(final String name, final ScratchpadFunction<T> function) {
+  public Flow<T> using(String name, ScratchpadFunction<T> function) {
     return using(Operations.fromFunction(name, function));
   }
 }

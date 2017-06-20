@@ -13,7 +13,7 @@ final class SingleFlowDescription implements FlowDescription {
   private final List<String> requiredKeyNames;
   private final String providedKeyName;
 
-  SingleFlowDescription(UUID stepId, final String name, final List<String> requiredKeyNames, final String providedKeyName) {
+  SingleFlowDescription(UUID stepId, String name, List<String> requiredKeyNames, String providedKeyName) {
     this.stepId = stepId;
     this.name = name;
     this.requiredKeyNames = requiredKeyNames;
@@ -21,7 +21,7 @@ final class SingleFlowDescription implements FlowDescription {
   }
 
   @Override
-  public void writeTo(final DescriptionWriter descriptionWriter) {
+  public void writeTo(DescriptionWriter descriptionWriter) {
     descriptionWriter.writeSingleFlow(stepId, requiredKeyNames, providedKeyName, name);
   }
 }

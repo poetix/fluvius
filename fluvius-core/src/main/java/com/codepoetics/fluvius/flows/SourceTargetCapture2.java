@@ -16,7 +16,7 @@ public final class SourceTargetCapture2<A, B, OUTPUT> {
   private final Key<B> sourceB;
   private final Key<OUTPUT> target;
 
-  SourceTargetCapture2(final Key<A> sourceA, final Key<B> sourceB, final Key<OUTPUT> target) {
+  SourceTargetCapture2(Key<A> sourceA, Key<B> sourceB, Key<OUTPUT> target) {
     this.sourceA = sourceA;
     this.sourceB = sourceB;
     this.target = target;
@@ -29,7 +29,7 @@ public final class SourceTargetCapture2<A, B, OUTPUT> {
    * @param f2   The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(final String name, final F2<A, B, OUTPUT> f2) {
+  public Flow<OUTPUT> using(String name, F2<A, B, OUTPUT> f2) {
     return Fluent.inputKeysCapture(sourceA, sourceB).to(target).using(
         name,
         Extractors.make(sourceA, sourceB, f2));
@@ -42,7 +42,7 @@ public final class SourceTargetCapture2<A, B, OUTPUT> {
    * @param f2 The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(final F2<A, B, OUTPUT> f2) {
+  public Flow<OUTPUT> using(F2<A, B, OUTPUT> f2) {
     return using("Obtain " + target.getName()
             + " from " + sourceA.getName()
             + " and " + sourceB.getName(),

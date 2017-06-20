@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class RecordingMatcher {
 
-  private Map<String, Object> recordedValues = new HashMap<>();
+  private final Map<String, Object> recordedValues = new HashMap<>();
 
   public <T> Matcher<T> record(final String name) {
     return new BaseMatcher<T>() {

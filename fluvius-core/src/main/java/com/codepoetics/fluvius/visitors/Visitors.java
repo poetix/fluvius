@@ -36,7 +36,7 @@ public final class Visitors {
    * @param wrapped The wrapped FlowVisitor.
    * @return The mutation-checking FlowVisitor.
    */
-  public static <V> FlowVisitor<V> mutationChecking(final FlowVisitor<V> wrapped) {
+  public static <V> FlowVisitor<V> mutationChecking(FlowVisitor<V> wrapped) {
     return new MutationCheckingVisitor<>(wrapped);
   }
 
@@ -47,7 +47,7 @@ public final class Visitors {
    * @param logger  The FlowLogger to use to log Flow and Condition execution.
    * @return The logging FlowVisitor.
    */
-  public static FlowVisitor<Action> logging(final FlowVisitor<Action> wrapped, final FlowLogger logger) {
+  public static FlowVisitor<Action> logging(FlowVisitor<Action> wrapped, FlowLogger logger) {
     return new LoggingFlowVisitor(wrapped, logger);
   }
 
@@ -57,7 +57,7 @@ public final class Visitors {
    * @param wrapped The wrapped FlowVisitor.
    * @return The logging FlowVisitor.
    */
-  public static FlowVisitor<Action> logging(final FlowVisitor<Action> wrapped) {
+  public static FlowVisitor<Action> logging(FlowVisitor<Action> wrapped) {
     return new LoggingFlowVisitor(wrapped, Loggers.getConsoleLogger());
   }
 
@@ -65,29 +65,29 @@ public final class Visitors {
     private final FlowVisitor<Action> innerVisitor;
     private final FlowLogger flowLogger;
 
-    private LoggingFlowVisitor(final FlowVisitor<Action> innerVisitor, final FlowLogger flowLogger) {
+    private LoggingFlowVisitor(FlowVisitor<Action> innerVisitor, FlowLogger flowLogger) {
       this.innerVisitor = innerVisitor;
       this.flowLogger = flowLogger;
     }
 
     @Override
-    public <T> Action visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+    public <T> Action visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
       return new LoggingAction(flowLogger, operation.getName(), providedKey,
           innerVisitor.visitSingle(stepId, requiredKeys, providedKey, operation));
     }
 
     @Override
-    public <T> Action visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<Action> actions) {
+    public <T> Action visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<Action> actions) {
       return innerVisitor.visitSequence(stepId, requiredKeys, providedKey, actions);
     }
 
     @Override
-    public <T> Action visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final List<Conditional<Action>> conditionalActions) {
+    public <T> Action visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Action defaultAction, List<Conditional<Action>> conditionalActions) {
       return innerVisitor.visitBranch(stepId, requiredKeys, providedKey, defaultAction, conditionalActions);
     }
 
     @Override
-    public Condition visitCondition(final Condition condition) {
+    public Condition visitCondition(Condition condition) {
       return new LoggingCondition(flowLogger, innerVisitor.visitCondition(condition));
     }
   }
@@ -99,7 +99,7 @@ public final class Visitors {
     private final Key<?> outputKey;
     private final Action action;
 
-    private LoggingAction(final FlowLogger flowLogger, final String name, final Key<?> outputKey, final Action action) {
+    private LoggingAction(FlowLogger flowLogger, String name, Key<?> outputKey, Action action) {
       this.flowLogger = flowLogger;
       this.name = name;
       this.outputKey = outputKey;
@@ -107,10 +107,10 @@ public final class Visitors {
     }
 
     @Override
-    public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
+    public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
       flowLogger.logOperationStarted(flowId, name, scratchpad);
 
-      final Scratchpad result = action.run(flowId, scratchpad);
+      Scratchpad result = action.run(flowId, scratchpad);
       if (result.isSuccessful(outputKey)) {
         flowLogger.logOperationCompleted(flowId, name, outputKey, result.get(outputKey));
       } else {
@@ -125,7 +125,7 @@ public final class Visitors {
     private final FlowLogger flowLogger;
     private final Condition condition;
 
-    private LoggingCondition(final FlowLogger flowLogger, final Condition condition) {
+    private LoggingCondition(FlowLogger flowLogger, Condition condition) {
       this.flowLogger = flowLogger;
       this.condition = condition;
     }
@@ -136,13 +136,13 @@ public final class Visitors {
     }
 
     @Override
-    public boolean test(final UUID flowId, final Scratchpad scratchpad) {
+    public boolean test(UUID flowId, Scratchpad scratchpad) {
       flowLogger.logConditionStarted(flowId, condition.getDescription(), scratchpad);
       try {
-        final boolean result = condition.test(flowId, scratchpad);
+        boolean result = condition.test(flowId, scratchpad);
         flowLogger.logConditionCompleted(flowId, condition.getDescription(), result);
         return result;
-      } catch (final RuntimeException e) {
+      } catch (RuntimeException e) {
         flowLogger.logConditionException(flowId, condition.getDescription(), e);
         throw e;
       }

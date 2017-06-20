@@ -11,15 +11,15 @@ final class Fluent {
   private Fluent() {
   }
 
-  static <OUTPUT> TargetCapture<OUTPUT> targetCapture(final Key<OUTPUT> target) {
+  static <OUTPUT> TargetCapture<OUTPUT> targetCapture(Key<OUTPUT> target) {
     return new TargetCapture<>(target);
   }
 
-  static InputKeysCapture inputKeysCapture(final Key<?>... inputKeys) {
+  static InputKeysCapture inputKeysCapture(Key<?>... inputKeys) {
     return inputKeysCapture(new HashSet<>(Arrays.asList(inputKeys)));
   }
 
-  private static InputKeysCapture inputKeysCapture(final Set<Key<?>> inputKeys) {
+  private static InputKeysCapture inputKeysCapture(Set<Key<?>> inputKeys) {
     return new InputKeysCapture(inputKeys);
   }
 

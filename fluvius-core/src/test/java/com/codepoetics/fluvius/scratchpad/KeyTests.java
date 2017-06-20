@@ -22,9 +22,9 @@ public class KeyTests {
 
   @Test
   public void keysCreateKeyValues() {
-    final ScratchpadStorage storage = mock(ScratchpadStorage.class);
+    ScratchpadStorage storage = mock(ScratchpadStorage.class);
 
-    final KeyValue value = age.of(42);
+    KeyValue value = age.of(42);
     value.store(storage);
 
     verify(storage).storeSuccess(age, 42);
@@ -37,8 +37,8 @@ public class KeyTests {
 
   @Test
   public void keysWithSameNameAreNotEqual() {
-    final Key<String> costA = Keys.named("cost");
-    final Key<Double> costB = Keys.named("cost");
+    Key<String> costA = Keys.named("cost");
+    Key<Double> costB = Keys.named("cost");
 
     assertNotEquals(costA, costB);
   }

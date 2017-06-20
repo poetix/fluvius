@@ -32,8 +32,8 @@ public final class Flows {
    * @param flow The Flow to pretty-print.
    * @return A string representation of the supplied Flow.
    */
-  public static String prettyPrint(final Flow<?> flow) {
-    final PrettyPrintingDescriptionWriter descriptionWriter = PrettyPrintingDescriptionWriter.create();
+  public static String prettyPrint(Flow<?> flow) {
+    PrettyPrintingDescriptionWriter descriptionWriter = PrettyPrintingDescriptionWriter.create();
     FlowDescriber.describe(flow).writeTo(descriptionWriter);
     return descriptionWriter.toString();
   }
@@ -44,7 +44,7 @@ public final class Flows {
    * @param inputKeys The keys from which the Flow takes values.
    * @return The next stage of the Fluent API.
    */
-  public static InputKeysCapture from(final Key<?>... inputKeys) {
+  public static InputKeysCapture from(Key<?>... inputKeys) {
     return Fluent.inputKeysCapture(inputKeys);
   }
 
@@ -55,27 +55,27 @@ public final class Flows {
    * @param <O>    The type of the Flow result.
    * @return The next stage of the Fluent API.
    */
-  public static <O> TargetCapture<O> obtaining(final Key<O> target) {
+  public static <O> TargetCapture<O> obtaining(Key<O> target) {
     return Fluent.targetCapture(target);
   }
 
-  public static <T> FlowExecution<T> compile(final Flow<T> flow) {
+  public static <T> FlowExecution<T> compile(Flow<T> flow) {
     return compile(flow, Visitors.getDefault());
   }
 
-  public static <T> FlowExecution<T> compile(final Flow<T> flow, final FlowVisitor<Action> flowVisitor) {
+  public static <T> FlowExecution<T> compile(Flow<T> flow, FlowVisitor<Action> flowVisitor) {
     return KeyCheckingFlowExecution.forFlow(flow, flowVisitor);
   }
 
-  public static <T> FlowExecution<T> compileLogging(final Flow<T> flow, final FlowLogger logger) {
+  public static <T> FlowExecution<T> compileLogging(Flow<T> flow, FlowLogger logger) {
     return compile(flow, Visitors.logging(Visitors.getDefault(), logger));
   }
 
-  public static <T> TracedFlowExecution<T> compileTracing(final Flow<T> flow, final TraceEventListener listener) {
+  public static <T> TracedFlowExecution<T> compileTracing(Flow<T> flow, TraceEventListener listener) {
     return compileTracing(flow, listener, Visitors.getDefault());
   }
 
-  public static <T> TracedFlowExecution<T> compileTracing(final Flow<T> flow, final TraceEventListener listener, final FlowVisitor<Action> flowVisitor) {
+  public static <T> TracedFlowExecution<T> compileTracing(Flow<T> flow, TraceEventListener listener, FlowVisitor<Action> flowVisitor) {
     return TraceMapCapturingFlowExecution.forFlow(flow, TracingFlowVisitor.wrapping(listener, flowVisitor));
   }
 
@@ -89,7 +89,7 @@ public final class Flows {
    * @return The result of running the Flow.
    */
   @Deprecated
-  public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final Scratchpad initialScratchpad) throws Exception {
+  public static <T> T run(Flow<T> flow, FlowVisitor<Action> flowVisitor, Scratchpad initialScratchpad) throws Exception {
     return KeyCheckingFlowExecution.forFlow(flow, flowVisitor).run(UUID.randomUUID(), initialScratchpad);
   }
 
@@ -104,7 +104,7 @@ public final class Flows {
    */
   @SuppressWarnings("deprecation")
   @Deprecated
-  public static <T> T run(final Flow<T> flow, final FlowVisitor<Action> flowVisitor, final KeyValue... keyValues) throws Exception {
+  public static <T> T run(Flow<T> flow, FlowVisitor<Action> flowVisitor, KeyValue... keyValues) throws Exception {
     return run(flow, flowVisitor, Scratchpads.create(keyValues));
   }
 
@@ -116,7 +116,7 @@ public final class Flows {
    * @param <T>       The type of the value returned by the Flow.
    * @return The next stage of the Fluent API.
    */
-  public static <T> BranchBuilder<T> branch(final Condition condition, final Flow<T> ifTrue) {
+  public static <T> BranchBuilder<T> branch(Condition condition, Flow<T> ifTrue) {
     return BranchBuilder.startingWith(condition, ifTrue);
   }
 
@@ -142,7 +142,7 @@ public final class Flows {
   public static <V> SuccessCapture<V> onSuccess(final Key<?> key, final Flow<V> successFlow) {
     return new SuccessCapture<V>() {
       @Override
-      public Flow<V> otherwise(final Flow<V> failureFlow) {
+      public Flow<V> otherwise(Flow<V> failureFlow) {
         return Flows.branch(
             Conditions.keyRecordsFailure(key), failureFlow)
             .otherwise(successFlow);
@@ -156,7 +156,7 @@ public final class Flows {
    * @param failureKey The key against which the failure reason was recorded.
    * @return The next state in the fluent API that constructs the recovery Flow.
    */
-  public static FailureKeyCapture recoverFrom(final Key<?> failureKey) {
+  public static FailureKeyCapture recoverFrom(Key<?> failureKey) {
     return new FailureKeyCapture(failureKey);
   }
 

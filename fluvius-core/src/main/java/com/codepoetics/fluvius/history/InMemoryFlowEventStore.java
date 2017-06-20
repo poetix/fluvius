@@ -17,17 +17,17 @@ public final class InMemoryFlowEventStore<T> implements FlowEventStore<T> {
   }
 
   @Override
-  public synchronized void storeEvent(final FlowEvent<T> event) {
-    final UUID flowId = event.getFlowId();
+  public synchronized void storeEvent(FlowEvent<T> event) {
+    UUID flowId = event.getFlowId();
     if (!store.containsKey(flowId)) {
       store.put(flowId, new ArrayList<FlowEvent<T>>());
     }
-    final List<FlowEvent<T>> history = store.get(flowId);
+    List<FlowEvent<T>> history = store.get(flowId);
     history.add(event);
   }
 
   @Override
-  public synchronized List<FlowEvent<T>> retrieveEvents(final UUID flowId) {
+  public synchronized List<FlowEvent<T>> retrieveEvents(UUID flowId) {
     return store.containsKey(flowId)
         ? store.get(flowId)
         : Collections.<FlowEvent<T>>emptyList();

@@ -24,7 +24,7 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
    * @param <T> The type of value returned by executing the flow.
    * @return The constructed flow execution.
    */
-  public static <T> FlowExecution<T> forFlow(final Flow<T> flow, final FlowVisitor<Action> visitor) {
+  public static <T> FlowExecution<T> forFlow(Flow<T> flow, FlowVisitor<Action> visitor) {
     return forAction(flow.visit(visitor), flow.getRequiredKeys(), flow.getProvidedKey());
   }
 
@@ -36,7 +36,7 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
    * @param <T> The type of value returned by executing the flow.
    * @return The constructed flow execution.
    */
-  public static <T> FlowExecution<T> forAction(final Action action, final Set<Key<?>> requiredKeys, final Key<T> providedKey) {
+  public static <T> FlowExecution<T> forAction(Action action, Set<Key<?>> requiredKeys, Key<T> providedKey) {
     return new KeyCheckingFlowExecution<>(action, requiredKeys, providedKey);
   }
 
@@ -44,15 +44,15 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
   private final Set<Key<?>> requiredKeys;
   private final Key<T> providedKey;
 
-  KeyCheckingFlowExecution(final Action action, final Set<Key<?>> requiredKeys, final Key<T> providedKey) {
+  KeyCheckingFlowExecution(Action action, Set<Key<?>> requiredKeys, Key<T> providedKey) {
     this.action = action;
     this.requiredKeys = requiredKeys;
     this.providedKey = providedKey;
   }
 
-  private Set<Key<?>> getMissingKeys(final Scratchpad initialScratchpad) {
-    final Set<Key<?>> missingKeys = new HashSet<>();
-    for (final Key<?> requiredKey : requiredKeys) {
+  private Set<Key<?>> getMissingKeys(Scratchpad initialScratchpad) {
+    Set<Key<?>> missingKeys = new HashSet<>();
+    for (Key<?> requiredKey : requiredKeys) {
       if (!initialScratchpad.containsKey(requiredKey)) {
         missingKeys.add(requiredKey);
       }
@@ -61,14 +61,14 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
   }
 
   @Override
-  public T run(final UUID flowId, final Scratchpad initialScratchpad) throws Exception {
-    final Set<Key<?>> missingKeys = getMissingKeys(initialScratchpad);
+  public T run(UUID flowId, Scratchpad initialScratchpad) throws Exception {
+    Set<Key<?>> missingKeys = getMissingKeys(initialScratchpad);
 
     if (!missingKeys.isEmpty()) {
       throw MissingKeysException.create(missingKeys);
     }
 
-    final Scratchpad finalScratchpad = action.run(flowId, initialScratchpad.locked());
+    Scratchpad finalScratchpad = action.run(flowId, initialScratchpad.locked());
 
     if (finalScratchpad.isSuccessful(providedKey)) {
       return finalScratchpad.get(providedKey);
@@ -78,12 +78,12 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
   }
 
   @Override
-  public T run(final UUID flowId, final KeyValue... initialKeyValues) throws Exception {
+  public T run(UUID flowId, KeyValue... initialKeyValues) throws Exception {
     return run(flowId, Scratchpads.create(initialKeyValues));
   }
 
   @Override
-  public Runnable asAsync(final UUID flowId, final FlowResultCallback<T> callback, final Scratchpad initialScratchpad) {
+  public Runnable asAsync(UUID flowId, FlowResultCallback<T> callback, Scratchpad initialScratchpad) {
     return new RunWithCallback<>(flowId, initialScratchpad, callback, this);
   }
 
@@ -93,7 +93,7 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
     private final FlowResultCallback<T> callback;
     private final KeyCheckingFlowExecution<T> execution;
 
-    private RunWithCallback(final UUID flowId, final Scratchpad initialScratchpad, final FlowResultCallback<T> callback, final KeyCheckingFlowExecution<T> execution) {
+    private RunWithCallback(UUID flowId, Scratchpad initialScratchpad, FlowResultCallback<T> callback, KeyCheckingFlowExecution<T> execution) {
       this.flowId = flowId;
       this.initialScratchpad = initialScratchpad;
       this.callback = callback;
@@ -105,7 +105,7 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
       T result = null;
       try {
         result = execution.run(flowId, initialScratchpad);
-      } catch (final Exception e) {
+      } catch (Exception e) {
         callback.onFailure(flowId, e);
       }
       if (result != null) {

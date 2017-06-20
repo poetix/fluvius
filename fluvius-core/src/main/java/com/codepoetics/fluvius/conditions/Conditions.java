@@ -24,7 +24,7 @@ public final class Conditions {
    * @param predicate   The ScratchpadPredicate to apply to the Scratchpad.
    * @return The constructed Condition.
    */
-  public static Condition fromPredicate(final String description, final ScratchpadPredicate predicate) {
+  public static Condition fromPredicate(String description, ScratchpadPredicate predicate) {
     return new PredicateCondition(description, predicate);
   }
 
@@ -33,7 +33,7 @@ public final class Conditions {
    * @param key The key to test.
    * @return The constructed Condition.
    */
-  public static Condition keyRecordsFailure(final Key<?> key) {
+  public static Condition keyRecordsFailure(Key<?> key) {
     return fromPredicate("Failure recorded for key '" + key.getName() + "'", Predicates.isFailure(key));
   }
 
@@ -45,7 +45,7 @@ public final class Conditions {
    * @param <T>      The type of the Key/value.
    * @return The constructed Condition.
    */
-  public static <T> Condition keyEquals(final Key<T> key, final T expected) {
+  public static <T> Condition keyEquals(Key<T> key, T expected) {
     return fromPredicate(key.getName() + " = " + expected, Predicates.keyEquals(key, expected));
   }
 
@@ -58,7 +58,7 @@ public final class Conditions {
    * @param <T>         The type of the Key/value.
    * @return The constructed Condition.
    */
-  public static <T> Condition keyMatches(final Key<T> key, final String description, final P1<T> predicate) {
+  public static <T> Condition keyMatches(Key<T> key, String description, P1<T> predicate) {
     return fromPredicate(key.getName() + " " + description, Predicates.keyMatches(key, predicate));
   }
 
@@ -66,7 +66,7 @@ public final class Conditions {
     private final String description;
     private final ScratchpadPredicate predicate;
 
-    private PredicateCondition(final String description, final ScratchpadPredicate predicate) {
+    private PredicateCondition(String description, ScratchpadPredicate predicate) {
       this.description = description;
       this.predicate = predicate;
     }
@@ -77,7 +77,7 @@ public final class Conditions {
     }
 
     @Override
-    public boolean test(final UUID flowId, final Scratchpad scratchpad) {
+    public boolean test(UUID flowId, Scratchpad scratchpad) {
       return predicate.test(scratchpad);
     }
   }

@@ -9,11 +9,11 @@ import java.util.UUID;
 
 final class BranchAction implements Action {
 
-  static Action of(final Action defaultAction, final List<Conditional<Action>> branchActions) {
+  static Action of(Action defaultAction, List<Conditional<Action>> branchActions) {
     return new BranchAction(defaultAction, branchActions);
   }
 
-  private BranchAction(final Action defaultAction, final List<Conditional<Action>> branchActions) {
+  private BranchAction(Action defaultAction, List<Conditional<Action>> branchActions) {
     this.defaultAction = defaultAction;
     this.branchActions = branchActions;
   }
@@ -22,8 +22,8 @@ final class BranchAction implements Action {
   private final List<Conditional<Action>> branchActions;
 
   @Override
-  public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
-    for (final Conditional<Action> conditional : branchActions) {
+  public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
+    for (Conditional<Action> conditional : branchActions) {
       if (conditional.getCondition().test(flowId, scratchpad)) {
         return conditional.getValue().run(flowId, scratchpad);
       }

@@ -13,7 +13,7 @@ final class SequenceFlowDescription implements FlowDescription {
   private final String providedKeyName;
   private final List<FlowDescription> itemDescriptions;
 
-  SequenceFlowDescription(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName, final List<FlowDescription> itemDescriptions) {
+  SequenceFlowDescription(UUID stepId, List<String> requiredKeyNames, String providedKeyName, List<FlowDescription> itemDescriptions) {
     this.stepId = stepId;
     this.requiredKeyNames = requiredKeyNames;
     this.providedKeyName = providedKeyName;
@@ -21,10 +21,10 @@ final class SequenceFlowDescription implements FlowDescription {
   }
 
   @Override
-  public void writeTo(final DescriptionWriter descriptionWriter) {
+  public void writeTo(DescriptionWriter descriptionWriter) {
     descriptionWriter.writeStartSequence(stepId, requiredKeyNames, providedKeyName);
     int sequenceIndex = 1;
-    for (final FlowDescription description : itemDescriptions) {
+    for (FlowDescription description : itemDescriptions) {
       descriptionWriter
           .writeStartSequenceItem(sequenceIndex++)
           .writeDescription(description)

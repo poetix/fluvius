@@ -20,7 +20,7 @@ public class MutationCheckingTest {
       return foo;
     }
 
-    public void setFoo(final String foo) {
+    public void setFoo(String foo) {
       this.foo = foo;
     }
 
@@ -28,7 +28,7 @@ public class MutationCheckingTest {
       return bar;
     }
 
-    public void setBar(final List<String[]> bar) {
+    public void setBar(List<String[]> bar) {
       this.bar = bar;
     }
 
@@ -42,38 +42,38 @@ public class MutationCheckingTest {
 
   @Test(expected = IllegalStateException.class)
   public void youCannotHideFromTheMutationChecker() throws Exception {
-    final Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
+    Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
       @Override
-      public String apply(final Map<String, MutableThing[]> input) {
+      public String apply(Map<String, MutableThing[]> input) {
         input.get("xyzzy")[0].getBar().get(1)[1] = "changed value";
         return "bwahahaha";
       }
     });
 
-    final Map<String, MutableThing[]> myMutableThings = createMutableThings();
+    Map<String, MutableThing[]> myMutableThings = createMutableThings();
 
     Flows.compile(evilFlow, Visitors.mutationChecking(Visitors.getDefault())).run(UUID.randomUUID(), mutableThings.of(myMutableThings));
   }
 
   @Test(expected = IllegalStateException.class)
   public void youStillCannotHideFromTheMutationChecker() throws Exception {
-    final Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
+    Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
       @Override
-      public String apply(final Map<String, MutableThing[]> input) {
+      public String apply(Map<String, MutableThing[]> input) {
         input.get("xyzzy")[0].getBaz()[1] = "changed value";
         return "bwahahaha";
       }
     });
 
-    final Map<String, MutableThing[]> myMutableThings = createMutableThings();
+    Map<String, MutableThing[]> myMutableThings = createMutableThings();
 
     Flows.compile(evilFlow, Visitors.mutationChecking(Visitors.getDefault())).run(UUID.randomUUID(), mutableThings.of(myMutableThings));
   }
 
   private Map<String, MutableThing[]> createMutableThings() {
-    final MutableThing myMutableThing = new MutableThing();
+    MutableThing myMutableThing = new MutableThing();
     myMutableThing.setBar(Arrays.asList(new String[] {"a", "b" }, new String[] {"c", "d"}));
-    final Map<String, MutableThing[]> myMutableThings = new HashMap<>();
+    Map<String, MutableThing[]> myMutableThings = new HashMap<>();
     myMutableThings.put("xyzzy", new MutableThing[] { myMutableThing});
     return myMutableThings;
   }

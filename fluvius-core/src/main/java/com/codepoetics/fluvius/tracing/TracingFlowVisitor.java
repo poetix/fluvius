@@ -18,7 +18,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
   private static final FlowVisitor<TraceMap> traceMapVisitor = new TraceMapFlowVisitor();
   private static final Mapper<TracedAction, TraceMap> toTraceMap = new Mapper<TracedAction, TraceMap>() {
     @Override
-    public TraceMap apply(final TracedAction input) {
+    public TraceMap apply(TracedAction input) {
       return input.getTraceMap();
     }
   };
@@ -30,22 +30,22 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
    * @param actionVisitor The flow visitor to wrap.
    * @return The constructed flow visitor.
    */
-  public static FlowVisitor<TracedAction> wrapping(final TraceEventListener listener, final FlowVisitor<Action> actionVisitor) {
+  public static FlowVisitor<TracedAction> wrapping(TraceEventListener listener, FlowVisitor<Action> actionVisitor) {
     return new TracingFlowVisitor(listener, actionVisitor);
   }
 
   private final TraceEventListener listener;
   private final FlowVisitor<Action> actionVisitor;
 
-  private TracingFlowVisitor(final TraceEventListener listener, final FlowVisitor<Action> actionVisitor) {
+  private TracingFlowVisitor(TraceEventListener listener, FlowVisitor<Action> actionVisitor) {
     this.listener = listener;
     this.actionVisitor = actionVisitor;
   }
 
   @Override
-  public <T> TracedAction visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-    final TraceMap traceMap = traceMapVisitor.visitSingle(stepId, requiredKeys, providedKey, operation);
-    final Action action = new NotifyingAction(
+  public <T> TracedAction visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
+    TraceMap traceMap = traceMapVisitor.visitSingle(stepId, requiredKeys, providedKey, operation);
+    Action action = new NotifyingAction(
         traceMap.getStepId(),
         listener,
         providedKey,
@@ -56,9 +56,9 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> TracedAction visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<TracedAction> items) {
-    final TraceMap traceMap = traceMapVisitor.visitSequence(stepId, requiredKeys, providedKey, getItemTraceMaps(items));
-    final Action action = new NotifyingAction(
+  public <T> TracedAction visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<TracedAction> items) {
+    TraceMap traceMap = traceMapVisitor.visitSequence(stepId, requiredKeys, providedKey, getItemTraceMaps(items));
+    Action action = new NotifyingAction(
         traceMap.getStepId(),
         listener,
         providedKey,
@@ -67,9 +67,9 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     return new ConcreteTracedAction(traceMap, action);
   }
 
-  private List<TraceMap> getItemTraceMaps(final List<TracedAction> items) {
-    final List<TraceMap> children = new ArrayList<>(items.size());
-    for (final TracedAction item : items) {
+  private List<TraceMap> getItemTraceMaps(List<TracedAction> items) {
+    List<TraceMap> children = new ArrayList<>(items.size());
+    for (TracedAction item : items) {
       children.add(item.getTraceMap());
     }
     return children;
@@ -77,15 +77,15 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> TracedAction visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final TracedAction defaultBranch, final List<Conditional<TracedAction>> conditionalBranches) {
-    final TraceMap traceMap = traceMapVisitor.visitBranch(
+  public <T> TracedAction visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, TracedAction defaultBranch, List<Conditional<TracedAction>> conditionalBranches) {
+    TraceMap traceMap = traceMapVisitor.visitBranch(
         stepId,
         requiredKeys,
         providedKey,
         defaultBranch.getTraceMap(),
         getConditionalTraceMaps(conditionalBranches));
 
-    final Action action = new NotifyingAction(
+    Action action = new NotifyingAction(
         traceMap.getStepId(),
         listener,
         providedKey,
@@ -99,16 +99,16 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     return new ConcreteTracedAction(traceMap, action);
   }
 
-  private List<Conditional<TraceMap>> getConditionalTraceMaps(final List<Conditional<TracedAction>> conditionalActions) {
-    final List<Conditional<TraceMap>> children = new ArrayList<>(conditionalActions.size());
-    for (final Conditional<TracedAction> branch : conditionalActions) {
+  private List<Conditional<TraceMap>> getConditionalTraceMaps(List<Conditional<TracedAction>> conditionalActions) {
+    List<Conditional<TraceMap>> children = new ArrayList<>(conditionalActions.size());
+    for (Conditional<TracedAction> branch : conditionalActions) {
       children.add(branch.map(toTraceMap));
     }
     return children;
   }
 
   @Override
-  public Condition visitCondition(final Condition condition) {
+  public Condition visitCondition(Condition condition) {
     return actionVisitor.visitCondition(condition);
   }
 
@@ -119,7 +119,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     private final Key<?> providedKey;
     private final Action action;
 
-    private NotifyingAction(final UUID stepId, final TraceEventListener listener, final Key<?> providedKey, final Action action) {
+    private NotifyingAction(UUID stepId, TraceEventListener listener, Key<?> providedKey, Action action) {
       this.stepId = stepId;
       this.listener = listener;
       this.providedKey = providedKey;
@@ -127,9 +127,9 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     }
 
     @Override
-    public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
+    public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
       listener.stepStarted(flowId, stepId, keysToNames(scratchpad.toMap()));
-      final Scratchpad result = action.run(flowId, scratchpad);
+      Scratchpad result = action.run(flowId, scratchpad);
       if (result.isSuccessful(providedKey)) {
         listener.stepSucceeded(flowId, stepId, result.get(providedKey));
       } else {
@@ -138,9 +138,9 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
       return result;
     }
 
-    private Map<String, Object> keysToNames(final Map<Key<?>, Object> scratchpadState) {
-      final Map<String, Object> result = new LinkedHashMap<>();
-      for (final Map.Entry<Key<?>, Object> entry : scratchpadState.entrySet()) {
+    private Map<String, Object> keysToNames(Map<Key<?>, Object> scratchpadState) {
+      Map<String, Object> result = new LinkedHashMap<>();
+      for (Map.Entry<Key<?>, Object> entry : scratchpadState.entrySet()) {
         result.put(entry.getKey().getName(), entry.getValue());
       }
       return result;
@@ -152,7 +152,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     private final TraceMap traceMap;
     private final Action action;
 
-    private ConcreteTracedAction(final TraceMap traceMap, final Action action) {
+    private ConcreteTracedAction(TraceMap traceMap, Action action) {
       this.traceMap = traceMap;
       this.action = action;
     }
@@ -163,7 +163,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
     }
 
     @Override
-    public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
+    public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
       return action.run(flowId, scratchpad);
     }
   }

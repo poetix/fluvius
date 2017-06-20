@@ -20,7 +20,7 @@ public final class History {
    * @param <T> The type to which flow event data will be serialised.
    * @return The constructed flow history repository.
    */
-  public static <T> FlowHistoryRepository<T> createInMemoryRepository(final EventDataSerialiser<T> serialiser) {
+  public static <T> FlowHistoryRepository<T> createInMemoryRepository(EventDataSerialiser<T> serialiser) {
     return createRepository(
         InMemoryFlowEventStore.<T>create(),
         serialiser,
@@ -37,9 +37,9 @@ public final class History {
    * @return The constructed flow history repository.
    */
   public static <T> FlowHistoryRepository<T> createRepository(
-      final FlowEventStore<T> eventStore,
-      final EventDataSerialiser<T> serialiser,
-      final TraceMapRepository traceMapRepository) {
+      FlowEventStore<T> eventStore,
+      EventDataSerialiser<T> serialiser,
+      TraceMapRepository traceMapRepository) {
     return createRepository(
         SerialisingFlowEventRepository.using(eventStore, serialiser),
         traceMapRepository
@@ -55,8 +55,8 @@ public final class History {
    * @return The constructed flow history repository.
    */
   public static <T> FlowHistoryRepository<T> createRepository(
-      final FlowEventRepository<T> eventRepository,
-      final TraceMapRepository traceMapRepository) {
+      FlowEventRepository<T> eventRepository,
+      TraceMapRepository traceMapRepository) {
     return DefaultFlowHistoryRepository.using(eventRepository, traceMapRepository);
   }
 
@@ -68,7 +68,7 @@ public final class History {
    * @param <T> The type to which flow event data will be serialised.
    * @return The constructed flow compiler.
    */
-  public static <T> FlowCompiler makeCompiler(final FlowHistoryRepository<T> repository, final FlowVisitor<Action> visitor) {
+  public static <T> FlowCompiler makeCompiler(FlowHistoryRepository<T> repository, FlowVisitor<Action> visitor) {
     return RecordingFlowCompiler.using(repository, visitor);
   }
 

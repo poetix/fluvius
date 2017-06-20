@@ -17,7 +17,7 @@ public final class Scratchpads {
    * @param keyValues The KeyValues to write into the Scratchpad.
    * @return The created Scratchpad.
    */
-  public static Scratchpad create(final KeyValue... keyValues) {
+  public static Scratchpad create(KeyValue... keyValues) {
     return HashMapBackedScratchpad.create(keyValues);
   }
 }

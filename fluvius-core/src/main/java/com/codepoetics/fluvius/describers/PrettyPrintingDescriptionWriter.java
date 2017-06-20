@@ -25,12 +25,12 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeSingleFlow(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName, final String name) {
+  public DescriptionWriter writeSingleFlow(UUID stepId, List<String> requiredKeyNames, String providedKeyName, String name) {
     return append(name).append(" ").stateRequirements(requiredKeyNames, providedKeyName);
   }
 
   @Override
-  public DescriptionWriter writeStartSequence(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName) {
+  public DescriptionWriter writeStartSequence(UUID stepId, List<String> requiredKeyNames, String providedKeyName) {
     return append("Sequence ")
         .stateRequirements(requiredKeyNames, providedKeyName)
         .append(":")
@@ -38,7 +38,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartSequenceItem(final int sequenceIndex) {
+  public DescriptionWriter writeStartSequenceItem(int sequenceIndex) {
     return newline()
         .appendSequencePrefix()
         .append(sequenceIndex)
@@ -57,7 +57,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartBranch(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName) {
+  public DescriptionWriter writeStartBranch(UUID stepId, List<String> requiredKeyNames, String providedKeyName) {
     return append("Branch ")
         .stateRequirements(requiredKeyNames, providedKeyName)
         .append(":")
@@ -65,11 +65,11 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartBranchOption(final char branchIndex, final String conditionDescription) {
+  public DescriptionWriter writeStartBranchOption(char branchIndex, String conditionDescription) {
     return writeBranchLabel(branchIndex, "If " + conditionDescription);
   }
 
-  private PrettyPrintingDescriptionWriter writeBranchLabel(final char branchIndex, final String conditionDescription) {
+  private PrettyPrintingDescriptionWriter writeBranchLabel(char branchIndex, String conditionDescription) {
     return newline()
         .appendBranchPrefix()
         .append(branchIndex)
@@ -80,7 +80,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartDefaultBranch(final char branchIndex) {
+  public DescriptionWriter writeStartDefaultBranch(char branchIndex) {
     return writeBranchLabel(branchIndex, "Otherwise");
   }
 
@@ -95,7 +95,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeDescription(final FlowDescription description) {
+  public DescriptionWriter writeDescription(FlowDescription description) {
     description.writeTo(this);
     return this;
   }
@@ -114,15 +114,15 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
     return this;
   }
 
-  private PrettyPrintingDescriptionWriter append(final Object value) {
+  private PrettyPrintingDescriptionWriter append(Object value) {
     builder.append(value);
     return this;
   }
 
-  private PrettyPrintingDescriptionWriter appendList(final Collection<?> values) {
+  private PrettyPrintingDescriptionWriter appendList(Collection<?> values) {
     append("[");
     boolean isFirst = true;
-    for (final Object value : values) {
+    for (Object value : values) {
       if (isFirst) {
         isFirst = false;
       } else {
@@ -151,21 +151,21 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
     return this;
   }
 
-  private PrettyPrintingDescriptionWriter stateRequirements(final List<String> requiredKeyNames, final String providedKeyName) {
+  private PrettyPrintingDescriptionWriter stateRequirements(List<String> requiredKeyNames, String providedKeyName) {
     return append("(requires ")
         .appendList(requiredKeyNames)
         .append(", provides ")
         .append(providedKeyName).append(")");
   }
 
-  private PrettyPrintingDescriptionWriter pushSequencePrefix(final int sequenceIndex) {
+  private PrettyPrintingDescriptionWriter pushSequencePrefix(int sequenceIndex) {
     sequencePrefix.push(sequencePrefix.isEmpty()
         ? Integer.toString(sequenceIndex)
         : sequencePrefix.peek() + "." + sequenceIndex);
     return this;
   }
 
-  private PrettyPrintingDescriptionWriter pushBranchIndex(final char branchIndex) {
+  private PrettyPrintingDescriptionWriter pushBranchIndex(char branchIndex) {
     sequencePrefix.push(sequencePrefix.isEmpty()
         ? Character.toString(branchIndex)
         : sequencePrefix.peek() + branchIndex);

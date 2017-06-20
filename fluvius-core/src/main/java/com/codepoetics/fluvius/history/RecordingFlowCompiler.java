@@ -32,7 +32,7 @@ final class RecordingFlowCompiler implements FlowCompiler {
 
   private static final class RecordingFlowExecution<T, V> extends AbstractFlowExecution<T> {
 
-    private static <T, V> FlowExecution<T> forFlow(final Flow<T> flow, final FlowHistoryRepository<V> repository, final FlowVisitor<Action> flowVisitor) {
+    private static <T, V> FlowExecution<T> forFlow(Flow<T> flow, FlowHistoryRepository<V> repository, FlowVisitor<Action> flowVisitor) {
       return new RecordingFlowExecution<>(
           Flows.compileTracing(flow, repository, flowVisitor),
           repository);
@@ -41,22 +41,22 @@ final class RecordingFlowCompiler implements FlowCompiler {
     private final TracedFlowExecution<T> tracedFlowExecution;
     private final FlowHistoryRepository<V> repository;
 
-    private RecordingFlowExecution(final TracedFlowExecution<T> tracedFlowExecution, final FlowHistoryRepository<V> repository) {
+    private RecordingFlowExecution(TracedFlowExecution<T> tracedFlowExecution, FlowHistoryRepository<V> repository) {
       this.tracedFlowExecution = tracedFlowExecution;
       this.repository = repository;
     }
 
     @Override
-    public T run(final UUID flowId, final Scratchpad initialScratchpad) throws Exception {
-      final TraceMap traceMap = tracedFlowExecution.getTraceMap();
+    public T run(UUID flowId, Scratchpad initialScratchpad) throws Exception {
+      TraceMap traceMap = tracedFlowExecution.getTraceMap();
       repository.storeTraceMap(flowId, traceMap);
 
       return tracedFlowExecution.run(flowId, initialScratchpad);
     }
 
     @Override
-    public Runnable asAsync(final UUID flowId, final FlowResultCallback<T> callback, final Scratchpad initialScratchpad) {
-      final TraceMap traceMap = tracedFlowExecution.getTraceMap();
+    public Runnable asAsync(UUID flowId, FlowResultCallback<T> callback, Scratchpad initialScratchpad) {
+      TraceMap traceMap = tracedFlowExecution.getTraceMap();
       repository.storeTraceMap(flowId, traceMap);
 
       return tracedFlowExecution.asAsync(flowId, callback, initialScratchpad);

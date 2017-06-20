@@ -11,28 +11,28 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
 
   private final FlowVisitor<V> innerVisitor;
 
-  MutationCheckingVisitor(final FlowVisitor<V> innerVisitor) {
+  MutationCheckingVisitor(FlowVisitor<V> innerVisitor) {
     this.innerVisitor = innerVisitor;
   }
 
   @Override
-  public <T> V visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+  public <T> V visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
     return innerVisitor.visitSingle(stepId, requiredKeys, providedKey, new MutationCheckingOperation<>(operation));
   }
 
   @Override
-  public <T> V visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<V> items) {
+  public <T> V visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<V> items) {
     return innerVisitor.visitSequence(stepId, requiredKeys, providedKey, items);
   }
 
   @Override
-  public <T> V visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final V defaultBranch,
-                           final List<Conditional<V>> conditionalBranches) {
+  public <T> V visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, V defaultBranch,
+                           List<Conditional<V>> conditionalBranches) {
     return innerVisitor.visitBranch(stepId, requiredKeys, providedKey, defaultBranch, conditionalBranches);
   }
 
   @Override
-  public Condition visitCondition(final Condition condition) {
+  public Condition visitCondition(Condition condition) {
     return innerVisitor.visitCondition(new MutationCheckingCondition(condition));
   }
 
@@ -40,7 +40,7 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
 
     private final Operation<T> innerOperation;
 
-    private MutationCheckingOperation(final Operation<T> innerOperation) {
+    private MutationCheckingOperation(Operation<T> innerOperation) {
       this.innerOperation = innerOperation;
     }
 
@@ -50,12 +50,12 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
     }
 
     @Override
-    public T run(final Scratchpad scratchpad) throws Exception {
-      final Map<Key<?>, Object> before = getMutableState(scratchpad);
+    public T run(Scratchpad scratchpad) throws Exception {
+      Map<Key<?>, Object> before = getMutableState(scratchpad);
 
       T result = innerOperation.run(scratchpad);
 
-      final Map<Key<?>, Object> after = getMutableState(scratchpad);
+      Map<Key<?>, Object> after = getMutableState(scratchpad);
       testForMutation(before, after);
 
       return result;
@@ -67,7 +67,7 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
 
     private final Condition innerCondition;
 
-    private MutationCheckingCondition(final Condition innerCondition) {
+    private MutationCheckingCondition(Condition innerCondition) {
       this.innerCondition = innerCondition;
     }
 
@@ -77,28 +77,28 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
     }
 
     @Override
-    public boolean test(final UUID flowId, final Scratchpad scratchpad) {
-      final Map<Key<?>, Object> before = getMutableState(scratchpad);
-      final boolean result = innerCondition.test(flowId, scratchpad);
-      final Map<Key<?>, Object> after = getMutableState(scratchpad);
+    public boolean test(UUID flowId, Scratchpad scratchpad) {
+      Map<Key<?>, Object> before = getMutableState(scratchpad);
+      boolean result = innerCondition.test(flowId, scratchpad);
+      Map<Key<?>, Object> after = getMutableState(scratchpad);
       testForMutation(before, after);
       return result;
     }
   }
 
-  private static Map<Key<?>, Object> getMutableState(final Scratchpad scratchpad) {
-    final Map<Key<?>, Object> before = scratchpad.toMap();
-    final Map<Key<?>, Object> beforeState = new HashMap<>(before.size());
-    for (final Map.Entry<Key<?>, Object> entry : before.entrySet()) {
+  private static Map<Key<?>, Object> getMutableState(Scratchpad scratchpad) {
+    Map<Key<?>, Object> before = scratchpad.toMap();
+    Map<Key<?>, Object> beforeState = new HashMap<>(before.size());
+    for (Map.Entry<Key<?>, Object> entry : before.entrySet()) {
       beforeState.put(entry.getKey(), MutableState.of(entry.getValue()));
     }
     return beforeState;
   }
 
-  private static void testForMutation(final Map<Key<?>, Object> before, final Map<Key<?>, Object> after) {
-    for (final Key<?> key : before.keySet()) {
-      final Object beforeValue = before.get(key);
-      final Object afterValue = after.get(key);
+  private static void testForMutation(Map<Key<?>, Object> before, Map<Key<?>, Object> after) {
+    for (Key<?> key : before.keySet()) {
+      Object beforeValue = before.get(key);
+      Object afterValue = after.get(key);
       if (!Objects.equals(beforeValue, afterValue)) {
         throw new IllegalStateException(
             String.format("Operation mutated value %s in scratchpad from %s to %s",

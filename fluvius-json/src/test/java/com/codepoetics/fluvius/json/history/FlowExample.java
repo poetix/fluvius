@@ -20,7 +20,7 @@ public final class FlowExample {
   public static final Key<AuthorisationResult> authorisationResult = Keys.named("authorisationResult");
   public static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new P1<AuthorisationResult>() {
     @Override
-    public boolean test(final AuthorisationResult value) {
+    public boolean test(AuthorisationResult value) {
       return value.isAuthorised();
     }
   });
@@ -31,7 +31,7 @@ public final class FlowExample {
           "Check credentials",
           new F2<String, String, AuthorisationResult>() {
             @Override
-            public AuthorisationResult apply(final String username, final String password) {
+            public AuthorisationResult apply(String username, String password) {
               return (password.equals("the real password"))
                   ? new AuthorisationResult(true, "ACCESS TOKEN")
                   : new AuthorisationResult(false, null);
@@ -40,7 +40,7 @@ public final class FlowExample {
   public static final Key<String> accessToken = Keys.named("accessToken");
   public static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new F1<AuthorisationResult, String>() {
             @Override
-            public String apply(final AuthorisationResult input) {
+            public String apply(AuthorisationResult input) {
               return input.getAccessToken();
             }
           });
@@ -52,7 +52,7 @@ public final class FlowExample {
                   "Fetch weather",
                   new F2<String, String, Double>() {
                     @Override
-                    public Double apply(final String accessToken, final String postcode) {
+                    public Double apply(String accessToken, String postcode) {
                       return 26D;
                     }
                   });
@@ -62,7 +62,7 @@ public final class FlowExample {
       .to(weatherMessage)
       .using("Format weather", new ScratchpadFunction<String>() {
         @Override
-        public String apply(final Scratchpad scratchpad) {
+        public String apply(Scratchpad scratchpad) {
           return scratchpad.get(userName)
               + ", the temperature at " + scratchpad.get(postcode)
               + " is " + scratchpad.get(temperature) + " degrees";
@@ -70,7 +70,7 @@ public final class FlowExample {
       });
   public static final Flow<String> formatError = Flows.obtaining(weatherMessage).from(userName).using("Format error message", new F1<String, String>() {
                     @Override
-                    public String apply(final String userName) {
+                    public String apply(String userName) {
                       return "Sorry, " + userName + ", your credentials were not valid";
                     }
                   });
@@ -83,7 +83,7 @@ public final class FlowExample {
     private final boolean isAuthorised;
     private final String accessToken;
 
-    public AuthorisationResult(final boolean isAuthorised, final String accessToken) {
+    public AuthorisationResult(boolean isAuthorised, String accessToken) {
       this.isAuthorised = isAuthorised;
       this.accessToken = accessToken;
     }

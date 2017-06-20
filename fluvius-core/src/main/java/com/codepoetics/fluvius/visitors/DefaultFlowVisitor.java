@@ -10,22 +10,22 @@ import java.util.UUID;
 final class DefaultFlowVisitor implements FlowVisitor<Action> {
 
   @Override
-  public <T> Action visitSingle(UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+  public <T> Action visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
     return SingleOperationAction.of(providedKey, operation);
   }
 
   @Override
-  public <T> Action visitSequence(UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<Action> actions) {
+  public <T> Action visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<Action> actions) {
     return SequenceAction.of(actions);
   }
 
   @Override
-  public <T> Action visitBranch(UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final List<Conditional<Action>> conditionalActions) {
+  public <T> Action visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Action defaultAction, List<Conditional<Action>> conditionalActions) {
     return BranchAction.of(defaultAction, conditionalActions);
   }
 
   @Override
-  public Condition visitCondition(final Condition condition) {
+  public Condition visitCondition(Condition condition) {
     return condition;
   }
 }

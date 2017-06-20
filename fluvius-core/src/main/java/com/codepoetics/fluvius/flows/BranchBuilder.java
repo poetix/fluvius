@@ -13,15 +13,15 @@ import java.util.Map;
  */
 public final class BranchBuilder<T> {
 
-  static <T> BranchBuilder<T> startingWith(final Condition condition, final Flow<T> ifTrue) {
-    final Map<Condition, Flow<T>> branches = new LinkedHashMap<>();
+  static <T> BranchBuilder<T> startingWith(Condition condition, Flow<T> ifTrue) {
+    Map<Condition, Flow<T>> branches = new LinkedHashMap<>();
     branches.put(condition, ifTrue);
     return new BranchBuilder<>(branches);
   }
 
   private final Map<Condition, Flow<T>> branches;
 
-  private BranchBuilder(final Map<Condition, Flow<T>> branches) {
+  private BranchBuilder(Map<Condition, Flow<T>> branches) {
     this.branches = branches;
   }
 
@@ -32,7 +32,7 @@ public final class BranchBuilder<T> {
    * @param ifTrue    The Flow to execute if the Condition it met.
    * @return This BranchBuilder, ready to accept further branches.
    */
-  public BranchBuilder<T> orIf(final Condition condition, final Flow<T> ifTrue) {
+  public BranchBuilder<T> orIf(Condition condition, Flow<T> ifTrue) {
     branches.put(condition, ifTrue);
     return this;
   }
@@ -43,9 +43,9 @@ public final class BranchBuilder<T> {
    * @param defaultFlow The Flow to execute if none of the branch conditions are met.
    * @return The constructed Flow.
    */
-  public Flow<T> otherwise(final Flow<T> defaultFlow) {
+  public Flow<T> otherwise(Flow<T> defaultFlow) {
     Flow<T> result = defaultFlow;
-    for (final Map.Entry<Condition, Flow<T>> branchEntry : branches.entrySet()) {
+    for (Map.Entry<Condition, Flow<T>> branchEntry : branches.entrySet()) {
       result = result.orIf(branchEntry.getKey(), branchEntry.getValue());
     }
     return result;

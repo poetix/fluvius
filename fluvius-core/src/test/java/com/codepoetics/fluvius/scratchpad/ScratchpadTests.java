@@ -15,7 +15,7 @@ public class ScratchpadTests {
 
   @Test
   public void valuesWrittenToScratchpadOnInitialisationAreRetrievable() {
-    final Scratchpad scratchpad = Scratchpads.create(
+    Scratchpad scratchpad = Scratchpads.create(
         name.of("Arthur Putey"),
         age.of(42)
     );
@@ -26,12 +26,12 @@ public class ScratchpadTests {
 
   @Test
   public void scratchpadCanBeUpdatedWithNewValues() {
-    final Scratchpad scratchpad = Scratchpads.create(
+    Scratchpad scratchpad = Scratchpads.create(
         name.of("Arthur Putey"),
         age.of(42)
     );
 
-    final Scratchpad updated = scratchpad.with(age.of(43), favouriteColour.of("Blue"));
+    Scratchpad updated = scratchpad.with(age.of(43), favouriteColour.of("Blue"));
 
     assertEquals((Integer) 43, updated.get(age));
     assertEquals("Blue", updated.get(favouriteColour));
@@ -39,12 +39,12 @@ public class ScratchpadTests {
 
   @Test
   public void updatesDoNotMutateOriginalScratchpad() {
-    final Scratchpad scratchpad = Scratchpads.create(
+    Scratchpad scratchpad = Scratchpads.create(
         name.of("Arthur Putey"),
         age.of(42)
     );
 
-    final Scratchpad updated = scratchpad.with(age.of(43), favouriteColour.of("Blue"));
+    Scratchpad updated = scratchpad.with(age.of(43), favouriteColour.of("Blue"));
 
     assertFalse(scratchpad.containsKey(favouriteColour));
     assertTrue(updated.containsKey(favouriteColour));
@@ -53,13 +53,13 @@ public class ScratchpadTests {
 
   @Test
   public void retrievalOfMissingKeyThrowsException() {
-    final Scratchpad scratchpad = Scratchpads.create(
+    Scratchpad scratchpad = Scratchpads.create(
         name.of("Arthur Putey"),
         age.of(42)
     );
     try {
       scratchpad.get(favouriteColour);
-    } catch (final NullPointerException e) {
+    } catch (NullPointerException e) {
       assertEquals("value of key favouriteColour must not be null", e.getMessage());
       return;
     }
@@ -68,7 +68,7 @@ public class ScratchpadTests {
 
   @Test
   public void toStringReturnsStringRepresentationOfStorage() {
-    final Scratchpad scratchpad = Scratchpads.create(
+    Scratchpad scratchpad = Scratchpads.create(
         name.of("Arthur Putey"),
         age.of(42)
     );
@@ -106,7 +106,7 @@ public class ScratchpadTests {
 
   @Test
   public void scratchpadsAreSerialisable() {
-    final Scratchpad scratchpad = Scratchpads.create(
+    Scratchpad scratchpad = Scratchpads.create(
         name.of("Arthur Putey"),
         age.of(42)
     );
@@ -116,7 +116,7 @@ public class ScratchpadTests {
 
   @Test(expected=IllegalArgumentException.class)
   public void keysCannotBeOverwrittenInLockedScratchpad() {
-    final Scratchpad locked = Scratchpads.create(name.of("Arthur Putey")).locked().with(age.of(42));
+    Scratchpad locked = Scratchpads.create(name.of("Arthur Putey")).locked().with(age.of(42));
     assertEquals(Integer.valueOf(42), locked.get(age));
 
     // throws IllegalArgumentException

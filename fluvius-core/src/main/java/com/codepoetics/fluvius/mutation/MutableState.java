@@ -19,7 +19,7 @@ public final class MutableState {
    * @param object The object to extract the mutable state from.
    * @return An equality-testable representation of the mutable state of the supplied object.
    */
-  public static Object of(final Object object) {
+  public static Object of(Object object) {
     if (isScalar(object)) {
       return object;
     }
@@ -41,7 +41,7 @@ public final class MutableState {
     return object;
   }
 
-  private static boolean isScalar(final Object object) {
+  private static boolean isScalar(Object object) {
     return object == null
         || object instanceof String
         || object instanceof Character
@@ -53,40 +53,40 @@ public final class MutableState {
         || object instanceof Double;
   }
 
-  private static Object ofCollection(final Collection<?> collection) {
-    final List<Object> contents = new ArrayList<>(collection.size());
-    for (final Object item : collection) {
+  private static Object ofCollection(Collection<?> collection) {
+    List<Object> contents = new ArrayList<>(collection.size());
+    for (Object item : collection) {
       contents.add(MutableState.of(item));
     }
     return contents;
   }
 
-  private static Object ofMap(final Map<?, ?> map) {
-    final Map<Object, Object> contents = new HashMap<>(map.size());
-    for (final Map.Entry<?, ?> entry : map.entrySet()) {
+  private static Object ofMap(Map<?, ?> map) {
+    Map<Object, Object> contents = new HashMap<>(map.size());
+    for (Map.Entry<?, ?> entry : map.entrySet()) {
       contents.put(MutableState.of(entry.getKey()), MutableState.of(entry.getValue()));
     }
     return contents;
   }
 
-  private static Object ofArray(final Object[] array) {
-    final List<Object> contents = new ArrayList<>(array.length);
-    for (final Object item : array) {
+  private static Object ofArray(Object[] array) {
+    List<Object> contents = new ArrayList<>(array.length);
+    for (Object item : array) {
       contents.add(MutableState.of(item));
     }
     return contents;
   }
 
-  private static boolean definesEquals(final Object object) {
+  private static boolean definesEquals(Object object) {
     try {
       return !object.getClass().getMethod("equals", Object.class).getDeclaringClass().equals(Object.class);
-    } catch (final NoSuchMethodException e) {
+    } catch (NoSuchMethodException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static boolean hasGettableProperties(final Object object) {
-    for (final PropertyDescriptor descriptor : safeGetPropertyDescriptors(object)) {
+  private static boolean hasGettableProperties(Object object) {
+    for (PropertyDescriptor descriptor : safeGetPropertyDescriptors(object)) {
       if (descriptor.getReadMethod() != null && !belongsToObject(descriptor)) {
         return true;
       }
@@ -94,17 +94,17 @@ public final class MutableState {
     return false;
   }
 
-  private static PropertyDescriptor[] safeGetPropertyDescriptors(final Object object)  {
+  private static PropertyDescriptor[] safeGetPropertyDescriptors(Object object)  {
     try {
       return Introspector.getBeanInfo(object.getClass()).getPropertyDescriptors();
-    } catch (final IntrospectionException e) {
+    } catch (IntrospectionException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static Object ofBeanLike(final Object object) {
-    final Map<String, Object> propertyValues = new HashMap<>();
-    for (final PropertyDescriptor propertyDescriptor : safeGetPropertyDescriptors(object)) {
+  private static Object ofBeanLike(Object object) {
+    Map<String, Object> propertyValues = new HashMap<>();
+    for (PropertyDescriptor propertyDescriptor : safeGetPropertyDescriptors(object)) {
       if (propertyDescriptor.getReadMethod() == null
           || belongsToObject(propertyDescriptor)) {
         continue;
@@ -114,11 +114,11 @@ public final class MutableState {
     return propertyValues;
   }
 
-  private static boolean belongsToObject(final PropertyDescriptor propertyDescriptor) {
+  private static boolean belongsToObject(PropertyDescriptor propertyDescriptor) {
     return propertyDescriptor.getReadMethod().getDeclaringClass().equals(Object.class);
   }
 
-  private static Object safeReadProperty(final Object object, final PropertyDescriptor propertyDescriptor)  {
+  private static Object safeReadProperty(Object object, PropertyDescriptor propertyDescriptor)  {
     try {
       return propertyDescriptor.getReadMethod().invoke(object);
     } catch (IllegalAccessException | InvocationTargetException e) {

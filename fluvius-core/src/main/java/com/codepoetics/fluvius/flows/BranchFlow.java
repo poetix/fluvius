@@ -11,13 +11,13 @@ import com.codepoetics.fluvius.preconditions.Preconditions;
 
 import java.util.*;
 
-class BranchFlow<T> extends AbstractFlow<T> {
+final class BranchFlow<T> extends AbstractFlow<T> {
 
   private static final class ConditionalFlow<T> {
     private final Condition condition;
     private final Flow<T> ifTrue;
 
-    private ConditionalFlow(final Condition condition, final Flow<T> ifTrue) {
+    private ConditionalFlow(Condition condition, Flow<T> ifTrue) {
       this.condition = condition;
       this.ifTrue = ifTrue;
     }
@@ -30,7 +30,7 @@ class BranchFlow<T> extends AbstractFlow<T> {
       return ifTrue;
     }
 
-    <V> Conditional<V> toConditional(final FlowVisitor<V> visitor) {
+    <V> Conditional<V> toConditional(FlowVisitor<V> visitor) {
       return new RealConditional<>(visitor.visitCondition(condition), ifTrue.visit(visitor));
     }
   }
@@ -39,7 +39,7 @@ class BranchFlow<T> extends AbstractFlow<T> {
     private final Condition condition;
     private final V value;
 
-    private RealConditional(final Condition condition, final V value) {
+    private RealConditional(Condition condition, V value) {
       this.condition = condition;
       this.value = value;
     }
@@ -55,27 +55,27 @@ class BranchFlow<T> extends AbstractFlow<T> {
     }
 
     @Override
-    public <V2> Conditional<V2> map(final Mapper<? super V, ? extends V2> mapper) {
+    public <V2> Conditional<V2> map(Mapper<? super V, ? extends V2> mapper) {
       return new RealConditional<>(condition, mapper.apply(value));
     }
   }
 
-  static <T> Flow<T> create(final Flow<T> defaultFlow, final Condition condition, final Flow<T> ifTrue) {
+  static <T> Flow<T> create(Flow<T> defaultFlow, Condition condition, Flow<T> ifTrue) {
     Preconditions.checkNotNull("defaultFlow", defaultFlow);
     Preconditions.checkNotNull("condition", condition);
     Preconditions.checkNotNull("ifTrue", ifTrue);
 
-    final List<ConditionalFlow<T>> branches = new ArrayList<>(1);
+    List<ConditionalFlow<T>> branches = new ArrayList<>(1);
     branches.add(new ConditionalFlow<>(condition, ifTrue));
     return create(defaultFlow, branches);
   }
 
-  private static <T> Flow<T> create(final Flow<T> defaultFlow, final List<ConditionalFlow<T>> branches) {
-    final Key<T> defaultOutputKey = defaultFlow.getProvidedKey();
-    final Set<Key<?>> requiredKeys = defaultFlow.getRequiredKeys();
+  private static <T> Flow<T> create(Flow<T> defaultFlow, List<ConditionalFlow<T>> branches) {
+    Key<T> defaultOutputKey = defaultFlow.getProvidedKey();
+    Set<Key<?>> requiredKeys = defaultFlow.getRequiredKeys();
 
-    for (final ConditionalFlow<T> conditionalFlow : branches) {
-      final Key<T> conditionalOutputKey = conditionalFlow.getIfTrue().getProvidedKey();
+    for (ConditionalFlow<T> conditionalFlow : branches) {
+      Key<T> conditionalOutputKey = conditionalFlow.getIfTrue().getProvidedKey();
       if (!conditionalOutputKey.equals(defaultOutputKey)) {
         throw IllegalBranchOutputKeyException.create(
             defaultOutputKey,
@@ -91,16 +91,16 @@ class BranchFlow<T> extends AbstractFlow<T> {
   private final Flow<T> defaultFlow;
   private final List<ConditionalFlow<T>> branches;
 
-  private BranchFlow(final UUID stepId, final Set<Key<?>> inputKeys, final Key<T> outputKey, final Flow<T> defaultFlow, final List<ConditionalFlow<T>> branches) {
+  private BranchFlow(UUID stepId, Set<Key<?>> inputKeys, Key<T> outputKey, Flow<T> defaultFlow, List<ConditionalFlow<T>> branches) {
     super(stepId, inputKeys, outputKey);
     this.defaultFlow = defaultFlow;
     this.branches = branches;
   }
 
   @Override
-  public <V> V visit(final FlowVisitor<V> visitor) {
-    final List<Conditional<V>> branchActions = new ArrayList<>(branches.size());
-    for (final ConditionalFlow<T> conditionalFlow : branches) {
+  public <V> V visit(FlowVisitor<V> visitor) {
+    List<Conditional<V>> branchActions = new ArrayList<>(branches.size());
+    for (ConditionalFlow<T> conditionalFlow : branches) {
       branchActions.add(
           conditionalFlow.toConditional(visitor));
     }
@@ -108,8 +108,8 @@ class BranchFlow<T> extends AbstractFlow<T> {
   }
 
   @Override
-  public Flow<T> orIf(final Condition condition, final Flow<T> ifTrue) {
-    final List<ConditionalFlow<T>> branches = new ArrayList<>(this.branches);
+  public Flow<T> orIf(Condition condition, Flow<T> ifTrue) {
+    List<ConditionalFlow<T>> branches = new ArrayList<>(this.branches);
     branches.add(new ConditionalFlow<>(condition, ifTrue));
     return create(defaultFlow, branches);
   }

@@ -12,57 +12,57 @@ final class Extractors {
   private Extractors() {
   }
 
-  static <A, OUTPUT> ScratchpadFunction<OUTPUT> make(final Key<A> keyA, final F1<A, OUTPUT> f1) {
+  static <A, OUTPUT> ScratchpadFunction<OUTPUT> make(Key<A> keyA, F1<A, OUTPUT> f1) {
     return new ExtractorFunction1<>(f1, keyA);
   }
 
-  static <A, B, OUTPUT> ScratchpadFunction<OUTPUT> make(final Key<A> keyA, final Key<B> keyB, final F2<A, B, OUTPUT> f2) {
+  static <A, B, OUTPUT> ScratchpadFunction<OUTPUT> make(Key<A> keyA, Key<B> keyB, F2<A, B, OUTPUT> f2) {
     return new ExtractorFunction2<>(f2, keyA, keyB);
   }
 
-  static <A, B, C, OUTPUT> ScratchpadFunction<OUTPUT> make(final Key<A> keyA, final Key<B> keyB, final Key<C> keyC, final F3<A, B, C, OUTPUT> f3) {
+  static <A, B, C, OUTPUT> ScratchpadFunction<OUTPUT> make(Key<A> keyA, Key<B> keyB, Key<C> keyC, F3<A, B, C, OUTPUT> f3) {
     return new ExtractorFunction3<>(f3, keyA, keyB, keyC);
   }
 
-  private static class ExtractorFunction1<A, OUTPUT> implements ScratchpadFunction<OUTPUT> {
+  private static final class ExtractorFunction1<A, OUTPUT> implements ScratchpadFunction<OUTPUT> {
     private final F1<A, OUTPUT> f1;
     private final Key<A> source;
 
-    private ExtractorFunction1(final F1<A, OUTPUT> f1, final Key<A> source) {
+    private ExtractorFunction1(F1<A, OUTPUT> f1, Key<A> source) {
       this.f1 = f1;
       this.source = source;
     }
 
     @Override
-    public OUTPUT apply(final Scratchpad scratchpad) throws Exception {
+    public OUTPUT apply(Scratchpad scratchpad) throws Exception {
       return f1.apply(scratchpad.get(source));
     }
   }
 
-  private static class ExtractorFunction2<A, B, OUTPUT> implements ScratchpadFunction<OUTPUT> {
+  private static final class ExtractorFunction2<A, B, OUTPUT> implements ScratchpadFunction<OUTPUT> {
     private final F2<A, B, OUTPUT> f2;
     private final Key<A> source1;
     private final Key<B> source2;
 
-    private ExtractorFunction2(final F2<A, B, OUTPUT> f2, final Key<A> source1, final Key<B> source2) {
+    private ExtractorFunction2(F2<A, B, OUTPUT> f2, Key<A> source1, Key<B> source2) {
       this.f2 = f2;
       this.source1 = source1;
       this.source2 = source2;
     }
 
     @Override
-    public OUTPUT apply(final Scratchpad scratchpad) throws Exception {
+    public OUTPUT apply(Scratchpad scratchpad) throws Exception {
       return f2.apply(scratchpad.get(source1), scratchpad.get(source2));
     }
   }
 
-  private static class ExtractorFunction3<A, B, C, OUTPUT> implements ScratchpadFunction<OUTPUT> {
+  private static final class ExtractorFunction3<A, B, C, OUTPUT> implements ScratchpadFunction<OUTPUT> {
     private final F3<A, B, C, OUTPUT> f3;
     private final Key<A> source1;
     private final Key<B> source2;
     private final Key<C> source3;
 
-    private ExtractorFunction3(final F3<A, B, C, OUTPUT> f3, final Key<A> source1, final Key<B> source2, final Key<C> source3) {
+    private ExtractorFunction3(F3<A, B, C, OUTPUT> f3, Key<A> source1, Key<B> source2, Key<C> source3) {
       this.f3 = f3;
       this.source1 = source1;
       this.source2 = source2;
@@ -70,7 +70,7 @@ final class Extractors {
     }
 
     @Override
-    public OUTPUT apply(final Scratchpad scratchpad) throws Exception {
+    public OUTPUT apply(Scratchpad scratchpad) throws Exception {
       return f3.apply(scratchpad.get(source1), scratchpad.get(source2), scratchpad.get(source3));
     }
   }

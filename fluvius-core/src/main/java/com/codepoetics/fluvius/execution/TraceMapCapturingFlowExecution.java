@@ -21,8 +21,8 @@ public final class TraceMapCapturingFlowExecution<T> extends AbstractFlowExecuti
    * @param <T> The type of the value returned by the flow.
    * @return The constructed flow execution.
    */
-  public static <T> TracedFlowExecution<T> forFlow(final Flow<T> flow, final FlowVisitor<TracedAction> visitor) {
-    final TracedAction action = flow.visit(visitor);
+  public static <T> TracedFlowExecution<T> forFlow(Flow<T> flow, FlowVisitor<TracedAction> visitor) {
+    TracedAction action = flow.visit(visitor);
     return new TraceMapCapturingFlowExecution<>(
         KeyCheckingFlowExecution.forAction(action, flow.getRequiredKeys(), flow.getProvidedKey()),
         action.getTraceMap()
@@ -32,7 +32,7 @@ public final class TraceMapCapturingFlowExecution<T> extends AbstractFlowExecuti
   private final FlowExecution<T> execution;
   private final TraceMap traceMap;
 
-  private TraceMapCapturingFlowExecution(final FlowExecution<T> execution, final TraceMap traceMap) {
+  private TraceMapCapturingFlowExecution(FlowExecution<T> execution, TraceMap traceMap) {
     this.execution = execution;
     this.traceMap = traceMap;
   }
@@ -43,12 +43,12 @@ public final class TraceMapCapturingFlowExecution<T> extends AbstractFlowExecuti
   }
 
   @Override
-  public T run(final UUID flowId, final Scratchpad initialScratchpad) throws Exception {
+  public T run(UUID flowId, Scratchpad initialScratchpad) throws Exception {
     return execution.run(flowId, initialScratchpad);
   }
 
   @Override
-  public Runnable asAsync(final UUID flowId, final FlowResultCallback<T> callback, final Scratchpad initialScratchpad) {
+  public Runnable asAsync(UUID flowId, FlowResultCallback<T> callback, Scratchpad initialScratchpad) {
     return execution.asAsync(flowId, callback, initialScratchpad);
   }
 }

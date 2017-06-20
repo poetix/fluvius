@@ -20,7 +20,7 @@ public final class Operations {
    * @param <T>      The type of the value returned by the Operation.
    * @return The constructed Operation.
    */
-  public static <T> Operation<T> fromFunction(final String name, final ScratchpadFunction<T> function) {
+  public static <T> Operation<T> fromFunction(String name, ScratchpadFunction<T> function) {
     return new FunctionOperation<>(name, function);
   }
 
@@ -28,7 +28,7 @@ public final class Operations {
     private final String name;
     private final ScratchpadFunction<T> function;
 
-    private FunctionOperation(final String name, final ScratchpadFunction<T> function) {
+    private FunctionOperation(String name, ScratchpadFunction<T> function) {
       this.name = name;
       this.function = function;
     }
@@ -39,7 +39,7 @@ public final class Operations {
     }
 
     @Override
-    public T run(final Scratchpad scratchpad) throws Exception {
+    public T run(Scratchpad scratchpad) throws Exception {
       return function.apply(scratchpad);
     }
   }

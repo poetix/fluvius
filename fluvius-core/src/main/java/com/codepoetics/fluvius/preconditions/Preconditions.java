@@ -16,7 +16,7 @@ public final class Preconditions {
    * @param <T>   The type of the variable being tested.
    * @return The (guaranteed non-null) value of the variable being tested.
    */
-  public static <T> T checkNotNull(final String name, final T value) {
+  public static <T> T checkNotNull(String name, T value) {
     if (name == null) {
       throw new NullPointerException("name must not be null");
     }

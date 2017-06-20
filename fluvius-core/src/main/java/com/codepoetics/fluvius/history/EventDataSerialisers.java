@@ -2,7 +2,10 @@ package com.codepoetics.fluvius.history;
 
 import com.codepoetics.fluvius.api.history.EventDataSerialiser;
 
-public class EventDataSerialisers {
+public final class EventDataSerialisers {
+
+  private EventDataSerialisers() {
+  }
 
   private static final EventDataSerialiser<Object> toObject = new ToObjectSerialiser();
   private static final EventDataSerialiser<String> toString = new ToStringSerialiser();
@@ -17,24 +20,24 @@ public class EventDataSerialisers {
 
   private static final class ToObjectSerialiser implements EventDataSerialiser<Object> {
     @Override
-    public Object serialise(final Object value) {
+    public Object serialise(Object value) {
       return value;
     }
 
     @Override
-    public Object serialiseException(final Exception exception) {
+    public Object serialiseException(Exception exception) {
       return exception;
     }
   }
 
   private static final class ToStringSerialiser implements EventDataSerialiser<String> {
     @Override
-    public String serialise(final Object value) {
+    public String serialise(Object value) {
       return value.toString();
     }
 
     @Override
-    public String serialiseException(final Exception exception) {
+    public String serialiseException(Exception exception) {
       return exception.getMessage();
     }
   }

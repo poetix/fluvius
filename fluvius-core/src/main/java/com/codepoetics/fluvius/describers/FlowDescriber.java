@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * A FlowVisitor that traverses a Flow to create a FlowDescription.
  */
-public class FlowDescriber implements FlowVisitor<FlowDescription> {
+public final class FlowDescriber implements FlowVisitor<FlowDescription> {
 
   /**
    * Traverse the supplied Flow to construct a FlowDescription.
@@ -17,7 +17,7 @@ public class FlowDescriber implements FlowVisitor<FlowDescription> {
    * @param flow The Flow to traverse.
    * @return The constructed FlowDescription.
    */
-  public static FlowDescription describe(final Flow<?> flow) {
+  public static FlowDescription describe(Flow<?> flow) {
     return flow.visit(new FlowDescriber());
   }
 
@@ -25,32 +25,32 @@ public class FlowDescriber implements FlowVisitor<FlowDescription> {
   }
 
   @Override
-  public <T> FlowDescription visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+  public <T> FlowDescription visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
     return new SingleFlowDescription(stepId, operation.getName(), toKeyNames(requiredKeys), providedKey.getName());
   }
 
   @Override
-  public <T> FlowDescription visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<FlowDescription> flows) {
+  public <T> FlowDescription visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<FlowDescription> flows) {
     return new SequenceFlowDescription(stepId, toKeyNames(requiredKeys), providedKey.getName(), flows);
   }
 
   @Override
-  public <T> FlowDescription visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final FlowDescription defaultBranch, final List<Conditional<FlowDescription>> conditionalBranches) {
-    final Map<String, FlowDescription> branchDescriptions = new LinkedHashMap<>();
-    for (final Conditional<FlowDescription> conditional : conditionalBranches) {
+  public <T> FlowDescription visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, FlowDescription defaultBranch, List<Conditional<FlowDescription>> conditionalBranches) {
+    Map<String, FlowDescription> branchDescriptions = new LinkedHashMap<>();
+    for (Conditional<FlowDescription> conditional : conditionalBranches) {
       branchDescriptions.put(conditional.getCondition().getDescription(), conditional.getValue());
     }
     return new BranchFlowDescription(stepId, toKeyNames(requiredKeys), providedKey.getName(), defaultBranch, branchDescriptions);
   }
 
   @Override
-  public Condition visitCondition(final Condition condition) {
+  public Condition visitCondition(Condition condition) {
     return condition;
   }
 
-  private List<String> toKeyNames(final Collection<Key<?>> keys) {
-    final List<String> keyNames = new ArrayList<>();
-    for (final Key<?> key : keys) {
+  private List<String> toKeyNames(Collection<Key<?>> keys) {
+    List<String> keyNames = new ArrayList<>();
+    for (Key<?> key : keys) {
       keyNames.add(key.getName());
     }
     return keyNames;

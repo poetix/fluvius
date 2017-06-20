@@ -9,20 +9,20 @@ import java.util.UUID;
 
 final class SingleOperationAction<T> implements Action {
 
-  static <T> Action of(final Key<T> outputKey, final Operation<T> operation) {
+  static <T> Action of(Key<T> outputKey, Operation<T> operation) {
     return new SingleOperationAction<>(outputKey, operation);
   }
 
   private final Key<T> outputKey;
   private final Operation<T> operation;
 
-  private SingleOperationAction(final Key<T> outputKey, final Operation<T> operation) {
+  private SingleOperationAction(Key<T> outputKey, Operation<T> operation) {
     this.outputKey = outputKey;
     this.operation = operation;
   }
 
   @Override
-  public Scratchpad run(final UUID flowId, final Scratchpad scratchpad) {
+  public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
     try {
       return scratchpad.with(outputKey.of(operation.run(scratchpad)));
     } catch (Exception e) {

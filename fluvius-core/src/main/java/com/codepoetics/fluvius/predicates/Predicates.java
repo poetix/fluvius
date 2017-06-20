@@ -35,7 +35,7 @@ public final class Predicates {
    * @param <T>       The type of the Key/value.
    * @return The constructed ScratchpadPredicate.
    */
-  public static <T> ScratchpadPredicate keyMatches(final Key<T> key, final P1<T> predicate) {
+  public static <T> ScratchpadPredicate keyMatches(Key<T> key, P1<T> predicate) {
     return new MatchingKeyValuePredicate<>(predicate, key);
   }
 
@@ -47,7 +47,7 @@ public final class Predicates {
    * @param <T>      The type of the Key/value.
    * @return The constructed ScratchpadPredicate.
    */
-  public static <T> ScratchpadPredicate keyEquals(final Key<T> key, final T expected) {
+  public static <T> ScratchpadPredicate keyEquals(Key<T> key, T expected) {
     return keyMatches(key, equalTo(expected));
   }
 
@@ -61,7 +61,7 @@ public final class Predicates {
   public static <T> P1<T> equalTo(final T expected) {
     return new P1<T>() {
       @Override
-      public boolean test(final T value) {
+      public boolean test(T value) {
         return value.equals(expected);
       }
     };
@@ -71,13 +71,13 @@ public final class Predicates {
     private final P1<T> predicate;
     private final Key<T> key;
 
-    private MatchingKeyValuePredicate(final P1<T> predicate, final Key<T> key) {
+    private MatchingKeyValuePredicate(P1<T> predicate, Key<T> key) {
       this.predicate = predicate;
       this.key = key;
     }
 
     @Override
-    public boolean test(final Scratchpad scratchpad) {
+    public boolean test(Scratchpad scratchpad) {
       return predicate.test(scratchpad.get(key));
     }
   }

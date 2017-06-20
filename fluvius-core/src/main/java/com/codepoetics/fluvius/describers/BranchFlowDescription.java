@@ -15,7 +15,7 @@ final class BranchFlowDescription implements FlowDescription {
   private final FlowDescription defaultBranchDescription;
   private final Map<String, FlowDescription> branchDescriptions;
 
-  BranchFlowDescription(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName, final FlowDescription defaultBranchDescription, final Map<String, FlowDescription> branchDescriptions) {
+  BranchFlowDescription(UUID stepId, List<String> requiredKeyNames, String providedKeyName, FlowDescription defaultBranchDescription, Map<String, FlowDescription> branchDescriptions) {
     this.stepId = stepId;
     this.requiredKeyNames = requiredKeyNames;
     this.providedKeyName = providedKeyName;
@@ -24,10 +24,10 @@ final class BranchFlowDescription implements FlowDescription {
   }
 
   @Override
-  public void writeTo(final DescriptionWriter descriptionWriter) {
+  public void writeTo(DescriptionWriter descriptionWriter) {
     descriptionWriter.writeStartBranch(stepId, requiredKeyNames, providedKeyName);
     char branchIndex = 'a';
-    for (final Map.Entry<String, FlowDescription> branchEntry : branchDescriptions.entrySet()) {
+    for (Map.Entry<String, FlowDescription> branchEntry : branchDescriptions.entrySet()) {
       descriptionWriter.writeStartBranchOption(branchIndex++, branchEntry.getKey())
           .writeDescription(branchEntry.getValue())
           .writeEndBranchOption();

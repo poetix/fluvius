@@ -10,7 +10,7 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 public final class TargetCapture<OUTPUT> {
   private final Key<OUTPUT> target;
 
-  TargetCapture(final Key<OUTPUT> target) {
+  TargetCapture(Key<OUTPUT> target) {
     this.target = target;
   }
 
@@ -21,7 +21,7 @@ public final class TargetCapture<OUTPUT> {
    * @param <A>     The type of the sourceA Key.
    * @return The next stage in the Fluent API.
    */
-  public <A> SourceTargetCapture1<A, OUTPUT> from(final Key<A> sourceA) {
+  public <A> SourceTargetCapture1<A, OUTPUT> from(Key<A> sourceA) {
     return new SourceTargetCapture1<>(sourceA, target);
   }
 
@@ -34,7 +34,7 @@ public final class TargetCapture<OUTPUT> {
    * @param <B>     The type of the second sourceA Key.
    * @return The next stage in the Fluent API.
    */
-  public <A, B> SourceTargetCapture2<A, B, OUTPUT> from(final Key<A> sourceA, final Key<B> sourceB) {
+  public <A, B> SourceTargetCapture2<A, B, OUTPUT> from(Key<A> sourceA, Key<B> sourceB) {
     return new SourceTargetCapture2<>(sourceA, sourceB, target);
   }
 
@@ -49,7 +49,7 @@ public final class TargetCapture<OUTPUT> {
    * @param <C>     The type of the third sourceA Key.
    * @return The next stage in the Fluent API.
    */
-  public <A, B, C> SourceTargetCapture3<A, B, C, OUTPUT> from(final Key<A> source1, final Key<B> source2, final Key<C> source3) {
+  public <A, B, C> SourceTargetCapture3<A, B, C, OUTPUT> from(Key<A> source1, Key<B> source2, Key<C> source3) {
     return new SourceTargetCapture3<>(source1, source2, source3, target);
   }
 }

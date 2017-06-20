@@ -10,20 +10,20 @@ import java.util.*;
 final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
 
   @Override
-  public <T> TraceMap visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+  public <T> TraceMap visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
     return new ConcreteTraceMap(stepId, toKeyNames(requiredKeys), providedKey.getName(), operation.getName(), FlowStepType.STEP, Collections.<TraceMap>emptyList());
   }
 
   @Override
-  public <T> TraceMap visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<TraceMap> items) {
+  public <T> TraceMap visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<TraceMap> items) {
     return new ConcreteTraceMap(stepId, toKeyNames(requiredKeys), providedKey.getName(), "Sequence", FlowStepType.SEQUENCE, items);
   }
 
   @Override
-  public <T> TraceMap visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final TraceMap defaultBranch, final List<Conditional<TraceMap>> conditionalBranches) {
-    final List<TraceMap> children = new ArrayList<>(conditionalBranches.size() + 1);
-    for (final Conditional<TraceMap> conditional : conditionalBranches) {
-      final TraceMap conditionalTraceMap = conditional.getValue();
+  public <T> TraceMap visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, TraceMap defaultBranch, List<Conditional<TraceMap>> conditionalBranches) {
+    List<TraceMap> children = new ArrayList<>(conditionalBranches.size() + 1);
+    for (Conditional<TraceMap> conditional : conditionalBranches) {
+      TraceMap conditionalTraceMap = conditional.getValue();
       children.add(conditionalChild(conditional, conditionalTraceMap));
     }
     children.add(defaultChild(defaultBranch));
@@ -50,16 +50,16 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
         traceMap.getChildren());
   }
 
-  private Set<String> toKeyNames(final Set<Key<?>> keys) {
-    final Set<String> result = new HashSet<>(keys.size());
-    for (final Key<?> key : keys) {
+  private Set<String> toKeyNames(Set<Key<?>> keys) {
+    Set<String> result = new HashSet<>(keys.size());
+    for (Key<?> key : keys) {
       result.add(key.getName());
     }
     return result;
   }
 
   @Override
-  public Condition visitCondition(final Condition condition) {
+  public Condition visitCondition(Condition condition) {
     return null;
   }
 
@@ -72,7 +72,7 @@ final class TraceMapFlowVisitor implements FlowVisitor<TraceMap> {
     private final FlowStepType type;
     private final List<TraceMap> children;
 
-    private ConcreteTraceMap(final UUID stepId, final Set<String> requiredKeys, final String providedKey, final String description, FlowStepType type, final List<TraceMap> children) {
+    private ConcreteTraceMap(UUID stepId, Set<String> requiredKeys, String providedKey, String description, FlowStepType type, List<TraceMap> children) {
       this.stepId = stepId;
       this.requiredKeys = requiredKeys;
       this.providedKey = providedKey;
