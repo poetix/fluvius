@@ -1,9 +1,0 @@
-com.codepoetics.fluvius.api
-com.codepoetics.fluvius.api.compilation
-com.codepoetics.fluvius.api.description
-com.codepoetics.fluvius.api.functional
-com.codepoetics.fluvius.api.history
-com.codepoetics.fluvius.api.logging
-com.codepoetics.fluvius.api.scratchpad
-com.codepoetics.fluvius.api.tracing
-com.codepoetics.fluvius.exceptions
