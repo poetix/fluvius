@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>fluvius-json - Checkstyle report</title>
-    <link>http://github.com/poetix/fluvius/fluvius-json</link>
+    <link>https://poetix.github.io/fluvius/fluvius-json</link>
     <description>fluvius-json - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2017</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 4,
              Infos: 0
       </title>
-            <link>http://github.com/poetix/fluvius/fluvius-json/checkstyle.html</link>
+            <link>https://poetix.github.io/fluvius/fluvius-json/checkstyle.html</link>
       <description>
-        <p>Click <a href="http://github.com/poetix/fluvius/fluvius-json/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://poetix.github.io/fluvius/fluvius-json/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.FlowEventViewTranslator.java">com/codepoetics/fluvius/json/history/FlowEventViewTranslator.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.FlowEventViewTranslator.java">com/codepoetics/fluvius/json/history/FlowEventViewTranslator.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.FlowEventView.java">com/codepoetics/fluvius/json/history/FlowEventView.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.FlowEventView.java">com/codepoetics/fluvius/json/history/FlowEventView.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.FlowHistoryView.java">com/codepoetics/fluvius/json/history/FlowHistoryView.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.FlowHistoryView.java">com/codepoetics/fluvius/json/history/FlowHistoryView.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.TraceMapView.java">com/codepoetics/fluvius/json/history/TraceMapView.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.TraceMapView.java">com/codepoetics/fluvius/json/history/TraceMapView.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.JsonEventDataSerialiser.java">com/codepoetics/fluvius/json/history/JsonEventDataSerialiser.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-json/checkstyle.html#com.codepoetics.fluvius.json.history.JsonEventDataSerialiser.java">com/codepoetics/fluvius/json/history/JsonEventDataSerialiser.java</a>
                 </td>
                 <td>
                   0

@@ -20,7 +20,7 @@ under the License.
 <rss version="0.91">
   <channel>
     <title>fluvius-api - Checkstyle report</title>
-    <link>http://github.com/poetix/fluvius/fluvius-api</link>
+    <link>https://poetix.github.io/fluvius/fluvius-api</link>
     <description>fluvius-api - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2017</copyright>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>http://github.com/poetix/fluvius/fluvius-api/checkstyle.html</link>
+            <link>https://poetix.github.io/fluvius/fluvius-api/checkstyle.html</link>
       <description>
-        <p>Click <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.F2.java">com/codepoetics/fluvius/api/functional/F2.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.F2.java">com/codepoetics/fluvius/api/functional/F2.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.package-info.java">com/codepoetics/fluvius/api/tracing/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.package-info.java">com/codepoetics/fluvius/api/tracing/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.TraceMapNotFoundException.java">com/codepoetics/fluvius/exceptions/TraceMapNotFoundException.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.TraceMapNotFoundException.java">com/codepoetics/fluvius/exceptions/TraceMapNotFoundException.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Operation.java">com/codepoetics/fluvius/api/Operation.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Operation.java">com/codepoetics/fluvius/api/Operation.java</a>
                 </td>
                 <td>
                   0
@@ -102,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.F1.java">com/codepoetics/fluvius/api/functional/F1.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.F1.java">com/codepoetics/fluvius/api/functional/F1.java</a>
                 </td>
                 <td>
                   0
@@ -116,7 +116,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.Key.java">com/codepoetics/fluvius/api/scratchpad/Key.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.Key.java">com/codepoetics/fluvius/api/scratchpad/Key.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +130,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.package-info.java">com/codepoetics/fluvius/exceptions/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.package-info.java">com/codepoetics/fluvius/exceptions/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -144,7 +144,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.compilation.package-info.java">com/codepoetics/fluvius/api/compilation/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.compilation.package-info.java">com/codepoetics/fluvius/api/compilation/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -158,7 +158,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.FlowStepType.java">com/codepoetics/fluvius/api/tracing/FlowStepType.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.FlowStepType.java">com/codepoetics/fluvius/api/tracing/FlowStepType.java</a>
                 </td>
                 <td>
                   0
@@ -172,7 +172,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.P1.java">com/codepoetics/fluvius/api/functional/P1.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.P1.java">com/codepoetics/fluvius/api/functional/P1.java</a>
                 </td>
                 <td>
                   0
@@ -186,7 +186,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Action.java">com/codepoetics/fluvius/api/Action.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Action.java">com/codepoetics/fluvius/api/Action.java</a>
                 </td>
                 <td>
                   0
@@ -200,7 +200,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.Scratchpad.java">com/codepoetics/fluvius/api/scratchpad/Scratchpad.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.Scratchpad.java">com/codepoetics/fluvius/api/scratchpad/Scratchpad.java</a>
                 </td>
                 <td>
                   0
@@ -214,7 +214,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.StepStartedEvent.java">com/codepoetics/fluvius/api/history/StepStartedEvent.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.StepStartedEvent.java">com/codepoetics/fluvius/api/history/StepStartedEvent.java</a>
                 </td>
                 <td>
                   0
@@ -228,7 +228,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowHistoryRepository.java">com/codepoetics/fluvius/api/history/FlowHistoryRepository.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowHistoryRepository.java">com/codepoetics/fluvius/api/history/FlowHistoryRepository.java</a>
                 </td>
                 <td>
                   0
@@ -242,7 +242,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.logging.FlowLogger.java">com/codepoetics/fluvius/api/logging/FlowLogger.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.logging.FlowLogger.java">com/codepoetics/fluvius/api/logging/FlowLogger.java</a>
                 </td>
                 <td>
                   0
@@ -256,7 +256,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException.java">com/codepoetics/fluvius/exceptions/IllegalBranchOutputKeyException.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException.java">com/codepoetics/fluvius/exceptions/IllegalBranchOutputKeyException.java</a>
                 </td>
                 <td>
                   0
@@ -270,7 +270,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.F3.java">com/codepoetics/fluvius/api/functional/F3.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.F3.java">com/codepoetics/fluvius/api/functional/F3.java</a>
                 </td>
                 <td>
                   0
@@ -284,7 +284,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TraceMap.java">com/codepoetics/fluvius/api/tracing/TraceMap.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TraceMap.java">com/codepoetics/fluvius/api/tracing/TraceMap.java</a>
                 </td>
                 <td>
                   0
@@ -298,7 +298,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.FlowVisitor.java">com/codepoetics/fluvius/api/FlowVisitor.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.FlowVisitor.java">com/codepoetics/fluvius/api/FlowVisitor.java</a>
                 </td>
                 <td>
                   0
@@ -312,7 +312,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEventStore.java">com/codepoetics/fluvius/api/history/FlowEventStore.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEventStore.java">com/codepoetics/fluvius/api/history/FlowEventStore.java</a>
                 </td>
                 <td>
                   0
@@ -326,7 +326,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.description.package-info.java">com/codepoetics/fluvius/api/description/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.description.package-info.java">com/codepoetics/fluvius/api/description/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -340,7 +340,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.logging.package-info.java">com/codepoetics/fluvius/api/logging/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.logging.package-info.java">com/codepoetics/fluvius/api/logging/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -354,7 +354,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Flow.java">com/codepoetics/fluvius/api/Flow.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Flow.java">com/codepoetics/fluvius/api/Flow.java</a>
                 </td>
                 <td>
                   0
@@ -368,7 +368,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEventRepository.java">com/codepoetics/fluvius/api/history/FlowEventRepository.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEventRepository.java">com/codepoetics/fluvius/api/history/FlowEventRepository.java</a>
                 </td>
                 <td>
                   0
@@ -382,7 +382,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.FlowResultCallback.java">com/codepoetics/fluvius/api/FlowResultCallback.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.FlowResultCallback.java">com/codepoetics/fluvius/api/FlowResultCallback.java</a>
                 </td>
                 <td>
                   0
@@ -396,7 +396,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.ScratchpadPredicate.java">com/codepoetics/fluvius/api/functional/ScratchpadPredicate.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.ScratchpadPredicate.java">com/codepoetics/fluvius/api/functional/ScratchpadPredicate.java</a>
                 </td>
                 <td>
                   0
@@ -410,7 +410,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.RecoveryFunction.java">com/codepoetics/fluvius/api/functional/RecoveryFunction.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.RecoveryFunction.java">com/codepoetics/fluvius/api/functional/RecoveryFunction.java</a>
                 </td>
                 <td>
                   0
@@ -424,7 +424,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.StepFailedEvent.java">com/codepoetics/fluvius/api/history/StepFailedEvent.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.StepFailedEvent.java">com/codepoetics/fluvius/api/history/StepFailedEvent.java</a>
                 </td>
                 <td>
                   0
@@ -438,7 +438,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.KeyValue.java">com/codepoetics/fluvius/api/scratchpad/KeyValue.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.KeyValue.java">com/codepoetics/fluvius/api/scratchpad/KeyValue.java</a>
                 </td>
                 <td>
                   0
@@ -452,7 +452,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.Mapper.java">com/codepoetics/fluvius/api/functional/Mapper.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.Mapper.java">com/codepoetics/fluvius/api/functional/Mapper.java</a>
                 </td>
                 <td>
                   0
@@ -466,7 +466,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEventTranslator.java">com/codepoetics/fluvius/api/history/FlowEventTranslator.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEventTranslator.java">com/codepoetics/fluvius/api/history/FlowEventTranslator.java</a>
                 </td>
                 <td>
                   0
@@ -480,7 +480,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.TraceMapRepository.java">com/codepoetics/fluvius/api/history/TraceMapRepository.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.TraceMapRepository.java">com/codepoetics/fluvius/api/history/TraceMapRepository.java</a>
                 </td>
                 <td>
                   0
@@ -494,7 +494,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.StepSucceededEvent.java">com/codepoetics/fluvius/api/history/StepSucceededEvent.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.StepSucceededEvent.java">com/codepoetics/fluvius/api/history/StepSucceededEvent.java</a>
                 </td>
                 <td>
                   0
@@ -508,7 +508,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Conditional.java">com/codepoetics/fluvius/api/Conditional.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Conditional.java">com/codepoetics/fluvius/api/Conditional.java</a>
                 </td>
                 <td>
                   0
@@ -522,7 +522,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.package-info.java">com/codepoetics/fluvius/api/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.package-info.java">com/codepoetics/fluvius/api/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -536,7 +536,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.description.FlowDescription.java">com/codepoetics/fluvius/api/description/FlowDescription.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.description.FlowDescription.java">com/codepoetics/fluvius/api/description/FlowDescription.java</a>
                 </td>
                 <td>
                   0
@@ -550,7 +550,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TracedFlowExecution.java">com/codepoetics/fluvius/api/tracing/TracedFlowExecution.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TracedFlowExecution.java">com/codepoetics/fluvius/api/tracing/TracedFlowExecution.java</a>
                 </td>
                 <td>
                   0
@@ -564,7 +564,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.package-info.java">com/codepoetics/fluvius/api/functional/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.package-info.java">com/codepoetics/fluvius/api/functional/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -578,7 +578,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.package-info.java">com/codepoetics/fluvius/api/scratchpad/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.package-info.java">com/codepoetics/fluvius/api/scratchpad/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -592,7 +592,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TracedAction.java">com/codepoetics/fluvius/api/tracing/TracedAction.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TracedAction.java">com/codepoetics/fluvius/api/tracing/TracedAction.java</a>
                 </td>
                 <td>
                   0
@@ -606,7 +606,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException.java">com/codepoetics/fluvius/exceptions/FailedKeyRetrievedException.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException.java">com/codepoetics/fluvius/exceptions/FailedKeyRetrievedException.java</a>
                 </td>
                 <td>
                   0
@@ -620,7 +620,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.FlowExecution.java">com/codepoetics/fluvius/api/FlowExecution.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.FlowExecution.java">com/codepoetics/fluvius/api/FlowExecution.java</a>
                 </td>
                 <td>
                   0
@@ -634,7 +634,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TraceEventListener.java">com/codepoetics/fluvius/api/tracing/TraceEventListener.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.tracing.TraceEventListener.java">com/codepoetics/fluvius/api/tracing/TraceEventListener.java</a>
                 </td>
                 <td>
                   0
@@ -648,7 +648,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowHistory.java">com/codepoetics/fluvius/api/history/FlowHistory.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowHistory.java">com/codepoetics/fluvius/api/history/FlowHistory.java</a>
                 </td>
                 <td>
                   0
@@ -662,7 +662,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.EventDataSerialiser.java">com/codepoetics/fluvius/api/history/EventDataSerialiser.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.EventDataSerialiser.java">com/codepoetics/fluvius/api/history/EventDataSerialiser.java</a>
                 </td>
                 <td>
                   0
@@ -676,7 +676,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage.java">com/codepoetics/fluvius/api/scratchpad/ScratchpadStorage.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.scratchpad.ScratchpadStorage.java">com/codepoetics/fluvius/api/scratchpad/ScratchpadStorage.java</a>
                 </td>
                 <td>
                   0
@@ -690,7 +690,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.MissingKeysException.java">com/codepoetics/fluvius/exceptions/MissingKeysException.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.exceptions.MissingKeysException.java">com/codepoetics/fluvius/exceptions/MissingKeysException.java</a>
                 </td>
                 <td>
                   0
@@ -704,7 +704,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEvent.java">com/codepoetics/fluvius/api/history/FlowEvent.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.FlowEvent.java">com/codepoetics/fluvius/api/history/FlowEvent.java</a>
                 </td>
                 <td>
                   0
@@ -718,7 +718,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.compilation.TracedFlowCompiler.java">com/codepoetics/fluvius/api/compilation/TracedFlowCompiler.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.compilation.TracedFlowCompiler.java">com/codepoetics/fluvius/api/compilation/TracedFlowCompiler.java</a>
                 </td>
                 <td>
                   0
@@ -732,7 +732,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.package-info.java">com/codepoetics/fluvius/api/history/package-info.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.history.package-info.java">com/codepoetics/fluvius/api/history/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -746,7 +746,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.ScratchpadFunction.java">com/codepoetics/fluvius/api/functional/ScratchpadFunction.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.functional.ScratchpadFunction.java">com/codepoetics/fluvius/api/functional/ScratchpadFunction.java</a>
                 </td>
                 <td>
                   0
@@ -760,7 +760,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Condition.java">com/codepoetics/fluvius/api/Condition.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.Condition.java">com/codepoetics/fluvius/api/Condition.java</a>
                 </td>
                 <td>
                   0
@@ -774,7 +774,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.description.DescriptionWriter.java">com/codepoetics/fluvius/api/description/DescriptionWriter.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.description.DescriptionWriter.java">com/codepoetics/fluvius/api/description/DescriptionWriter.java</a>
                 </td>
                 <td>
                   0
@@ -788,7 +788,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://github.com/poetix/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.compilation.FlowCompiler.java">com/codepoetics/fluvius/api/compilation/FlowCompiler.java</a>
+                  <a href="https://poetix.github.io/fluvius/fluvius-api/checkstyle.html#com.codepoetics.fluvius.api.compilation.FlowCompiler.java">com/codepoetics/fluvius/api/compilation/FlowCompiler.java</a>
                 </td>
                 <td>
                   0
