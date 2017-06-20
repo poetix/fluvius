@@ -30,10 +30,7 @@ public class RecordingMatcher {
     return new BaseMatcher<T>() {
       @Override
       public boolean matches(Object o) {
-        if (!recordedValues.containsKey(name)) {
-          return false;
-        }
-        return recordedValues.get(name).equals(o);
+        return recordedValues.containsKey(name) && recordedValues.get(name).equals(o);
       }
 
       @Override

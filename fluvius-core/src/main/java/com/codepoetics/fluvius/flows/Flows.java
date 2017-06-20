@@ -1,8 +1,6 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.functional.RecoveryFunction;
-import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.logging.FlowLogger;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
@@ -14,12 +12,10 @@ import com.codepoetics.fluvius.describers.FlowDescriber;
 import com.codepoetics.fluvius.describers.PrettyPrintingDescriptionWriter;
 import com.codepoetics.fluvius.execution.KeyCheckingFlowExecution;
 import com.codepoetics.fluvius.execution.TraceMapCapturingFlowExecution;
-import com.codepoetics.fluvius.operations.Operations;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
 import com.codepoetics.fluvius.visitors.Visitors;
 
-import java.util.Collections;
 import java.util.UUID;
 
 /**

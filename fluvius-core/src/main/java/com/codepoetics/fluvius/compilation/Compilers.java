@@ -6,7 +6,6 @@ import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.FlowVisitor;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
-import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
 import com.codepoetics.fluvius.api.logging.FlowLogger;
 import com.codepoetics.fluvius.api.tracing.TraceEventListener;

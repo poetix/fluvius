@@ -5,7 +5,6 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.exceptions.MissingKeysException;
-import com.codepoetics.fluvius.execution.AbstractFlowExecution;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 
 import java.util.HashSet;

@@ -1,7 +1,5 @@
 package com.codepoetics.fluvius.api.functional;
 
-import java.io.Serializable;
-
 /**
  * A mapping function taking a single argument.
  *

@@ -59,6 +59,7 @@ public final class ATraceMap extends BasePropertyMatcher<TraceMap> {
     return withRequiredKeys(Matchers.containsInAnyOrder(requiredKeys));
   }
 
+  @SafeVarargs
   public final ATraceMap withRequiredKeys(Matcher<? super String>...keyMatchers) {
     return withRequiredKeys(Matchers.containsInAnyOrder(Arrays.asList(keyMatchers)));
   }
@@ -81,7 +82,8 @@ public final class ATraceMap extends BasePropertyMatcher<TraceMap> {
     return this;
   }
 
-  public ATraceMap withChildren(Matcher<? super TraceMap>...traceMapMatchers) {
+  @SafeVarargs
+  public final ATraceMap withChildren(Matcher<? super TraceMap>...traceMapMatchers) {
     return withChildren(Arrays.asList(traceMapMatchers));
   }
 

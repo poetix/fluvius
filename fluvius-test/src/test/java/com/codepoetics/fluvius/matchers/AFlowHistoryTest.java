@@ -1,20 +1,14 @@
 package com.codepoetics.fluvius.matchers;
 
-import com.codepoetics.fluvius.api.history.FlowEvent;
-import com.codepoetics.fluvius.api.history.FlowHistory;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
-import com.codepoetics.fluvius.api.tracing.TraceMap;
 import com.codepoetics.fluvius.test.builders.TestFlowEvent;
 import com.codepoetics.fluvius.test.builders.TestFlowHistory;
 import com.codepoetics.fluvius.test.builders.TestTraceMap;
 import com.codepoetics.fluvius.test.matchers.AFlowEvent;
 import com.codepoetics.fluvius.test.matchers.AFlowHistory;
 import com.codepoetics.fluvius.test.matchers.ATraceMap;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;

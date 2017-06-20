@@ -1,11 +1,9 @@
 package com.codepoetics.fluvius.predicates;
 
-import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.functional.P1;
 import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
-import com.codepoetics.fluvius.conditions.Conditions;
 
 /**
  * Utility class for constructing predicates.

@@ -36,7 +36,9 @@ public final class TestFlowHistory<T> implements FlowHistory<T> {
     return traceMap;
   }
 
-  public TestFlowHistory<T> withEventHistory(FlowEvent<? extends T>...events) {
+  @SuppressWarnings("unchecked")
+  @SafeVarargs
+  public final TestFlowHistory<T> withEventHistory(FlowEvent<? extends T>...events) {
     return withEventHistory((List) Arrays.asList(events));
   }
 

@@ -13,7 +13,6 @@ import com.codepoetics.fluvius.test.matchers.AFlowHistory;
 import com.codepoetics.fluvius.test.matchers.ATraceMap;
 import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
 import com.codepoetics.fluvius.tracing.TraceMaps;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.UUID;

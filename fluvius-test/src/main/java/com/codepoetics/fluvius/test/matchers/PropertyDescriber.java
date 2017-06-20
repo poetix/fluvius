@@ -1,6 +1,5 @@
 package com.codepoetics.fluvius.test.matchers;
 
-import com.codepoetics.fluvius.api.tracing.TraceMap;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 

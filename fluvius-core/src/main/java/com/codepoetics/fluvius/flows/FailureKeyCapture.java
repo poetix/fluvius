@@ -3,7 +3,7 @@ package com.codepoetics.fluvius.flows;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 /**
- * Created by dominicfox on 19/06/2017.
+ * Part of the fluent API for defining flows that recover from failures.
  */
 public final class FailureKeyCapture {
   private final Key<?> failureKey;

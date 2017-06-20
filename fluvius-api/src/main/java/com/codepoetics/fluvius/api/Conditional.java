@@ -1,6 +1,5 @@
 package com.codepoetics.fluvius.api;
 
-import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.Mapper;
 
 /**

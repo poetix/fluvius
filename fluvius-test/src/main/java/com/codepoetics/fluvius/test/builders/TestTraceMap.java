@@ -33,7 +33,7 @@ public class TestTraceMap implements TraceMap {
   }
 
   public TestTraceMap withRequiredKeys(String...requiredKeys) {
-    return withRequiredKeys(new HashSet<String>(Arrays.asList(requiredKeys)));
+    return withRequiredKeys(new HashSet<>(Arrays.asList(requiredKeys)));
   }
 
   public TestTraceMap withRequiredKeys(Set<String> requiredKeys) {
