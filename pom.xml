@@ -148,6 +148,14 @@
         <module>fluvius-test</module>
     </modules>
 
+    <distributionManagement>
+        <site>
+            <name>Github Pages</name>
+            <url>https://poetix.github.com/fluvius</url>
+            <id>github-pages</id>
+        </site>
+    </distributionManagement>
+
     <scm>
         <connection>scm:git:git://github.com/poetix/fluvius.git</connection>
         <developerConnection>scm:git:git@github.com:poetix/fluvius.git</developerConnection>
