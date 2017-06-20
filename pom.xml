@@ -159,7 +159,7 @@
     <scm>
         <connection>scm:git:git://github.com/poetix/fluvius.git</connection>
         <developerConnection>scm:git:git@github.com:poetix/fluvius.git</developerConnection>
-        <url>http://github.com/poetix/fluvius</url>
+	<url>https://poetix.github.io/fluvius</url>
     </scm>
 
 </project>
