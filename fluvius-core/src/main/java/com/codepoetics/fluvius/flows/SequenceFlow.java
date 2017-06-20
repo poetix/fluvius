@@ -36,7 +36,7 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     requiredKeysForLast.removeAll(providedKeys);
     requiredKeys.addAll(requiredKeysForLast);
 
-    return new SequenceFlow<>(requiredKeys, first, middle, last);
+    return new SequenceFlow<>(UUID.randomUUID(), requiredKeys, first, middle, last);
   }
 
   @SuppressWarnings("unchecked")
@@ -52,8 +52,8 @@ class SequenceFlow<T> extends AbstractFlow<T> {
   private final List<Flow<?>> middle;
   private final Flow<T> last;
 
-  private SequenceFlow(final Set<Key<?>> requiredKeys, final Flow<?> first, final List<Flow<?>> middle, final Flow<T> last) {
-    super(requiredKeys, last.getProvidedKey());
+  private SequenceFlow(final UUID stepId, final Set<Key<?>> requiredKeys, final Flow<?> first, final List<Flow<?>> middle, final Flow<T> last) {
+    super(stepId, requiredKeys, last.getProvidedKey());
     this.first = first;
     this.middle = middle;
     this.last = last;
@@ -73,7 +73,7 @@ class SequenceFlow<T> extends AbstractFlow<T> {
     for (final Flow<?> flow : allFlows()) {
       items.add(flow.visit(visitor));
     }
-    return visitor.visitSequence(getRequiredKeys(), getProvidedKey(), items);
+    return visitor.visitSequence(getStepId(), getRequiredKeys(), getProvidedKey(), items);
   }
 
   @Override

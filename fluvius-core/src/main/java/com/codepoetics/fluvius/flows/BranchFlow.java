@@ -4,7 +4,6 @@ import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Conditional;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowVisitor;
-import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.Mapper;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException;
@@ -86,14 +85,14 @@ class BranchFlow<T> extends AbstractFlow<T> {
       requiredKeys.addAll(conditionalFlow.getIfTrue().getRequiredKeys());
     }
 
-    return new BranchFlow<>(requiredKeys, defaultOutputKey, defaultFlow, branches);
+    return new BranchFlow<>(UUID.randomUUID(), requiredKeys, defaultOutputKey, defaultFlow, branches);
   }
 
   private final Flow<T> defaultFlow;
   private final List<ConditionalFlow<T>> branches;
 
-  private BranchFlow(final Set<Key<?>> inputKeys, final Key<T> outputKey, final Flow<T> defaultFlow, final List<ConditionalFlow<T>> branches) {
-    super(inputKeys, outputKey);
+  private BranchFlow(final UUID stepId, final Set<Key<?>> inputKeys, final Key<T> outputKey, final Flow<T> defaultFlow, final List<ConditionalFlow<T>> branches) {
+    super(stepId, inputKeys, outputKey);
     this.defaultFlow = defaultFlow;
     this.branches = branches;
   }
@@ -105,7 +104,7 @@ class BranchFlow<T> extends AbstractFlow<T> {
       branchActions.add(
           conditionalFlow.toConditional(visitor));
     }
-    return visitor.visitBranch(getRequiredKeys(), getProvidedKey(), defaultFlow.visit(visitor), branchActions);
+    return visitor.visitBranch(getStepId(), getRequiredKeys(), getProvidedKey(), defaultFlow.visit(visitor), branchActions);
   }
 
   @Override

@@ -71,19 +71,19 @@ public final class Visitors {
     }
 
     @Override
-    public <T> Action visitSingle(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+    public <T> Action visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
       return new LoggingAction(flowLogger, operation.getName(), providedKey,
-          innerVisitor.visitSingle(requiredKeys, providedKey, operation));
+          innerVisitor.visitSingle(stepId, requiredKeys, providedKey, operation));
     }
 
     @Override
-    public <T> Action visitSequence(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<Action> actions) {
-      return innerVisitor.visitSequence(requiredKeys, providedKey, actions);
+    public <T> Action visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<Action> actions) {
+      return innerVisitor.visitSequence(stepId, requiredKeys, providedKey, actions);
     }
 
     @Override
-    public <T> Action visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final List<Conditional<Action>> conditionalActions) {
-      return innerVisitor.visitBranch(requiredKeys, providedKey, defaultAction, conditionalActions);
+    public <T> Action visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Action defaultAction, final List<Conditional<Action>> conditionalActions) {
+      return innerVisitor.visitBranch(stepId, requiredKeys, providedKey, defaultAction, conditionalActions);
     }
 
     @Override

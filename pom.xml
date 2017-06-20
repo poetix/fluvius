@@ -54,6 +54,16 @@
             </dependency>
             <dependency>
                 <groupId>com.codepoetics</groupId>
+                <artifactId>fluvius-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codepoetics</groupId>
+                <artifactId>fluvius-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codepoetics</groupId>
                 <artifactId>fluvius-json</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -134,6 +144,8 @@
     <modules>
         <module>fluvius-core</module>
         <module>fluvius-json</module>
+        <module>fluvius-api</module>
+        <module>fluvius-test</module>
     </modules>
 
     <scm>

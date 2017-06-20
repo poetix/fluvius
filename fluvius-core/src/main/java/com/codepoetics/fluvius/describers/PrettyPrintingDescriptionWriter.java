@@ -6,6 +6,7 @@ import com.codepoetics.fluvius.api.description.FlowDescription;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
+import java.util.UUID;
 
 /**
  * A DescriptionWriter that pretty-prints the description of a Flow.
@@ -24,12 +25,12 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeSingleFlow(final List<String> requiredKeyNames, final String providedKeyName, final String name) {
+  public DescriptionWriter writeSingleFlow(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName, final String name) {
     return append(name).append(" ").stateRequirements(requiredKeyNames, providedKeyName);
   }
 
   @Override
-  public DescriptionWriter writeStartSequence(final List<String> requiredKeyNames, final String providedKeyName) {
+  public DescriptionWriter writeStartSequence(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName) {
     return append("Sequence ")
         .stateRequirements(requiredKeyNames, providedKeyName)
         .append(":")
@@ -56,7 +57,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartBranch(final List<String> requiredKeyNames, final String providedKeyName) {
+  public DescriptionWriter writeStartBranch(UUID stepId, final List<String> requiredKeyNames, final String providedKeyName) {
     return append("Branch ")
         .stateRequirements(requiredKeyNames, providedKeyName)
         .append(":")

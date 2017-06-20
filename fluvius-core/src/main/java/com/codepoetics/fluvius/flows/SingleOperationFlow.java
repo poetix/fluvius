@@ -7,23 +7,24 @@ import com.codepoetics.fluvius.api.Operation;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 import java.util.Set;
+import java.util.UUID;
 
 class SingleOperationFlow<T> extends AbstractFlow<T> {
 
   static <T> Flow<T> create(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-    return new SingleOperationFlow<>(requiredKeys, providedKey, operation);
+    return new SingleOperationFlow<>(UUID.randomUUID(), requiredKeys, providedKey, operation);
   }
 
   private final Operation<T> operation;
 
-  private SingleOperationFlow(final Set<Key<?>> requiredKeys, final Key<T> providedKeys, final Operation<T> operation) {
-    super(requiredKeys, providedKeys);
+  private SingleOperationFlow(UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKeys, final Operation<T> operation) {
+    super(stepId, requiredKeys, providedKeys);
     this.operation = operation;
   }
 
   @Override
   public <V> V visit(final FlowVisitor<V> visitor) {
-    return visitor.visitSingle(getRequiredKeys(), getProvidedKey(), operation);
+    return visitor.visitSingle(getStepId(), getRequiredKeys(), getProvidedKey(), operation);
   }
 
   @Override

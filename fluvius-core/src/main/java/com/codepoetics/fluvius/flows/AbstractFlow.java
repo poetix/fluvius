@@ -8,12 +8,19 @@ import java.util.*;
 
 abstract class AbstractFlow<T> implements Flow<T> {
 
+  private final UUID stepId;
   private final Set<Key<?>> requiredKeys;
   private final Key<T> providedKey;
 
-  AbstractFlow(final Set<Key<?>> requiredKeys, final Key<T> providedKey) {
+  AbstractFlow(UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey) {
+    this.stepId = stepId;
     this.requiredKeys = requiredKeys;
     this.providedKey = providedKey;
+  }
+
+  @Override
+  public UUID getStepId() {
+    return stepId;
   }
 
   @Override

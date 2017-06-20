@@ -5,15 +5,23 @@ import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
+import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
+import com.codepoetics.fluvius.test.matchers.AFlowEvent;
+import com.codepoetics.fluvius.test.matchers.AFlowHistory;
+import com.codepoetics.fluvius.test.matchers.ATraceMap;
+import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
+import com.codepoetics.fluvius.tracing.TraceMaps;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.UUID;
 
 import static com.codepoetics.fluvius.FlowExample.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public class InMemoryRepositoryTest {
+public class FlowHistoryTest {
 
   private final FlowHistoryRepository<String> repository = History.createInMemoryRepository(EventDataSerialisers.toStringSerialiser());
   private final FlowCompiler compiler = Compilers.builder()
@@ -23,6 +31,8 @@ public class InMemoryRepositoryTest {
 
   @Test
   public void inMemoryRepositoryStoresFlowHistory() throws Exception {
+    RecordingMatcher recorder = new RecordingMatcher();
+
     final Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
@@ -45,6 +55,20 @@ public class InMemoryRepositoryTest {
 
     final Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
 
+    assertThat(
+        TraceMaps.getTraceMap(completeFlow),
+        ATraceMap.ofType(FlowStepType.SEQUENCE)
+            .withChildren(
+                ATraceMap.ofType(FlowStepType.STEP)
+                    .withId(recorder.record("authorize user"))
+                    .withDescription("Authorize user"),
+
+                ATraceMap.ofType(FlowStepType.STEP)
+                    .withId(recorder.record("get temperature"))
+                    .withDescription("Get local temperature")
+            )
+    );
+
     final FlowExecution<Double> execution = compiler.compile(completeFlow);
 
     final UUID flowId = UUID.randomUUID();
@@ -57,6 +81,23 @@ public class InMemoryRepositoryTest {
             postcode.of("VB6 5UX")
         );
 
-    System.out.println(repository.getFlowHistory(flowId));
+    assertThat(repository.getFlowHistory(flowId),
+        AFlowHistory
+            .<String>withFlowId(flowId)
+
+            .withEventHistory(
+                AFlowEvent.<String>stepStarted(),
+
+                  AFlowEvent.<String>stepStarted()
+                      .withStepId(recorder.equalsRecorded("authorize user")),
+                  AFlowEvent.stepSucceeded("ACCESS TOKEN"),
+
+                  AFlowEvent.<String>stepStarted()
+                      .withStepId(recorder.equalsRecorded("get temperature")),
+                  AFlowEvent.stepSucceeded("26.0"),
+
+                AFlowEvent.stepSucceeded("26.0")
+            )
+    );
   }
 }

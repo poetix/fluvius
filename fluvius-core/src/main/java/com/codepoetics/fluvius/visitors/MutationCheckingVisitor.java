@@ -16,19 +16,19 @@ final class MutationCheckingVisitor<V> implements FlowVisitor<V> {
   }
 
   @Override
-  public <T> V visitSingle(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-    return innerVisitor.visitSingle(requiredKeys, providedKey, new MutationCheckingOperation<>(operation));
+  public <T> V visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+    return innerVisitor.visitSingle(stepId, requiredKeys, providedKey, new MutationCheckingOperation<>(operation));
   }
 
   @Override
-  public <T> V visitSequence(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<V> items) {
-    return innerVisitor.visitSequence(requiredKeys, providedKey, items);
+  public <T> V visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<V> items) {
+    return innerVisitor.visitSequence(stepId, requiredKeys, providedKey, items);
   }
 
   @Override
-  public <T> V visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final V defaultBranch,
+  public <T> V visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final V defaultBranch,
                            final List<Conditional<V>> conditionalBranches) {
-    return innerVisitor.visitBranch(requiredKeys, providedKey, defaultBranch, conditionalBranches);
+    return innerVisitor.visitBranch(stepId, requiredKeys, providedKey, defaultBranch, conditionalBranches);
   }
 
   @Override

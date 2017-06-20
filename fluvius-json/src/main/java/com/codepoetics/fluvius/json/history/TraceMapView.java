@@ -13,7 +13,7 @@ public final class TraceMapView {
 
   public static TraceMapView from(TraceMap traceMap) {
     return new TraceMapView(
-        traceMap.getId().toString(),
+        traceMap.getStepId().toString(),
         traceMap.getDescription(),
         traceMap.getType().name(),
         traceMap.getRequiredKeys(),

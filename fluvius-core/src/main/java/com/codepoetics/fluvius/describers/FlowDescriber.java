@@ -25,22 +25,22 @@ public class FlowDescriber implements FlowVisitor<FlowDescription> {
   }
 
   @Override
-  public <T> FlowDescription visitSingle(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-    return new SingleFlowDescription(operation.getName(), toKeyNames(requiredKeys), providedKey.getName());
+  public <T> FlowDescription visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+    return new SingleFlowDescription(stepId, operation.getName(), toKeyNames(requiredKeys), providedKey.getName());
   }
 
   @Override
-  public <T> FlowDescription visitSequence(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<FlowDescription> flows) {
-    return new SequenceFlowDescription(toKeyNames(requiredKeys), providedKey.getName(), flows);
+  public <T> FlowDescription visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<FlowDescription> flows) {
+    return new SequenceFlowDescription(stepId, toKeyNames(requiredKeys), providedKey.getName(), flows);
   }
 
   @Override
-  public <T> FlowDescription visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final FlowDescription defaultBranch, final List<Conditional<FlowDescription>> conditionalBranches) {
+  public <T> FlowDescription visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final FlowDescription defaultBranch, final List<Conditional<FlowDescription>> conditionalBranches) {
     final Map<String, FlowDescription> branchDescriptions = new LinkedHashMap<>();
     for (final Conditional<FlowDescription> conditional : conditionalBranches) {
       branchDescriptions.put(conditional.getCondition().getDescription(), conditional.getValue());
     }
-    return new BranchFlowDescription(toKeyNames(requiredKeys), providedKey.getName(), defaultBranch, branchDescriptions);
+    return new BranchFlowDescription(stepId, toKeyNames(requiredKeys), providedKey.getName(), defaultBranch, branchDescriptions);
   }
 
   @Override

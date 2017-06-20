@@ -1,7 +1,6 @@
 package com.codepoetics.fluvius.tracing;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.Mapper;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
@@ -44,26 +43,26 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
   }
 
   @Override
-  public <T> TracedAction visitSingle(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
-    final TraceMap traceMap = traceMapVisitor.visitSingle(requiredKeys, providedKey, operation);
+  public <T> TracedAction visitSingle(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final Operation<T> operation) {
+    final TraceMap traceMap = traceMapVisitor.visitSingle(stepId, requiredKeys, providedKey, operation);
     final Action action = new NotifyingAction(
-        traceMap.getId(),
+        traceMap.getStepId(),
         listener,
         providedKey,
-        actionVisitor.visitSingle(requiredKeys, providedKey, operation));
+        actionVisitor.visitSingle(stepId, requiredKeys, providedKey, operation));
 
     return new ConcreteTracedAction(traceMap, action);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> TracedAction visitSequence(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<TracedAction> items) {
-    final TraceMap traceMap = traceMapVisitor.visitSequence(requiredKeys, providedKey, getItemTraceMaps(items));
+  public <T> TracedAction visitSequence(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final List<TracedAction> items) {
+    final TraceMap traceMap = traceMapVisitor.visitSequence(stepId, requiredKeys, providedKey, getItemTraceMaps(items));
     final Action action = new NotifyingAction(
-        traceMap.getId(),
+        traceMap.getStepId(),
         listener,
         providedKey,
-        actionVisitor.visitSequence(requiredKeys, providedKey, (List) items));
+        actionVisitor.visitSequence(stepId, requiredKeys, providedKey, (List) items));
 
     return new ConcreteTracedAction(traceMap, action);
   }
@@ -78,18 +77,20 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> TracedAction visitBranch(final Set<Key<?>> requiredKeys, final Key<T> providedKey, final TracedAction defaultBranch, final List<Conditional<TracedAction>> conditionalBranches) {
+  public <T> TracedAction visitBranch(final UUID stepId, final Set<Key<?>> requiredKeys, final Key<T> providedKey, final TracedAction defaultBranch, final List<Conditional<TracedAction>> conditionalBranches) {
     final TraceMap traceMap = traceMapVisitor.visitBranch(
+        stepId,
         requiredKeys,
         providedKey,
         defaultBranch.getTraceMap(),
         getConditionalTraceMaps(conditionalBranches));
 
     final Action action = new NotifyingAction(
-        traceMap.getId(),
+        traceMap.getStepId(),
         listener,
         providedKey,
         actionVisitor.visitBranch(
+            stepId,
             requiredKeys,
             providedKey,
             defaultBranch,

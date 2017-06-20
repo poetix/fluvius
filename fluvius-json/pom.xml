@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.codepoetics</groupId>
-            <artifactId>fluvius-core</artifactId>
+            <artifactId>fluvius-api</artifactId>
         </dependency>
 
         <dependency>
@@ -30,6 +30,11 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codepoetics</groupId>
+            <artifactId>fluvius-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
