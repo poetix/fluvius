@@ -1,16 +1,13 @@
 #!/bin/bash
 
-mvn site
+mvn site:stage
 git checkout gh-pages
 
-cp -R fluvius-core/target/site target/site/fluvius-core
-cp -R fluvius-json/target/site target/site/fluvius-json
-
-rm -rf fluvius-core
-rm -rf fluvius-json
-cp -R target/site/* .
+cp -R target/staging/* .
 git add fluvius-core
 git add fluvius-json
+git add fluvius-api
+git add fluvius-test
 git add *.html
 git add js
 git add css
