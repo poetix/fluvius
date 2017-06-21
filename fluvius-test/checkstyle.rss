@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2017</copyright>
     <item>
-      <title>File: 11,
+      <title>File: 13,
              Errors: 0,
-             Warnings: 22,
+             Warnings: 29,
              Infos: 0
       </title>
             <link>https://poetix.github.io/fluvius/fluvius-test/checkstyle.html</link>
@@ -44,6 +44,118 @@ under the License.
             </tr>
           </thead>
           <tbody>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.RecordingMatcher.java">com/codepoetics/fluvius/test/matchers/RecordingMatcher.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.PropertyMismatchDescriber.java">com/codepoetics/fluvius/test/matchers/PropertyMismatchDescriber.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.AFlowHistory.java">com/codepoetics/fluvius/test/matchers/AFlowHistory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.builders.TestTraceMap.java">com/codepoetics/fluvius/test/builders/TestTraceMap.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.AMap.java">com/codepoetics/fluvius/test/matchers/AMap.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.ATraceMap.java">com/codepoetics/fluvius/test/matchers/ATraceMap.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.AFlowEvent.java">com/codepoetics/fluvius/test/matchers/AFlowEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.mocks.MockTraceEventListener.java">com/codepoetics/fluvius/test/mocks/MockTraceEventListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
                           <tr>
                 <td>
                   <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.builders.TestFlowEvent.java">com/codepoetics/fluvius/test/builders/TestFlowEvent.java</a>
@@ -88,34 +200,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.RecordingMatcher.java">com/codepoetics/fluvius/test/matchers/RecordingMatcher.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  4
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.PropertyMismatchDescriber.java">com/codepoetics/fluvius/test/matchers/PropertyMismatchDescriber.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.IndentationControl.java">com/codepoetics/fluvius/test/matchers/IndentationControl.java</a>
                 </td>
                 <td>
@@ -130,63 +214,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.AFlowHistory.java">com/codepoetics/fluvius/test/matchers/AFlowHistory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.builders.TestTraceMap.java">com/codepoetics/fluvius/test/builders/TestTraceMap.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.ATraceMap.java">com/codepoetics/fluvius/test/matchers/ATraceMap.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.PropertyDescriber.java">com/codepoetics/fluvius/test/matchers/PropertyDescriber.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  3
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://poetix.github.io/fluvius/fluvius-test/checkstyle.html#com.codepoetics.fluvius.test.matchers.AFlowEvent.java">com/codepoetics/fluvius/test/matchers/AFlowEvent.java</a>
                 </td>
                 <td>
                   0
