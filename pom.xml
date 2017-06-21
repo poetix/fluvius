@@ -151,11 +151,11 @@
     <distributionManagement>
         <site>
             <name>Github Pages</name>
-            <url>https://poetix.github.io/fluvius</url>
+	    <url>file:///tmp/maven-sites</url>
             <id>github-pages</id>
         </site>
     </distributionManagement>
-
+    
     <scm>
         <connection>scm:git:git://github.com/poetix/fluvius.git</connection>
         <developerConnection>scm:git:git@github.com:poetix/fluvius.git</developerConnection>
