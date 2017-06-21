@@ -1,5 +1,6 @@
 package com.codepoetics.fluvius.test.matchers;
 
+import com.codepoetics.fluvius.api.scratchpad.Key;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -10,6 +11,10 @@ import java.util.Map;
 public class RecordingMatcher {
 
   private final Map<String, Object> recordedValues = new HashMap<>();
+
+  public <T> Matcher<T> record(final Key<T> key) {
+    return record(key.getName());
+  }
 
   public <T> Matcher<T> record(final String name) {
     return new BaseMatcher<T>() {
@@ -24,6 +29,10 @@ public class RecordingMatcher {
         return true;
       }
     };
+  }
+
+  public <T> Matcher<T> equalsRecorded(final Key<T> key) {
+    return equalsRecorded(key.getName());
   }
 
   public <T> Matcher<T> equalsRecorded(final String name) {

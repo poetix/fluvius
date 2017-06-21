@@ -1,18 +1,25 @@
-package com.codepoetics.fluvius;
+package com.codepoetics.fluvius.flows;
 
+import com.codepoetics.fluvius.FlowExample;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
 import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.F2;
+import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
-import com.codepoetics.fluvius.api.tracing.TraceEventListener;
+import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.compilation.Compilers;
-import com.codepoetics.fluvius.flows.Flows;
+import com.codepoetics.fluvius.scratchpad.Keys;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
+import com.codepoetics.fluvius.test.matchers.AMap;
+import com.codepoetics.fluvius.test.matchers.ATraceMap;
+import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
+import com.codepoetics.fluvius.test.mocks.MockTraceEventListener;
 import com.codepoetics.fluvius.utilities.Serialisation;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -21,7 +28,9 @@ import java.util.UUID;
 
 import static com.codepoetics.fluvius.FlowExample.*;
 import static com.codepoetics.fluvius.flows.Flows.branch;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 public class FlowApiTest implements Serializable {
 
@@ -59,114 +68,41 @@ public class FlowApiTest implements Serializable {
 
   @Test
   public void dependencyExample() throws Exception {
-    Flow<String> getAccessToken = Flows
-        .obtaining(accessToken)
-        .from(userName, password)
-        .using("Authorize user", new F2<String, String, String>() {
-          @Override
-          public String apply(String username, String password) {
-            return "ACCESS TOKEN";
-          }
-        });
-
-    Flow<Double> getLocalTemperature = Flows
-        .obtaining(FlowExample.temperature)
-        .from(accessToken, postcode)
-        .using("Get local temperature", new F2<String, String, Double>() {
-          @Override
-          public Double apply(String accessCode, String postcode) {
-            return 26D;
-          }
-        });
-
-    Flow<Double> completeFlow = getAccessToken.then(getLocalTemperature);
+    Flow<Double> completeFlow = createTemperatureRetrievingFlow();
 
     System.out.println(Flows.prettyPrint(completeFlow));
 
-    compiler.compile(completeFlow)
+    assertEquals(Double.valueOf(26D),
+        compiler.compile(completeFlow)
         .run(
             userName.of("Arthur"),
             password.of("Special secret password"),
             postcode.of("VB6 5UX")
-    );
+        ));
   }
 
   @Test
   public void flowsSerialise() throws Exception {
-    Flow<String> getAccessToken = Flows
-        .obtaining(accessToken)
-        .from(userName, password)
-        .using("Authorize user", new F2<String, String, String>() {
-          @Override
-          public String apply(String username, String password) {
-            return "ACCESS TOKEN";
-          }
-        });
+    Flow<Double> completeFlow = Serialisation.roundtrip(createTemperatureRetrievingFlow());
 
-    Flow<Double> getLocalTemperature = Flows
-        .obtaining(FlowExample.temperature)
-        .from(accessToken, postcode)
-        .using("Get local temperature", new F2<String, String, Double>() {
-          @Override
-          public Double apply(String accessCode, String postcode) {
-            return 26D;
-          }
-        });
-
-    Flow<Double> completeFlow = Serialisation.roundtrip(getAccessToken.then(getLocalTemperature));
-
-    System.out.println(Flows.prettyPrint(completeFlow));
-
-    compiler.compile(completeFlow)
-        .run(
-            userName.of("Arthur"),
-            password.of("Special secret password"),
-            postcode.of("VB6 5UX")
-    );
+    assertEquals(Double.valueOf(26D),
+        compiler.compile(completeFlow)
+            .run(
+                userName.of("Arthur"),
+                password.of("Special secret password"),
+                postcode.of("VB6 5UX")
+            ));
   }
 
   @Test
-  public void tracing() throws Exception {
-    Flow<String> getAccessToken = Flows
-        .obtaining(accessToken)
-        .from(userName, password)
-        .using("Authorize user", new F2<String, String, String>() {
-          @Override
-          public String apply(String username, String password) {
-            return "ACCESS TOKEN";
-          }
-        });
+  public void testTracing() throws Exception {
+    RecordingMatcher recorder = new RecordingMatcher();
 
-    Flow<Double> getLocalTemperature = Flows
-        .obtaining(FlowExample.temperature)
-        .from(accessToken, postcode)
-        .using("Get local temperature", new F2<String, String, Double>() {
-          @Override
-          public Double apply(String accessCode, String postcode) {
-            return 26D;
-          }
-        });
-
-    Flow<Double> completeFlow = Serialisation.roundtrip(getAccessToken.then(getLocalTemperature));
+    Flow<Double> completeFlow = createTemperatureRetrievingFlow();
 
     System.out.println(Flows.prettyPrint(completeFlow));
 
-    TraceEventListener listener = new TraceEventListener() {
-      @Override
-      public void stepStarted(UUID flowId, UUID id, Map<String, Object> scratchpad) {
-        System.out.println("Step " + id + " started with scratchpad " + scratchpad);
-      }
-
-      @Override
-      public void stepSucceeded(UUID flowId, UUID id, Object result) {
-        System.out.println("Step " + id + " succeeded with result " + result);
-      }
-
-      @Override
-      public void stepFailed(UUID flowId, UUID id, Exception exception) {
-        System.out.println("Step " + id + " failed with exception " + exception);
-      }
-    };
+    MockTraceEventListener listener = new MockTraceEventListener();
 
     TracedFlowCompiler compiler = Compilers.builder()
         .loggingToConsole()
@@ -176,15 +112,75 @@ public class FlowApiTest implements Serializable {
 
     TracedFlowExecution<Double> tracedFlowExecution = compiler.compile(completeFlow);
 
+    Key<UUID> sequenceStepId = Keys.named("sequence step id");
+    Key<UUID> authorizeUserStepId = Keys.named("authorize user step id");
+    Key<UUID> getTemperatureStepId = Keys.named("get temperature step id");
+
+    assertThat(
+        tracedFlowExecution.getTraceMap(),
+
+        ATraceMap.ofType(FlowStepType.SEQUENCE)
+          .withId(recorder.record(sequenceStepId))
+          .withChildren(
+              ATraceMap.ofType(FlowStepType.STEP)
+                  .withDescription("Authorize user")
+                  .withId(recorder.record(authorizeUserStepId)),
+              ATraceMap.ofType(FlowStepType.STEP)
+                  .withDescription("Get local temperature")
+                  .withId(recorder.record(getTemperatureStepId))
+          )
+    );
+
     System.out.println(tracedFlowExecution.getTraceMap());
+
+    UUID flowId = UUID.randomUUID();
 
     tracedFlowExecution
         .run(
-            UUID.randomUUID(),
+            flowId,
             userName.of("Arthur"),
             password.of("Special secret password"),
             postcode.of("VB6 5UX")
         );
+
+    listener
+      .forFlow(flowId)
+      .verifyStepStarted(recorder.equalsRecorded(sequenceStepId),
+        userName.of("Arthur"),
+        password.of("Special secret password"),
+        postcode.of("VB6 5UX"))
+
+        .verifyStepStarted(recorder.equalsRecorded(authorizeUserStepId), AMap.of(String.class, Object.class))
+          .andSucceeded("ACCESS TOKEN")
+        .verifyStepStarted(recorder.equalsRecorded(getTemperatureStepId),
+          accessToken.of("ACCESS TOKEN"))
+          .andSucceeded(26D)
+
+      .verifyStepSucceeded(recorder.equalsRecorded(sequenceStepId),26D);
+  }
+
+  private Flow<Double> createTemperatureRetrievingFlow() {
+    Flow<String> getAccessToken = Flows
+        .obtaining(accessToken)
+        .from(userName, password)
+        .using("Authorize user", new F2<String, String, String>() {
+          @Override
+          public String apply(String username, String password) {
+            return "ACCESS TOKEN";
+          }
+        });
+
+    Flow<Double> getLocalTemperature = Flows
+        .obtaining(FlowExample.temperature)
+        .from(accessToken, postcode)
+        .using("Get local temperature", new F2<String, String, Double>() {
+          @Override
+          public Double apply(String accessCode, String postcode) {
+            return 26D;
+          }
+        });
+
+    return getAccessToken.then(getLocalTemperature);
   }
 
   @Test(expected = IllegalArgumentException.class)
