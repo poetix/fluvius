@@ -151,7 +151,7 @@
     <distributionManagement>
         <site>
             <name>Github Pages</name>
-	    <url>file:///tmp/maven-sites</url>
+	    <url>https://poetix.github.io/fluvius</url>
             <id>github-pages</id>
         </site>
     </distributionManagement>
