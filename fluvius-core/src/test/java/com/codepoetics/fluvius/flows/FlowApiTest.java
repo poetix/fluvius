@@ -8,23 +8,18 @@ import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
 import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.scratchpad.Key;
-import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException;
 import com.codepoetics.fluvius.scratchpad.Keys;
-import com.codepoetics.fluvius.scratchpad.Scratchpads;
-import com.codepoetics.fluvius.test.matchers.AMap;
 import com.codepoetics.fluvius.test.matchers.ATraceMap;
 import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
 import com.codepoetics.fluvius.test.mocks.MockTraceEventListener;
 import com.codepoetics.fluvius.utilities.Serialisation;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.UUID;
 
 import static com.codepoetics.fluvius.FlowExample.*;
@@ -32,7 +27,6 @@ import static com.codepoetics.fluvius.flows.Flows.branch;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.verify;
 
 public class FlowApiTest implements Serializable {
 
