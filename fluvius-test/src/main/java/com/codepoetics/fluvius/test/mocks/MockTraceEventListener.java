@@ -8,6 +8,7 @@ import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.test.matchers.AMap;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 
 import java.util.LinkedHashMap;
@@ -16,7 +17,6 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
 
 /**
  * A mock {@link TraceEventListener} with some helpful methods to verify events.
@@ -24,6 +24,8 @@ import static org.mockito.Mockito.verify;
 public final class MockTraceEventListener implements TraceEventListener {
 
   private final TraceEventListener innerMock = Mockito.mock(TraceEventListener.class);
+  private final InOrder inOrder = Mockito.inOrder(innerMock);
+
   private Matcher<UUID> flowIdMatcher = Matchers.any(UUID.class);
   private Matcher<UUID> lastStepIdMatcher = Matchers.any(UUID.class);
 
@@ -83,8 +85,12 @@ public final class MockTraceEventListener implements TraceEventListener {
 
   public MockTraceEventListener verifyStepStarted(Matcher<UUID> stepIdMatcher, Matcher<Map<String, Object>> scratchpadState) {
     lastStepIdMatcher = stepIdMatcher;
-    verify(innerMock).stepStarted(argThat(flowIdMatcher), argThat(stepIdMatcher), argThat(scratchpadState));
+    inOrder.verify(innerMock).stepStarted(argThat(flowIdMatcher), argThat(stepIdMatcher), argThat(scratchpadState));
     return this;
+  }
+
+  public MockTraceEventListener verifyStepSucceeded(Matcher<UUID> stepIdMatcher) {
+    return verifyStepSucceeded(stepIdMatcher, Matchers.notNullValue());
   }
 
   public MockTraceEventListener verifyStepSucceeded(Matcher<UUID> stepIdMatcher, Object result) {
@@ -92,8 +98,12 @@ public final class MockTraceEventListener implements TraceEventListener {
   }
 
   public MockTraceEventListener verifyStepSucceeded(Matcher<UUID> stepIdMatcher, Matcher<Object> resultMatcher) {
-    verify(innerMock).stepSucceeded(argThat(flowIdMatcher), argThat(stepIdMatcher), argThat(resultMatcher));
+    inOrder.verify(innerMock).stepSucceeded(argThat(flowIdMatcher), argThat(stepIdMatcher), argThat(resultMatcher));
     return this;
+  }
+
+  public MockTraceEventListener andSucceeded() {
+    return verifyStepSucceeded(lastStepIdMatcher);
   }
 
   public MockTraceEventListener andSucceeded(Object result) {
@@ -104,13 +114,21 @@ public final class MockTraceEventListener implements TraceEventListener {
     return verifyStepSucceeded(lastStepIdMatcher, resultMatcher);
   }
 
+  public MockTraceEventListener verifyStepFailed(Matcher<UUID> stepIdMatcher) {
+    return verifyStepFailed(stepIdMatcher, Matchers.any(Exception.class));
+  }
+
   public MockTraceEventListener verifyStepFailed(Matcher<UUID> stepIdMatcher, Exception reason) {
     return verifyStepFailed(stepIdMatcher, Matchers.equalTo(reason));
   }
 
   public MockTraceEventListener verifyStepFailed(Matcher<UUID> stepIdMatcher, Matcher<Exception> reasonMatcher) {
-    verify(innerMock).stepFailed(argThat(flowIdMatcher), argThat(stepIdMatcher), argThat(reasonMatcher));
+    inOrder.verify(innerMock).stepFailed(argThat(flowIdMatcher), argThat(stepIdMatcher), argThat(reasonMatcher));
     return this;
+  }
+
+  public MockTraceEventListener andFailed() {
+    return verifyStepFailed(lastStepIdMatcher);
   }
 
   public MockTraceEventListener andFailed(Exception reason) {
