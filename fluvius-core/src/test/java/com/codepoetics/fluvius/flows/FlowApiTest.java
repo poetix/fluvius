@@ -12,6 +12,7 @@ import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.compilation.Compilers;
+import com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException;
 import com.codepoetics.fluvius.scratchpad.Keys;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 import com.codepoetics.fluvius.test.matchers.AMap;
@@ -30,6 +31,7 @@ import static com.codepoetics.fluvius.FlowExample.*;
 import static com.codepoetics.fluvius.flows.Flows.branch;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
 public class FlowApiTest implements Serializable {
@@ -38,6 +40,10 @@ public class FlowApiTest implements Serializable {
       .loggingToConsole()
       .mutationChecking()
       .build();
+
+  private static final Key<UUID> sequenceStepId = Keys.named("sequence step id");
+  private static final Key<UUID> authorizeUserStepId = Keys.named("authorize user step id");
+  private static final Key<UUID> getTemperatureStepId = Keys.named("get temperature step id");
 
   @Test
   public void testFlowApi() throws Exception {
@@ -50,20 +56,21 @@ public class FlowApiTest implements Serializable {
 
     System.out.println(Flows.prettyPrint(combined));
 
-    Scratchpad input = Scratchpads.create(
-        userName.of("Fred"),
-        password.of("verysecurepassword"),
-        postcode.of("VB6 5UX")
-    );
-
     FlowExecution<String> execution = compiler.compile(combined);
     assertEquals(
         "Sorry, Fred, your credentials were not valid",
-        execution.run(input));
+        execution.run(
+            userName.of("Fred"),
+            password.of("verysecurepassword"),
+            postcode.of("VB6 5UX")));
 
     assertEquals(
         "Fred, the temperature at VB6 5UX is 26.0 degrees",
-        execution.run(input.with(password.of("the real password"))));
+        execution.run(
+            userName.of("Fred"),
+            password.of("the real password"),
+            postcode.of("VB6 5UX")
+        ));
   }
 
   @Test
@@ -76,7 +83,7 @@ public class FlowApiTest implements Serializable {
         compiler.compile(completeFlow)
         .run(
             userName.of("Arthur"),
-            password.of("Special secret password"),
+            password.of("the true password"),
             postcode.of("VB6 5UX")
         ));
   }
@@ -89,7 +96,7 @@ public class FlowApiTest implements Serializable {
         compiler.compile(completeFlow)
             .run(
                 userName.of("Arthur"),
-                password.of("Special secret password"),
+                password.of("the true password"),
                 postcode.of("VB6 5UX")
             ));
   }
@@ -97,12 +104,9 @@ public class FlowApiTest implements Serializable {
   @Test
   public void testTracing() throws Exception {
     RecordingMatcher recorder = new RecordingMatcher();
+    MockTraceEventListener listener = new MockTraceEventListener();
 
     Flow<Double> completeFlow = createTemperatureRetrievingFlow();
-
-    System.out.println(Flows.prettyPrint(completeFlow));
-
-    MockTraceEventListener listener = new MockTraceEventListener();
 
     TracedFlowCompiler compiler = Compilers.builder()
         .loggingToConsole()
@@ -112,9 +116,6 @@ public class FlowApiTest implements Serializable {
 
     TracedFlowExecution<Double> tracedFlowExecution = compiler.compile(completeFlow);
 
-    Key<UUID> sequenceStepId = Keys.named("sequence step id");
-    Key<UUID> authorizeUserStepId = Keys.named("authorize user step id");
-    Key<UUID> getTemperatureStepId = Keys.named("get temperature step id");
 
     assertThat(
         tracedFlowExecution.getTraceMap(),
@@ -131,15 +132,13 @@ public class FlowApiTest implements Serializable {
           )
     );
 
-    System.out.println(tracedFlowExecution.getTraceMap());
-
     UUID flowId = UUID.randomUUID();
 
     tracedFlowExecution
         .run(
             flowId,
             userName.of("Arthur"),
-            password.of("Special secret password"),
+            password.of("the true password"),
             postcode.of("VB6 5UX")
         );
 
@@ -147,16 +146,40 @@ public class FlowApiTest implements Serializable {
       .forFlow(flowId)
       .verifyStepStarted(recorder.equalsRecorded(sequenceStepId),
         userName.of("Arthur"),
-        password.of("Special secret password"),
+        password.of("the true password"),
         postcode.of("VB6 5UX"))
 
-        .verifyStepStarted(recorder.equalsRecorded(authorizeUserStepId), AMap.of(String.class, Object.class))
+        .verifyStepStarted(recorder.equalsRecorded(authorizeUserStepId))
           .andSucceeded("ACCESS TOKEN")
         .verifyStepStarted(recorder.equalsRecorded(getTemperatureStepId),
           accessToken.of("ACCESS TOKEN"))
           .andSucceeded(26D)
 
       .verifyStepSucceeded(recorder.equalsRecorded(sequenceStepId),26D);
+
+    UUID failedFlowId = UUID.randomUUID();
+
+    try {
+      tracedFlowExecution.run(
+          failedFlowId,
+          userName.of("Arthur"),
+          password.of("the untrue password"),
+          postcode.of("VB6 5UX")
+      );
+      fail("Exception thrown during flow should be rethrown on execution");
+    } catch (FailedKeyRetrievedException e) {
+      assertEquals("Invalid password", e.getCause().getMessage());
+    }
+
+    listener
+        .forFlow(failedFlowId)
+        .verifyStepStarted(recorder.equalsRecorded(sequenceStepId),
+            userName.of("Arthur"),
+            password.of("the untrue password"),
+            postcode.of("VB6 5UX"))
+
+        .verifyStepStarted(recorder.equalsRecorded(authorizeUserStepId))
+          .andFailed();
   }
 
   private Flow<Double> createTemperatureRetrievingFlow() {
@@ -165,8 +188,11 @@ public class FlowApiTest implements Serializable {
         .from(userName, password)
         .using("Authorize user", new F2<String, String, String>() {
           @Override
-          public String apply(String username, String password) {
-            return "ACCESS TOKEN";
+          public String apply(String username, String password) throws Exception {
+            if (password.equals("the true password")) {
+              return "ACCESS TOKEN";
+            }
+            throw new IllegalArgumentException("Invalid password");
           }
         });
 
