@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 
 public class KeyTests {
 
-  private static final Key<Integer> age = Keys.named("age");
+  private static final Key<Integer> age = Key.named("age");
 
   @Test
   public void keysHaveNames() {
@@ -37,8 +37,8 @@ public class KeyTests {
 
   @Test
   public void keysWithSameNameAreNotEqual() {
-    Key<String> costA = Keys.named("cost");
-    Key<Double> costB = Keys.named("cost");
+    Key<String> costA = Key.named("cost");
+    Key<Double> costB = Key.named("cost");
 
     assertNotEquals(costA, costB);
   }

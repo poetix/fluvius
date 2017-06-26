@@ -9,9 +9,9 @@ import static org.junit.Assert.*;
 
 public class ScratchpadTests {
 
-  private static final Key<String> name = Keys.named("name");
-  private static final Key<Integer> age = Keys.named("age");
-  private static final Key<String> favouriteColour = Keys.named("favouriteColour");
+  private static final Key<String> name = Key.named("name");
+  private static final Key<Integer> age = Key.named("age");
+  private static final Key<String> favouriteColour = Key.named("favouriteColour");
 
   @Test
   public void valuesWrittenToScratchpadOnInitialisationAreRetrievable() {

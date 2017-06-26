@@ -4,7 +4,6 @@ import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Conditional;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowVisitor;
-import com.codepoetics.fluvius.api.functional.Mapper;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.exceptions.IllegalBranchOutputKeyException;
 import com.codepoetics.fluvius.preconditions.Preconditions;
@@ -31,32 +30,7 @@ final class BranchFlow<T> extends AbstractFlow<T> {
     }
 
     <V> Conditional<V> toConditional(FlowVisitor<V> visitor) {
-      return new RealConditional<>(visitor.visitCondition(condition), ifTrue.visit(visitor));
-    }
-  }
-
-  private static final class RealConditional<V> implements Conditional<V> {
-    private final Condition condition;
-    private final V value;
-
-    private RealConditional(Condition condition, V value) {
-      this.condition = condition;
-      this.value = value;
-    }
-
-    @Override
-    public Condition getCondition() {
-      return condition;
-    }
-
-    @Override
-    public V getValue() {
-      return value;
-    }
-
-    @Override
-    public <V2> Conditional<V2> map(Mapper<? super V, ? extends V2> mapper) {
-      return new RealConditional<>(condition, mapper.apply(value));
+      return Conditional.of(visitor.visitCondition(condition), ifTrue.visit(visitor));
     }
   }
 

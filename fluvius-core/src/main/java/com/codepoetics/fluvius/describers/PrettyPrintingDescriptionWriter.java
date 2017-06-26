@@ -1,10 +1,8 @@
 package com.codepoetics.fluvius.describers;
 
 import com.codepoetics.fluvius.api.description.DescriptionWriter;
-import com.codepoetics.fluvius.api.description.FlowDescription;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
@@ -25,12 +23,12 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeSingleFlow(UUID stepId, List<String> requiredKeyNames, String providedKeyName, String name) {
+  public DescriptionWriter writeSingleFlow(UUID stepId, Collection<String> requiredKeyNames, String providedKeyName, String name) {
     return append(name).append(" ").stateRequirements(requiredKeyNames, providedKeyName);
   }
 
   @Override
-  public DescriptionWriter writeStartSequence(UUID stepId, List<String> requiredKeyNames, String providedKeyName) {
+  public DescriptionWriter writeStartSequence(UUID stepId, Collection<String> requiredKeyNames, String providedKeyName) {
     return append("Sequence ")
         .stateRequirements(requiredKeyNames, providedKeyName)
         .append(":")
@@ -38,7 +36,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartSequenceItem(int sequenceIndex) {
+  public DescriptionWriter writeStartSequenceItem(String sequenceIndex) {
     return newline()
         .appendSequencePrefix()
         .append(sequenceIndex)
@@ -57,11 +55,11 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
   }
 
   @Override
-  public DescriptionWriter writeStartBranch(UUID stepId, List<String> requiredKeyNames, String providedKeyName) {
+  public DescriptionWriter writeStartBranch(UUID stepId, Collection<String> requiredKeyNames, String providedKeyName) {
     return append("Branch ")
         .stateRequirements(requiredKeyNames, providedKeyName)
-        .append(":")
-        .indent();
+        .append(":");
+        //.indent();
   }
 
   @Override
@@ -91,13 +89,7 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
 
   @Override
   public DescriptionWriter writeEndBranch() {
-    return outdent();
-  }
-
-  @Override
-  public DescriptionWriter writeDescription(FlowDescription description) {
-    description.writeTo(this);
-    return this;
+    return this; // outdent();
   }
 
   private PrettyPrintingDescriptionWriter appendBranchPrefix() {
@@ -151,16 +143,16 @@ public final class PrettyPrintingDescriptionWriter implements DescriptionWriter 
     return this;
   }
 
-  private PrettyPrintingDescriptionWriter stateRequirements(List<String> requiredKeyNames, String providedKeyName) {
+  private PrettyPrintingDescriptionWriter stateRequirements(Collection<String> requiredKeyNames, String providedKeyName) {
     return append("(requires ")
         .appendList(requiredKeyNames)
         .append(", provides ")
         .append(providedKeyName).append(")");
   }
 
-  private PrettyPrintingDescriptionWriter pushSequencePrefix(int sequenceIndex) {
+  private PrettyPrintingDescriptionWriter pushSequencePrefix(String sequenceIndex) {
     sequencePrefix.push(sequencePrefix.isEmpty()
-        ? Integer.toString(sequenceIndex)
+        ? sequenceIndex
         : sequencePrefix.peek() + "." + sequenceIndex);
     return this;
   }

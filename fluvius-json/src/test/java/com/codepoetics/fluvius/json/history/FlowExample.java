@@ -10,14 +10,13 @@ import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.conditions.Conditions;
 import com.codepoetics.fluvius.flows.Flows;
-import com.codepoetics.fluvius.scratchpad.Keys;
 
 public final class FlowExample {
 
-  public static final Key<String> userName = Keys.named("userName");
-  public static final Key<String> password = Keys.named("password");
-  public static final Key<String> postcode = Keys.named("postcode");
-  public static final Key<AuthorisationResult> authorisationResult = Keys.named("authorisationResult");
+  public static final Key<String> userName = Key.named("userName");
+  public static final Key<String> password = Key.named("password");
+  public static final Key<String> postcode = Key.named("postcode");
+  public static final Key<AuthorisationResult> authorisationResult = Key.named("authorisationResult");
   public static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new P1<AuthorisationResult>() {
     @Override
     public boolean test(AuthorisationResult value) {
@@ -37,14 +36,14 @@ public final class FlowExample {
                   : new AuthorisationResult(false, null);
             }
           });
-  public static final Key<String> accessToken = Keys.named("accessToken");
+  public static final Key<String> accessToken = Key.named("accessToken");
   public static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new F1<AuthorisationResult, String>() {
             @Override
             public String apply(AuthorisationResult input) {
               return input.getAccessToken();
             }
           });
-  public static final Key<Double> temperature = Keys.named("temperature");
+  public static final Key<Double> temperature = Key.named("temperature");
   public static final Flow<Double> getWeather = Flows
               .obtaining(temperature)
               .from(accessToken, postcode)
@@ -56,7 +55,7 @@ public final class FlowExample {
                       return 26D;
                     }
                   });
-  public static final Key<String> weatherMessage = Keys.named("weatherMessage");
+  public static final Key<String> weatherMessage = Key.named("weatherMessage");
   public static final Flow<String> formatWeather = Flows
       .from(userName, postcode, temperature)
       .to(weatherMessage)

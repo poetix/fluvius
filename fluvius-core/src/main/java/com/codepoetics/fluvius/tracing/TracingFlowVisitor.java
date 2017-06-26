@@ -51,7 +51,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
         providedKey,
         actionVisitor.visitSingle(stepId, requiredKeys, providedKey, operation));
 
-    return new ConcreteTracedAction(traceMap, action);
+    return TracedAction.of(traceMap, action);
   }
 
   @SuppressWarnings("unchecked")
@@ -64,7 +64,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
         providedKey,
         actionVisitor.visitSequence(stepId, requiredKeys, providedKey, (List) items));
 
-    return new ConcreteTracedAction(traceMap, action);
+    return TracedAction.of(traceMap, action);
   }
 
   private List<TraceMap> getItemTraceMaps(List<TracedAction> items) {
@@ -96,7 +96,7 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
             defaultBranch,
             (List) conditionalBranches));
 
-    return new ConcreteTracedAction(traceMap, action);
+    return TracedAction.of(traceMap, action);
   }
 
   private List<Conditional<TraceMap>> getConditionalTraceMaps(List<Conditional<TracedAction>> conditionalActions) {
@@ -144,27 +144,6 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
         result.put(entry.getKey().getName(), entry.getValue());
       }
       return result;
-    }
-  }
-
-  private static final class ConcreteTracedAction implements TracedAction {
-
-    private final TraceMap traceMap;
-    private final Action action;
-
-    private ConcreteTracedAction(TraceMap traceMap, Action action) {
-      this.traceMap = traceMap;
-      this.action = action;
-    }
-
-    @Override
-    public TraceMap getTraceMap() {
-      return traceMap;
-    }
-
-    @Override
-    public Scratchpad run(UUID flowId, Scratchpad scratchpad) {
-      return action.run(flowId, scratchpad);
     }
   }
 }

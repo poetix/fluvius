@@ -1,48 +1,96 @@
 package com.codepoetics.fluvius.api.tracing;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A map of the possible execution paths of a flow.
  */
-public interface TraceMap {
+public final class TraceMap {
 
-  /**
-   * Get the id of the mapped flow step.
-   * @return The id of the mapped flow step.
-   */
-  UUID getStepId();
+  public static TraceMap ofStep(UUID stepId, Set<String> requiredKeys, String providedKey, String description) {
+    return new TraceMap(stepId, requiredKeys, providedKey, description, FlowStepType.STEP, Collections.<TraceMapLabel, TraceMap>emptyMap());
+  }
 
-  /**
-   * Get the keys required by the mapped flow step.
-   * @return The keys required by the mapped flow step.
-   */
-  Set<String> getRequiredKeys();
+  public static TraceMap ofSequence(UUID stepId, Set<String> requiredKeys, String providedKey, List<TraceMap> steps) {
+    Map<TraceMapLabel, TraceMap> children = new LinkedHashMap<>();
+    int stepIndex = 1;
+    for (TraceMap step : steps) {
+      children.put(TraceMapLabel.forSequence(stepIndex++), step);
+    }
+    return new TraceMap(stepId, requiredKeys, providedKey, "Sequence", FlowStepType.SEQUENCE, children);
+  }
 
-  /**
-   * Get the key provided by the mapped flow step.
-   * @return The key provided by the mapped flow step.
-   */
-  String getProvidedKey();
+  public static TraceMap ofBranch(UUID stepId, Set<String> requiredKeys, String providedKey, TraceMap defaultTraceMap, Map<String, TraceMap> conditionalTraceMaps) {
+    Map<TraceMapLabel, TraceMap> children = new LinkedHashMap<>();
+    for (Map.Entry<String, TraceMap> entry : conditionalTraceMaps.entrySet()) {
+      children.put(TraceMapLabel.forConditionalBranch(entry.getKey()), entry.getValue());
+    }
+    children.put(TraceMapLabel.forDefaultBranch(), defaultTraceMap);
+    return new TraceMap(stepId, requiredKeys, providedKey, "Branch", FlowStepType.BRANCH, children);
+  }
 
-  /**
-   * Get a textual description of the mapped flow step.
-   * @return A textual description of the mapped flow step.
-   */
-  String getDescription();
+  private final UUID stepId;
+  private final Set<String> requiredKeys;
+  private final String providedKey;
+  private final String description;
+  private final FlowStepType type;
+  private final Map<TraceMapLabel, TraceMap> children;
 
-  /**
-   * Get the type of the mapped flow step.
-   * @return The type of the mapped flow step.
-   */
-  FlowStepType getType();
+  private TraceMap(UUID stepId, Set<String> requiredKeys, String providedKey, String description, FlowStepType type, Map<TraceMapLabel, TraceMap> children) {
+    this.stepId = stepId;
+    this.requiredKeys = requiredKeys;
+    this.providedKey = providedKey;
+    this.description = description;
+    this.type = type;
+    this.children = children;
+  }
 
-  /**
-   * Get the children of the mapped flow step.
-   * @return The children of the mapped flow step.
-   */
-  List<TraceMap> getChildren();
+  public UUID getStepId() {
+    return stepId;
+  }
 
+  public Set<String> getRequiredKeys() {
+    return requiredKeys;
+  }
+
+  public String getProvidedKey() {
+    return providedKey;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public FlowStepType getType() {
+    return type;
+  }
+
+  public Map<TraceMapLabel, TraceMap> getChildren() {
+    return children;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return this == o
+        || (o instanceof TraceMap && equals((TraceMap) o));
+  }
+
+  private boolean equals(TraceMap o) {
+    return o.stepId.equals(stepId)
+        && o.requiredKeys.equals(requiredKeys)
+        && o.providedKey.equals(providedKey)
+        && o.description.equals(description)
+        && o.type.equals(type)
+        && o.children.equals(children);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(stepId, requiredKeys, providedKey, description, type, children);
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s: %s (requires %s, provides %s) | %s", stepId, description, requiredKeys, providedKey, children);
+  }
 }

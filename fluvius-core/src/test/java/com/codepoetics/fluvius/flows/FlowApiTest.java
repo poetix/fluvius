@@ -9,10 +9,11 @@ import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
+import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException;
-import com.codepoetics.fluvius.scratchpad.Keys;
+import com.codepoetics.fluvius.test.matchers.AMap;
 import com.codepoetics.fluvius.test.matchers.ATraceMap;
 import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
 import com.codepoetics.fluvius.test.mocks.MockTraceEventListener;
@@ -35,9 +36,9 @@ public class FlowApiTest implements Serializable {
       .mutationChecking()
       .build();
 
-  private static final Key<UUID> sequenceStepId = Keys.named("sequence step id");
-  private static final Key<UUID> authorizeUserStepId = Keys.named("authorize user step id");
-  private static final Key<UUID> getTemperatureStepId = Keys.named("get temperature step id");
+  private static final Key<UUID> sequenceStepId = Key.named("sequence step id");
+  private static final Key<UUID> authorizeUserStepId = Key.named("authorize user step id");
+  private static final Key<UUID> getTemperatureStepId = Key.named("get temperature step id");
 
   @Test
   public void testFlowApi() throws Exception {
@@ -116,13 +117,17 @@ public class FlowApiTest implements Serializable {
 
         ATraceMap.ofType(FlowStepType.SEQUENCE)
           .withId(recorder.record(sequenceStepId))
-          .withChildren(
-              ATraceMap.ofType(FlowStepType.STEP)
-                  .withDescription("Authorize user")
-                  .withId(recorder.record(authorizeUserStepId)),
-              ATraceMap.ofType(FlowStepType.STEP)
-                  .withDescription("Get local temperature")
-                  .withId(recorder.record(getTemperatureStepId))
+          .withChildren(AMap
+              .containing(
+                  TraceMapLabel.forSequence(1),
+                  ATraceMap.ofType(FlowStepType.STEP)
+                    .withDescription("Authorize user")
+                    .withId(recorder.record(authorizeUserStepId)))
+              .with(
+                  TraceMapLabel.forSequence(2),
+                  ATraceMap.ofType(FlowStepType.STEP)
+                    .withDescription("Get local temperature")
+                    .withId(recorder.record(getTemperatureStepId)))
           )
     );
 

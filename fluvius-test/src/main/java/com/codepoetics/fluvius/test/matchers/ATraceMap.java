@@ -2,13 +2,11 @@ package com.codepoetics.fluvius.test.matchers;
 
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
+import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -22,7 +20,7 @@ public final class ATraceMap extends BasePropertyMatcher<TraceMap> {
   private Matcher<String> descriptionMatcher;
   private Matcher<Iterable<? extends String>> requiredKeysMatcher;
   private Matcher<String> providedKeyMatcher;
-  private List<Matcher<? super TraceMap>> childMatchers;
+  private AMap<TraceMapLabel, TraceMap> childrenMatcher = AMap.of(TraceMapLabel.class, TraceMap.class);
 
   private ATraceMap(Matcher<FlowStepType> typeMatcher) {
     super("TraceMap");
@@ -82,13 +80,13 @@ public final class ATraceMap extends BasePropertyMatcher<TraceMap> {
     return this;
   }
 
-  @SafeVarargs
-  public final ATraceMap withChildren(Matcher<? super TraceMap>...traceMapMatchers) {
-    return withChildren(Arrays.asList(traceMapMatchers));
+  public final ATraceMap withChildren(AMap<TraceMapLabel, TraceMap> childrenMatcher) {
+    this.childrenMatcher = childrenMatcher;
+    return this;
   }
 
-  public ATraceMap withChildren(List<Matcher<? super TraceMap>> childMatchers) {
-    this.childMatchers = childMatchers;
+  public final ATraceMap withChild(TraceMapLabel label, Matcher<TraceMap> traceMapMatcher) {
+    this.childrenMatcher = this.childrenMatcher.with(label, traceMapMatcher);
     return this;
   }
 
@@ -99,7 +97,7 @@ public final class ATraceMap extends BasePropertyMatcher<TraceMap> {
         .describeProperty("description", descriptionMatcher)
         .describeProperty("requiredKeys", requiredKeysMatcher)
         .describeProperty("providedKey", providedKeyMatcher)
-        .describeProperty("children", childMatchers);
+        .describeProperty("children", childrenMatcher);
   }
 
   @Override
@@ -109,6 +107,6 @@ public final class ATraceMap extends BasePropertyMatcher<TraceMap> {
         .check("description", traceMap.getDescription(), descriptionMatcher)
         .check("requiredKeys", traceMap.getRequiredKeys(), requiredKeysMatcher)
         .check("providedKey", traceMap.getProvidedKey(), providedKeyMatcher)
-        .check("children", traceMap.getChildren(), childMatchers == null ? null : Matchers.contains(childMatchers));
+        .check("children", traceMap.getChildren(), childrenMatcher);
   }
 }

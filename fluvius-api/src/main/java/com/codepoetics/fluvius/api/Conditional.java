@@ -7,20 +7,39 @@ import com.codepoetics.fluvius.api.functional.Mapper;
  *
  * @param <V> The type of the value.
  */
-public interface Conditional<V> {
+public final class Conditional<V> {
+
+  public static <V> Conditional<V> of(Condition condition, V value) {
+    return new Conditional<>(condition, value);
+  }
+
+  private final V value;
+  private final Condition condition;
+
+  private Conditional(Condition condition, V value) {
+    this.value = value;
+    this.condition = condition;
+  }
+
   /**
    * Get the Condition associated with the value.
    *
    * @return The Condition associated with the value.
    */
-  Condition getCondition();
+  public Condition getCondition() {
+    return condition;
+  }
 
   /**
    * Get the value.
    *
    * @return The value.
    */
-  V getValue();
+  public V getValue() {
+    return value;
+  }
 
-  <V2> Conditional<V2> map(Mapper<? super V, ? extends V2> mapper);
+  public <V2> Conditional<V2> map(Mapper<? super V, ? extends V2> mapper) {
+    return new Conditional<>(condition, mapper.apply(value));
+  }
 }

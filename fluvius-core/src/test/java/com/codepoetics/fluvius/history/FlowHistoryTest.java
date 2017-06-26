@@ -6,12 +6,10 @@ import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.F2;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
+import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
-import com.codepoetics.fluvius.test.matchers.AFlowEvent;
-import com.codepoetics.fluvius.test.matchers.AFlowHistory;
-import com.codepoetics.fluvius.test.matchers.ATraceMap;
-import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
+import com.codepoetics.fluvius.test.matchers.*;
 import com.codepoetics.fluvius.tracing.TraceMaps;
 import org.junit.Test;
 
@@ -57,14 +55,17 @@ public class FlowHistoryTest {
     assertThat(
         TraceMaps.getTraceMap(completeFlow),
         ATraceMap.ofType(FlowStepType.SEQUENCE)
-            .withChildren(
-                ATraceMap.ofType(FlowStepType.STEP)
-                    .withId(recorder.record("authorize user"))
-                    .withDescription("Authorize user"),
-
-                ATraceMap.ofType(FlowStepType.STEP)
-                    .withId(recorder.record("get temperature"))
-                    .withDescription("Get local temperature")
+            .withChildren(AMap
+                .containing(
+                    TraceMapLabel.forSequence(1),
+                    ATraceMap.ofType(FlowStepType.STEP)
+                        .withId(recorder.record("authorize user"))
+                        .withDescription("Authorize user"))
+                .with(
+                    TraceMapLabel.forSequence(2),
+                    ATraceMap.ofType(FlowStepType.STEP)
+                        .withId(recorder.record("get temperature"))
+                        .withDescription("Get local temperature"))
             )
     );
 

@@ -4,7 +4,6 @@ import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.flows.Flows;
-import com.codepoetics.fluvius.scratchpad.Keys;
 import org.junit.Test;
 
 import java.util.*;
@@ -37,8 +36,8 @@ public class MutationCheckingTest {
     }
   }
 
-  private static final Key<Map<String, MutableThing[]>> mutableThings = Keys.named("mutableThings");
-  private static final Key<String> output = Keys.named("output");
+  private static final Key<Map<String, MutableThing[]>> mutableThings = Key.named("mutableThings");
+  private static final Key<String> output = Key.named("output");
 
   @Test(expected = IllegalStateException.class)
   public void youCannotHideFromTheMutationChecker() throws Exception {

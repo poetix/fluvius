@@ -8,11 +8,11 @@ import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.conditions.Conditions;
-import com.codepoetics.fluvius.describers.FlowDescriber;
 import com.codepoetics.fluvius.describers.PrettyPrintingDescriptionWriter;
 import com.codepoetics.fluvius.execution.KeyCheckingFlowExecution;
 import com.codepoetics.fluvius.execution.TraceMapCapturingFlowExecution;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
+import com.codepoetics.fluvius.tracing.TraceMaps;
 import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
 import com.codepoetics.fluvius.visitors.Visitors;
 
@@ -34,7 +34,7 @@ public final class Flows {
    */
   public static String prettyPrint(Flow<?> flow) {
     PrettyPrintingDescriptionWriter descriptionWriter = PrettyPrintingDescriptionWriter.create();
-    FlowDescriber.describe(flow).writeTo(descriptionWriter);
+    TraceMaps.describe(TraceMaps.getTraceMap(flow), descriptionWriter);
     return descriptionWriter.toString();
   }
 

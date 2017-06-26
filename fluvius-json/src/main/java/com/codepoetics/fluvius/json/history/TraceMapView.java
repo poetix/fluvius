@@ -1,12 +1,11 @@
 package com.codepoetics.fluvius.json.history;
 
 import com.codepoetics.fluvius.api.tracing.TraceMap;
+import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @JsonSerialize
 public final class TraceMapView {
@@ -22,10 +21,10 @@ public final class TraceMapView {
     );
   }
 
-  private static List<TraceMapView> toViews(List<TraceMap> children) {
-    List<TraceMapView> result = new ArrayList<>(children.size());
-    for (TraceMap traceMap : children) {
-      result.add(from(traceMap));
+  private static Map<String, TraceMapView> toViews(Map<TraceMapLabel, TraceMap> children) {
+    Map<String, TraceMapView> result = new LinkedHashMap<>(children.size());
+    for (Map.Entry<TraceMapLabel, TraceMap> entry : children.entrySet()) {
+      result.put(entry.getKey().getDescription(), from(entry.getValue()));
     }
     return result;
   }
@@ -35,9 +34,9 @@ public final class TraceMapView {
   private final String type;
   private final Set<String> requiredKeys;
   private final String providedKey;
-  private final List<TraceMapView> children;
+  private final Map<String, TraceMapView> children;
 
-  public TraceMapView(String stepId, String description, String type, Set<String> requiredKeys, String providedKey, List<TraceMapView> children) {
+  public TraceMapView(String stepId, String description, String type, Set<String> requiredKeys, String providedKey, Map<String, TraceMapView> children) {
     this.stepId = stepId;
     this.description = description;
     this.type = type;
@@ -72,7 +71,7 @@ public final class TraceMapView {
   }
 
   @JsonProperty
-  public List<TraceMapView> getChildren() {
+  public Map<String, TraceMapView> getChildren() {
     return children;
   }
 }
