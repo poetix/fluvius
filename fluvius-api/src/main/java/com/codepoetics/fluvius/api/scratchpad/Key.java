@@ -1,5 +1,7 @@
 package com.codepoetics.fluvius.api.scratchpad;
 
+import com.codepoetics.fluvius.preconditions.Preconditions;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -48,7 +50,7 @@ public final class Key<T> implements Serializable {
    * @return The constructed key/value pair.
    */
   public KeyValue of(T value) {
-    return new KeyValue(this, value);
+    return new KeyValue(this, Preconditions.checkNotNull("value", value));
   }
 
   /**

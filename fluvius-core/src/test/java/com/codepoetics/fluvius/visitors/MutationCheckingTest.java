@@ -1,14 +1,18 @@
 package com.codepoetics.fluvius.visitors;
 
 import com.codepoetics.fluvius.api.Flow;
+import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.F1;
 import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import org.junit.Test;
 
 import java.util.*;
 
 public class MutationCheckingTest {
+
+  private static final FlowCompiler compiler = Compilers.builder().mutationChecking().build();
 
   public static final class MutableThing {
     private String foo;
@@ -51,7 +55,8 @@ public class MutationCheckingTest {
 
     Map<String, MutableThing[]> myMutableThings = createMutableThings();
 
-    Flows.compile(evilFlow, Visitors.mutationChecking(Visitors.getDefault())).run(UUID.randomUUID(), mutableThings.of(myMutableThings));
+    compiler.compile(evilFlow)
+        .run(UUID.randomUUID(), mutableThings.of(myMutableThings));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -66,7 +71,8 @@ public class MutationCheckingTest {
 
     Map<String, MutableThing[]> myMutableThings = createMutableThings();
 
-    Flows.compile(evilFlow, Visitors.mutationChecking(Visitors.getDefault())).run(UUID.randomUUID(), mutableThings.of(myMutableThings));
+    compiler.compile(evilFlow)
+        .run(UUID.randomUUID(), mutableThings.of(myMutableThings));
   }
 
   private Map<String, MutableThing[]> createMutableThings() {

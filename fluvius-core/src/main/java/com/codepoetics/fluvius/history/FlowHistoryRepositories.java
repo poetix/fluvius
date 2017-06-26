@@ -1,16 +1,14 @@
 package com.codepoetics.fluvius.history;
 
-import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.history.*;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
 
 /**
- * Utility class for creating {@link FlowHistoryRepository}s and {@link FlowCompiler}s that will compile {@link Flow}s that record {@link FlowEvent}s to them.
+ * Utility class for creating {@link FlowHistoryRepository}s.
  */
-public final class History {
+public final class FlowHistoryRepositories {
 
-  private History() {
+  private FlowHistoryRepositories() {
   }
 
   /**
@@ -20,8 +18,8 @@ public final class History {
    * @param <T> The type to which flow event data will be serialised.
    * @return The constructed flow history repository.
    */
-  public static <T> FlowHistoryRepository<T> createInMemoryRepository(EventDataSerialiser<T> serialiser) {
-    return createRepository(
+  public static <T> FlowHistoryRepository<T> createInMemory(EventDataSerialiser<T> serialiser) {
+    return create(
         InMemoryFlowEventStore.<T>create(),
         serialiser,
         InMemoryTraceMapRepository.create());
@@ -36,11 +34,11 @@ public final class History {
    * @param <T> The type to which flow event data will be serialised.
    * @return The constructed flow history repository.
    */
-  public static <T> FlowHistoryRepository<T> createRepository(
+  public static <T> FlowHistoryRepository<T> create(
       FlowEventStore<T> eventStore,
       EventDataSerialiser<T> serialiser,
       TraceMapRepository traceMapRepository) {
-    return createRepository(
+    return create(
         SerialisingFlowEventRepository.using(eventStore, serialiser),
         traceMapRepository
     );
@@ -54,22 +52,10 @@ public final class History {
    * @param <T> The type to which flow event data will be serialised.
    * @return The constructed flow history repository.
    */
-  public static <T> FlowHistoryRepository<T> createRepository(
+  public static <T> FlowHistoryRepository<T> create(
       FlowEventRepository<T> eventRepository,
       TraceMapRepository traceMapRepository) {
     return DefaultFlowHistoryRepository.using(eventRepository, traceMapRepository);
-  }
-
-  /**
-   * Create a {@link FlowCompiler} that will compile {@link Flow}s to {@link FlowExecution}s that will record {@link FlowEvent}s to the provided {@link FlowHistoryRepository} on execution.
-   *
-   * @param repository The repository to which events will be written.
-   * @param visitor The visitor to use to compile {@link Flow}s into executable {@link Action}s.
-   * @param <T> The type to which flow event data will be serialised.
-   * @return The constructed flow compiler.
-   */
-  public static <T> FlowCompiler makeCompiler(FlowHistoryRepository<T> repository, FlowVisitor<Action> visitor) {
-    return RecordingFlowCompiler.using(repository, visitor);
   }
 
 }

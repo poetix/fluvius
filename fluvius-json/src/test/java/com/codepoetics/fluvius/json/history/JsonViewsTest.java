@@ -10,7 +10,7 @@ import com.codepoetics.fluvius.api.history.EventDataSerialiser;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
-import com.codepoetics.fluvius.history.History;
+import com.codepoetics.fluvius.history.FlowHistoryRepositories;
 import com.codepoetics.fluvius.visitors.Visitors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ public class JsonViewsTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
   private final EventDataSerialiser<JsonNode> serialiser = JsonEventDataSerialiser.using(mapper);
-  private final FlowHistoryRepository<JsonNode> repository = History.createInMemoryRepository(serialiser);
+  private final FlowHistoryRepository<JsonNode> repository = FlowHistoryRepositories.createInMemory(serialiser);
   private final FlowCompiler compiler = Compilers.builder()
       .loggingToConsole()
       .mutationChecking()

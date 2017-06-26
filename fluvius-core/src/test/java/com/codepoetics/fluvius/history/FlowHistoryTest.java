@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FlowHistoryTest {
 
-  private final FlowHistoryRepository<String> repository = History.createInMemoryRepository(EventDataSerialisers.toStringSerialiser());
+  private final FlowHistoryRepository<String> repository = FlowHistoryRepositories.createInMemory(EventDataSerialisers.toStringSerialiser());
   private final FlowCompiler compiler = Compilers.builder()
       .loggingToConsole()
       .recordingTo(repository)

@@ -1,20 +1,14 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.logging.FlowLogger;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyValue;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
-import com.codepoetics.fluvius.api.tracing.TraceEventListener;
-import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.conditions.Conditions;
 import com.codepoetics.fluvius.describers.PrettyPrintingDescriptionWriter;
 import com.codepoetics.fluvius.execution.KeyCheckingFlowExecution;
-import com.codepoetics.fluvius.execution.TraceMapCapturingFlowExecution;
 import com.codepoetics.fluvius.scratchpad.Scratchpads;
 import com.codepoetics.fluvius.tracing.TraceMaps;
-import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
-import com.codepoetics.fluvius.visitors.Visitors;
 
 import java.util.UUID;
 
@@ -57,26 +51,6 @@ public final class Flows {
    */
   public static <O> TargetCapture<O> obtaining(Key<O> target) {
     return Fluent.targetCapture(target);
-  }
-
-  public static <T> FlowExecution<T> compile(Flow<T> flow) {
-    return compile(flow, Visitors.getDefault());
-  }
-
-  public static <T> FlowExecution<T> compile(Flow<T> flow, FlowVisitor<Action> flowVisitor) {
-    return KeyCheckingFlowExecution.forFlow(flow, flowVisitor);
-  }
-
-  public static <T> FlowExecution<T> compileLogging(Flow<T> flow, FlowLogger logger) {
-    return compile(flow, Visitors.logging(Visitors.getDefault(), logger));
-  }
-
-  public static <T> TracedFlowExecution<T> compileTracing(Flow<T> flow, TraceEventListener listener) {
-    return compileTracing(flow, listener, Visitors.getDefault());
-  }
-
-  public static <T> TracedFlowExecution<T> compileTracing(Flow<T> flow, TraceEventListener listener, FlowVisitor<Action> flowVisitor) {
-    return TraceMapCapturingFlowExecution.forFlow(flow, TracingFlowVisitor.wrapping(listener, flowVisitor));
   }
 
   /**

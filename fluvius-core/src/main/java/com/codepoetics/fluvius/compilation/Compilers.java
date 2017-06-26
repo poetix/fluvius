@@ -12,7 +12,7 @@ import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.execution.KeyCheckingFlowExecution;
 import com.codepoetics.fluvius.execution.TraceMapCapturingFlowExecution;
-import com.codepoetics.fluvius.history.History;
+import com.codepoetics.fluvius.history.RecordingFlowCompiler;
 import com.codepoetics.fluvius.logging.Loggers;
 import com.codepoetics.fluvius.tracing.TracingFlowVisitor;
 import com.codepoetics.fluvius.visitors.Visitors;
@@ -86,14 +86,14 @@ public final class Compilers {
     /**
      * Specifies that {@link FlowExecution}s compiled by the constructed compiler will record a trace of their execution history to the provided {@link FlowHistoryRepository}.
      *
-     * @param repository The repository to which exeuction traces will be written.
+     * @param repository The repository to which execution traces will be written.
      * @return A builder that will build the compiler as specified.
      */
     public Builder<FlowCompiler> recordingTo(final FlowHistoryRepository<?> repository) {
       return new Builder<>(visitor, new CompilerMaker<FlowCompiler>() {
         @Override
         public FlowCompiler makeCompiler(FlowVisitor<Action> input) {
-          return History.makeCompiler(repository, visitor);
+          return RecordingFlowCompiler.using(repository, input);
         }
       });
     }
