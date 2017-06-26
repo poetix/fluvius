@@ -4,7 +4,7 @@ import com.codepoetics.fluvius.api.history.*;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
 
 /**
- * Utility class for creating {@link FlowHistoryRepository}s.
+ * Utility class for creating {@link FlowHistoryRepository}s out of smaller pieces.
  */
 public final class FlowHistoryRepositories {
 

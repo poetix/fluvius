@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @param <T> The type of the value tested by this predicate.
  */
-public interface P1<T> extends Serializable {
+public interface Predicate<T> extends Serializable {
   /**
    * Apply this predicate to the supplied value.
    *

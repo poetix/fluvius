@@ -2,9 +2,9 @@ package com.codepoetics.fluvius.json.history;
 
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
-import com.codepoetics.fluvius.api.functional.F1;
-import com.codepoetics.fluvius.api.functional.F2;
-import com.codepoetics.fluvius.api.functional.P1;
+import com.codepoetics.fluvius.api.functional.SingleParameterStep;
+import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
+import com.codepoetics.fluvius.api.functional.Predicate;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
@@ -17,7 +17,7 @@ public final class FlowExample {
   public static final Key<String> password = Key.named("password");
   public static final Key<String> postcode = Key.named("postcode");
   public static final Key<AuthorisationResult> authorisationResult = Key.named("authorisationResult");
-  public static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new P1<AuthorisationResult>() {
+  public static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new Predicate<AuthorisationResult>() {
     @Override
     public boolean test(AuthorisationResult value) {
       return value.isAuthorised();
@@ -28,7 +28,7 @@ public final class FlowExample {
       .from(userName, password)
       .using(
           "Check credentials",
-          new F2<String, String, AuthorisationResult>() {
+          new DoubleParameterStep<String, String, AuthorisationResult>() {
             @Override
             public AuthorisationResult apply(String username, String password) {
               return (password.equals("the real password"))
@@ -37,7 +37,7 @@ public final class FlowExample {
             }
           });
   public static final Key<String> accessToken = Key.named("accessToken");
-  public static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new F1<AuthorisationResult, String>() {
+  public static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new SingleParameterStep<AuthorisationResult, String>() {
             @Override
             public String apply(AuthorisationResult input) {
               return input.getAccessToken();
@@ -49,7 +49,7 @@ public final class FlowExample {
               .from(accessToken, postcode)
               .using(
                   "Fetch weather",
-                  new F2<String, String, Double>() {
+                  new DoubleParameterStep<String, String, Double>() {
                     @Override
                     public Double apply(String accessToken, String postcode) {
                       return 26D;
@@ -67,7 +67,7 @@ public final class FlowExample {
               + " is " + scratchpad.get(temperature) + " degrees";
         }
       });
-  public static final Flow<String> formatError = Flows.obtaining(weatherMessage).from(userName).using("Format error message", new F1<String, String>() {
+  public static final Flow<String> formatError = Flows.obtaining(weatherMessage).from(userName).using("Format error message", new SingleParameterStep<String, String>() {
                     @Override
                     public String apply(String userName) {
                       return "Sorry, " + userName + ", your credentials were not valid";

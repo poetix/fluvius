@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.Flow;
-import com.codepoetics.fluvius.api.functional.RecoveryFunction;
+import com.codepoetics.fluvius.api.functional.RecoveryStep;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
@@ -24,14 +24,14 @@ public final class RecoveryResultKeyCapture<T> {
   /**
    * Specify the recovery function to use to recover from a failure written to the captured {@link Key}.
    * @param description Description of the recovery operation.
-   * @param recoveryFunction The recovery function to use.
+   * @param recoveryStep The recovery function to use.
    * @return The constructed flow.
    */
-  public Flow<T> using(String description, final RecoveryFunction<T> recoveryFunction) {
+  public Flow<T> using(String description, final RecoveryStep<T> recoveryStep) {
     return SingleOperationFlow.create(Collections.<Key<?>>singleton(failureKey), recoveryResultKey, Operations.fromFunction(description, new ScratchpadFunction<T>() {
       @Override
       public T apply(Scratchpad input) throws Exception {
-        return recoveryFunction.apply(input.getFailureReason(failureKey));
+        return recoveryStep.apply(input.getFailureReason(failureKey));
       }
     }));
   }

@@ -7,5 +7,5 @@ import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
  *
  * @param <T> The type of the returned value.
  */
-public interface ScratchpadFunction<T> extends F1<Scratchpad, T> {
+public interface ScratchpadFunction<T> extends SingleParameterStep<Scratchpad, T> {
 }

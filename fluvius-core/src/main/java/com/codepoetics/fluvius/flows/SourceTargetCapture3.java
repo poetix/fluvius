@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.Flow;
-import com.codepoetics.fluvius.api.functional.F3;
+import com.codepoetics.fluvius.api.functional.TripleParameterStep;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 /**
@@ -29,27 +29,27 @@ public final class SourceTargetCapture3<A, B, C, OUTPUT> {
    * Create a Flow from the source keys to the target key, using the given name and function.
    *
    * @param name The name of the Flow.
-   * @param f3   The function to use to transform the source values to the target value.
+   * @param tripleParameterStep   The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(String name, F3<A, B, C, OUTPUT> f3) {
+  public Flow<OUTPUT> using(String name, TripleParameterStep<A, B, C, OUTPUT> tripleParameterStep) {
     return Fluent.inputKeysCapture(sourceA, sourceB, sourceC).to(target).using(
         name,
-        Extractors.make(sourceA, sourceB, sourceC, f3));
+        Extractors.make(sourceA, sourceB, sourceC, tripleParameterStep));
   }
 
   /**
    * Create a Flow from the source keys to the target key, using the given function.
    * The flow is automatically named based on the key names.
    *
-   * @param f3 The function to use to transform the source values to the target value.
+   * @param tripleParameterStep The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(F3<A, B, C, OUTPUT> f3) {
+  public Flow<OUTPUT> using(TripleParameterStep<A, B, C, OUTPUT> tripleParameterStep) {
     return using("Obtain " + target.getName()
             + " from " + sourceA.getName()
             + ", " + sourceB.getName()
             + " and " + sourceC.getName(),
-        f3);
+        tripleParameterStep);
   }
 }

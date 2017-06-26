@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @param <C>      The type of the function's third argument.
  * @param <OUTPUT> The type of the function's result.
  */
-public interface F3<A, B, C, OUTPUT> extends Serializable {
+public interface TripleParameterStep<A, B, C, OUTPUT> extends Serializable {
   /**
    * Apply this function to the supplied inputs.
    *

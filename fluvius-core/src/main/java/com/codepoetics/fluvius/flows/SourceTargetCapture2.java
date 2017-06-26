@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.Flow;
-import com.codepoetics.fluvius.api.functional.F2;
+import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 /**
@@ -26,26 +26,26 @@ public final class SourceTargetCapture2<A, B, OUTPUT> {
    * Create a Flow from the source keys to the target key, using the given name and function.
    *
    * @param name The name of the Flow.
-   * @param f2   The function to use to transform the source values to the target value.
+   * @param doubleParameterStep   The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(String name, F2<A, B, OUTPUT> f2) {
+  public Flow<OUTPUT> using(String name, DoubleParameterStep<A, B, OUTPUT> doubleParameterStep) {
     return Fluent.inputKeysCapture(sourceA, sourceB).to(target).using(
         name,
-        Extractors.make(sourceA, sourceB, f2));
+        Extractors.make(sourceA, sourceB, doubleParameterStep));
   }
 
   /**
    * Create a Flow from the source keys to the target key, using the given function.
    * The flow is automatically named based on the key names.
    *
-   * @param f2 The function to use to transform the source values to the target value.
+   * @param doubleParameterStep The function to use to transform the source values to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(F2<A, B, OUTPUT> f2) {
+  public Flow<OUTPUT> using(DoubleParameterStep<A, B, OUTPUT> doubleParameterStep) {
     return using("Obtain " + target.getName()
             + " from " + sourceA.getName()
             + " and " + sourceB.getName(),
-        f2);
+        doubleParameterStep);
   }
 }

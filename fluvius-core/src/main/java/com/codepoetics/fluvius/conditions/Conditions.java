@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.conditions;
 
 import com.codepoetics.fluvius.api.Condition;
-import com.codepoetics.fluvius.api.functional.P1;
+import com.codepoetics.fluvius.api.functional.Predicate;
 import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
@@ -58,7 +58,7 @@ public final class Conditions {
    * @param <T>         The type of the Key/value.
    * @return The constructed Condition.
    */
-  public static <T> Condition keyMatches(Key<T> key, String description, P1<T> predicate) {
+  public static <T> Condition keyMatches(Key<T> key, String description, Predicate<T> predicate) {
     return fromPredicate(key.getName() + " " + description, Predicates.keyMatches(key, predicate));
   }
 

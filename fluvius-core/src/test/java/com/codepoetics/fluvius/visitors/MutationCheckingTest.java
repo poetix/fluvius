@@ -2,7 +2,7 @@ package com.codepoetics.fluvius.visitors;
 
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
-import com.codepoetics.fluvius.api.functional.F1;
+import com.codepoetics.fluvius.api.functional.SingleParameterStep;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
@@ -45,7 +45,7 @@ public class MutationCheckingTest {
 
   @Test(expected = IllegalStateException.class)
   public void youCannotHideFromTheMutationChecker() throws Exception {
-    Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
+    Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new SingleParameterStep<Map<String, MutableThing[]>, String>() {
       @Override
       public String apply(Map<String, MutableThing[]> input) {
         input.get("xyzzy")[0].getBar().get(1)[1] = "changed value";
@@ -61,7 +61,7 @@ public class MutationCheckingTest {
 
   @Test(expected = IllegalStateException.class)
   public void youStillCannotHideFromTheMutationChecker() throws Exception {
-    Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new F1<Map<String, MutableThing[]>, String>() {
+    Flow<String> evilFlow = Flows.obtaining(output).from(mutableThings).using("evil operation", new SingleParameterStep<Map<String, MutableThing[]>, String>() {
       @Override
       public String apply(Map<String, MutableThing[]> input) {
         input.get("xyzzy")[0].getBaz()[1] = "changed value";

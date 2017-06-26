@@ -1,7 +1,7 @@
 package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.Flow;
-import com.codepoetics.fluvius.api.functional.F1;
+import com.codepoetics.fluvius.api.functional.SingleParameterStep;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 /**
@@ -23,25 +23,25 @@ public final class SourceTargetCapture1<A, OUTPUT> {
    * Create a Flow from the source key to the target key, using the given name and function.
    *
    * @param name The name of the Flow.
-   * @param f1   The function to use to transform the source value to the target value.
+   * @param singleParameterStep   The function to use to transform the source value to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(String name, F1<A, OUTPUT> f1) {
+  public Flow<OUTPUT> using(String name, SingleParameterStep<A, OUTPUT> singleParameterStep) {
     return Fluent.inputKeysCapture(sourceA).to(target).using(
         name,
-        Extractors.make(sourceA, f1));
+        Extractors.make(sourceA, singleParameterStep));
   }
 
   /**
    * Create a Flow from the source key to the target key, using the given function.
    * The flow is automatically named based on the key names.
    *
-   * @param f1 The function to use to transform the source value to the target value.
+   * @param singleParameterStep The function to use to transform the source value to the target value.
    * @return The constructed Flow.
    */
-  public Flow<OUTPUT> using(F1<A, OUTPUT> f1) {
+  public Flow<OUTPUT> using(SingleParameterStep<A, OUTPUT> singleParameterStep) {
     return using("Obtain " + target.getName()
             + " from " + sourceA.getName(),
-        f1);
+        singleParameterStep);
   }
 }

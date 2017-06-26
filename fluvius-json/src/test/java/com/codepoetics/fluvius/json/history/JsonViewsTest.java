@@ -5,7 +5,7 @@ import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.FlowVisitor;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
-import com.codepoetics.fluvius.api.functional.F2;
+import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
 import com.codepoetics.fluvius.api.history.EventDataSerialiser;
 import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
 import com.codepoetics.fluvius.compilation.Compilers;
@@ -40,7 +40,7 @@ public class JsonViewsTest {
     Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
-        .using("Authorize user", new F2<String, String, String>() {
+        .using("Authorize user", new DoubleParameterStep<String, String, String>() {
           @Override
           public String apply(String username, String password) {
             return "ACCESS TOKEN";
@@ -50,7 +50,7 @@ public class JsonViewsTest {
     Flow<Double> getLocalTemperature = Flows
         .obtaining(temperature)
         .from(accessToken, postcode)
-        .using("Get local temperature", new F2<String, String, Double>() {
+        .using("Get local temperature", new DoubleParameterStep<String, String, Double>() {
           @Override
           public Double apply(String accessCode, String postcode) {
             return 26D;

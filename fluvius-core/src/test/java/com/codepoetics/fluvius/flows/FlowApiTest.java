@@ -5,8 +5,8 @@ import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
-import com.codepoetics.fluvius.api.functional.F1;
-import com.codepoetics.fluvius.api.functional.F2;
+import com.codepoetics.fluvius.api.functional.SingleParameterStep;
+import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
@@ -185,7 +185,7 @@ public class FlowApiTest implements Serializable {
     Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
-        .using("Authorize user", new F2<String, String, String>() {
+        .using("Authorize user", new DoubleParameterStep<String, String, String>() {
           @Override
           public String apply(String username, String password) throws Exception {
             if (password.equals("the true password")) {
@@ -198,7 +198,7 @@ public class FlowApiTest implements Serializable {
     Flow<Double> getLocalTemperature = Flows
         .obtaining(FlowExample.temperature)
         .from(accessToken, postcode)
-        .using("Get local temperature", new F2<String, String, Double>() {
+        .using("Get local temperature", new DoubleParameterStep<String, String, Double>() {
           @Override
           public Double apply(String accessCode, String postcode) {
             return 26D;
@@ -210,7 +210,7 @@ public class FlowApiTest implements Serializable {
 
   @Test(expected = IllegalArgumentException.class)
   public void flowsCannotOverwriteAlreadyWrittenKeys() throws Exception {
-    Flow<String> changeAccessToken = Flows.obtaining(accessToken).from(accessToken).using(new F1<String, String>() {
+    Flow<String> changeAccessToken = Flows.obtaining(accessToken).from(accessToken).using(new SingleParameterStep<String, String>() {
       @Override
       public String apply(String input) {
         return input + ", so there!";
