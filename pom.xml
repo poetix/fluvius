@@ -142,10 +142,10 @@
     </reporting>
 
     <modules>
-        <module>fluvius-core</module>
-        <module>fluvius-json</module>
         <module>fluvius-api</module>
         <module>fluvius-test</module>
+        <module>fluvius-core</module>
+        <module>fluvius-json</module>
     </modules>
 
     <distributionManagement>

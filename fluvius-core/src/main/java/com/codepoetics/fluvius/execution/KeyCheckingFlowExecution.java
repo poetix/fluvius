@@ -25,7 +25,11 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
    * @return The constructed flow execution.
    */
   public static <T> FlowExecution<T> forFlow(Flow<T> flow, FlowVisitor<Action> visitor) {
-    return new KeyCheckingFlowExecution<>(flow.visit(visitor), flow.getRequiredKeys(), flow.getProvidedKey());
+    return forAction(flow.visit(visitor), flow.getRequiredKeys(), flow.getProvidedKey());
+  }
+
+  static <T> FlowExecution<T> forAction(Action action, Set<Key<?>> requiredKeys, Key<T> providedKey) {
+    return new KeyCheckingFlowExecution<>(action, requiredKeys, providedKey);
   }
 
   private final Action action;
