@@ -2,9 +2,7 @@ package com.codepoetics.fluvius.tracing;
 
 import com.codepoetics.fluvius.api.*;
 import com.codepoetics.fluvius.api.scratchpad.Key;
-import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
-import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
 
 import java.util.*;
 

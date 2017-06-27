@@ -20,7 +20,7 @@ public abstract class FlowEvent<T> {
    * @param <T> The type to which event data is serialised.
    * @return The constructed event.
    */
-  public static <T> StepStartedEvent<T> started(UUID flowId, UUID stepId, long timestamp, Map<String, T> scratchpadState) {
+  public static <T> FlowEvent<T> started(UUID flowId, UUID stepId, long timestamp, Map<String, T> scratchpadState) {
     return new StepStartedEvent<>(flowId, stepId, timestamp, scratchpadState);
   }
 
@@ -34,7 +34,7 @@ public abstract class FlowEvent<T> {
    * @param <T> The type to which event data is serialised.
    * @return The constructed event.
    */
-  public static <T> StepFailedEvent<T> failed(UUID flowId, UUID stepId, long timestamp, T reason) {
+  public static <T> FlowEvent<T> failed(UUID flowId, UUID stepId, long timestamp, T reason) {
     return new StepFailedEvent<>(flowId, stepId, timestamp, reason);
   }
 
@@ -48,7 +48,7 @@ public abstract class FlowEvent<T> {
    * @param <T> The type to which event data is serialised.
    * @return The constructed event.
    */
-  public static <T> StepSucceededEvent<T> succeeded(UUID flowId, UUID stepId, long timestamp, T result) {
+  public static <T> FlowEvent<T> succeeded(UUID flowId, UUID stepId, long timestamp, T result) {
     return new StepSucceededEvent<>(flowId, stepId, timestamp, result);
   }
 

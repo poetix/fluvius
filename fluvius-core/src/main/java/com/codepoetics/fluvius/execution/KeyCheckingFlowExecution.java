@@ -25,19 +25,7 @@ public final class KeyCheckingFlowExecution<T> extends AbstractFlowExecution<T> 
    * @return The constructed flow execution.
    */
   public static <T> FlowExecution<T> forFlow(Flow<T> flow, FlowVisitor<Action> visitor) {
-    return forAction(flow.visit(visitor), flow.getRequiredKeys(), flow.getProvidedKey());
-  }
-
-  /**
-   * Create a key-checking flow execution using the supplied action, required keys and provided key.
-   * @param action The flow to build flow execution for.
-   * @param requiredKeys The keys that must be in the {@link Scratchpad} for the flow to execute.
-   * @param providedKey The keys that will be written into the {@link Scratchpad} when the flow has completed.
-   * @param <T> The type of value returned by executing the flow.
-   * @return The constructed flow execution.
-   */
-  public static <T> FlowExecution<T> forAction(Action action, Set<Key<?>> requiredKeys, Key<T> providedKey) {
-    return new KeyCheckingFlowExecution<>(action, requiredKeys, providedKey);
+    return new KeyCheckingFlowExecution<>(flow.visit(visitor), flow.getRequiredKeys(), flow.getProvidedKey());
   }
 
   private final Action action;
