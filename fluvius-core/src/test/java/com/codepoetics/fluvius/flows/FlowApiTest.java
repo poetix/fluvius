@@ -4,19 +4,18 @@ import com.codepoetics.fluvius.FlowExample;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
-import com.codepoetics.fluvius.api.compilation.TracedFlowCompiler;
 import com.codepoetics.fluvius.api.functional.SingleParameterStep;
 import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
-import com.codepoetics.fluvius.api.tracing.TracedFlowExecution;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.exceptions.FailedKeyRetrievedException;
 import com.codepoetics.fluvius.test.matchers.AMap;
 import com.codepoetics.fluvius.test.matchers.ATraceMap;
 import com.codepoetics.fluvius.test.matchers.RecordingMatcher;
 import com.codepoetics.fluvius.test.mocks.MockTraceEventListener;
+import com.codepoetics.fluvius.tracing.TraceMaps;
 import com.codepoetics.fluvius.utilities.Serialisation;
 import org.junit.Test;
 
@@ -103,17 +102,16 @@ public class FlowApiTest implements Serializable {
 
     Flow<Double> completeFlow = createTemperatureRetrievingFlow();
 
-    TracedFlowCompiler compiler = Compilers.builder()
+    FlowCompiler compiler = Compilers.builder()
         .loggingToConsole()
         .mutationChecking()
         .tracingWith(listener)
         .build();
 
-    TracedFlowExecution<Double> tracedFlowExecution = compiler.compile(completeFlow);
-
+    FlowExecution<Double> flowExecution = compiler.compile(completeFlow);
 
     assertThat(
-        tracedFlowExecution.getTraceMap(),
+        TraceMaps.getTraceMap(completeFlow),
 
         ATraceMap.ofType(FlowStepType.SEQUENCE)
           .withId(recorder.record(sequenceStepId))
@@ -133,7 +131,7 @@ public class FlowApiTest implements Serializable {
 
     UUID flowId = UUID.randomUUID();
 
-    tracedFlowExecution
+    flowExecution
         .run(
             flowId,
             userName.of("Arthur"),
@@ -159,7 +157,7 @@ public class FlowApiTest implements Serializable {
     UUID failedFlowId = UUID.randomUUID();
 
     try {
-      tracedFlowExecution.run(
+      flowExecution.run(
           failedFlowId,
           userName.of("Arthur"),
           password.of("the untrue password"),

@@ -11,6 +11,7 @@ import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.history.FlowHistoryRepositories;
+import com.codepoetics.fluvius.tracing.TraceMaps;
 import com.codepoetics.fluvius.visitors.Visitors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ public class JsonViewsTest {
   private final FlowCompiler compiler = Compilers.builder()
       .loggingToConsole()
       .mutationChecking()
-      .recordingTo(repository)
+      .tracingWith(repository)
       .build();
 
   @Test
@@ -70,6 +71,8 @@ public class JsonViewsTest {
             password.of("Special secret password"),
             postcode.of("VB6 5UX")
         );
+
+    repository.storeTraceMap(flowId, TraceMaps.getTraceMap(completeFlow));
 
     System.out.println(mapper.writeValueAsString(FlowHistoryView.from(repository.getFlowHistory(flowId))));
   }

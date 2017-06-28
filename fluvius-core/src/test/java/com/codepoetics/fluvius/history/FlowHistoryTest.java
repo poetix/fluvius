@@ -23,7 +23,7 @@ public class FlowHistoryTest {
   private final FlowHistoryRepository<String> repository = FlowHistoryRepositories.createInMemory(EventDataSerialisers.toStringSerialiser());
   private final FlowCompiler compiler = Compilers.builder()
       .loggingToConsole()
-      .recordingTo(repository)
+      .tracingWith(repository)
       .build();
 
   @Test
@@ -80,6 +80,8 @@ public class FlowHistoryTest {
             password.of("Special secret password"),
             postcode.of("VB6 5UX")
         );
+
+    repository.storeTraceMap(flowId, TraceMaps.getTraceMap(completeFlow));
 
     assertThat(repository.getFlowHistory(flowId),
         AFlowHistory

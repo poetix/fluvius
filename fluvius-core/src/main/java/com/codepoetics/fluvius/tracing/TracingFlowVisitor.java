@@ -1,27 +1,17 @@
 package com.codepoetics.fluvius.tracing;
 
 import com.codepoetics.fluvius.api.*;
-import com.codepoetics.fluvius.api.functional.Mapper;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.tracing.TraceEventListener;
 import com.codepoetics.fluvius.api.tracing.TraceMap;
-import com.codepoetics.fluvius.api.tracing.TracedAction;
 
 import java.util.*;
 
 /**
  * A {@link FlowVisitor} that creates a {@link TraceMap} and notifies a {@link TraceEventListener} of step execution.
  */
-public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
-
-  private static final FlowVisitor<TraceMap> traceMapVisitor = new TraceMapFlowVisitor();
-  private static final Mapper<TracedAction, TraceMap> toTraceMap = new Mapper<TracedAction, TraceMap>() {
-    @Override
-    public TraceMap apply(TracedAction input) {
-      return input.getTraceMap();
-    }
-  };
+public final class TracingFlowVisitor implements FlowVisitor<Action> {
 
   /**
    * Create a new tracing FlowVisitor wrapping the supplied listener and visitor.
@@ -30,86 +20,55 @@ public final class TracingFlowVisitor implements FlowVisitor<TracedAction> {
    * @param actionVisitor The flow visitor to wrap.
    * @return The constructed flow visitor.
    */
-  public static FlowVisitor<TracedAction> wrapping(TraceEventListener listener, FlowVisitor<Action> actionVisitor) {
+  public static FlowVisitor<Action> wrapping(TraceEventListener listener, FlowVisitor<Action> actionVisitor) {
     return new TracingFlowVisitor(listener, actionVisitor);
   }
 
   private final TraceEventListener listener;
-  private final FlowVisitor<Action> actionVisitor;
+  private final FlowVisitor<Action> innerVisitor;
 
-  private TracingFlowVisitor(TraceEventListener listener, FlowVisitor<Action> actionVisitor) {
+  private TracingFlowVisitor(TraceEventListener listener, FlowVisitor<Action> innerVisitor) {
     this.listener = listener;
-    this.actionVisitor = actionVisitor;
+    this.innerVisitor = innerVisitor;
   }
 
   @Override
-  public <T> TracedAction visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
-    TraceMap traceMap = traceMapVisitor.visitSingle(stepId, requiredKeys, providedKey, operation);
-    Action action = new NotifyingAction(
-        traceMap.getStepId(),
-        listener,
-        providedKey,
-        actionVisitor.visitSingle(stepId, requiredKeys, providedKey, operation));
-
-    return TracedAction.of(traceMap, action);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T> TracedAction visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<TracedAction> items) {
-    TraceMap traceMap = traceMapVisitor.visitSequence(stepId, requiredKeys, providedKey, getItemTraceMaps(items));
-    Action action = new NotifyingAction(
-        traceMap.getStepId(),
-        listener,
-        providedKey,
-        actionVisitor.visitSequence(stepId, requiredKeys, providedKey, (List) items));
-
-    return TracedAction.of(traceMap, action);
-  }
-
-  private List<TraceMap> getItemTraceMaps(List<TracedAction> items) {
-    List<TraceMap> children = new ArrayList<>(items.size());
-    for (TracedAction item : items) {
-      children.add(item.getTraceMap());
-    }
-    return children;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T> TracedAction visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, TracedAction defaultBranch, List<Conditional<TracedAction>> conditionalBranches) {
-    TraceMap traceMap = traceMapVisitor.visitBranch(
+  public <T> Action visitSingle(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Operation<T> operation) {
+    return new NotifyingAction(
         stepId,
-        requiredKeys,
-        providedKey,
-        defaultBranch.getTraceMap(),
-        getConditionalTraceMaps(conditionalBranches));
-
-    Action action = new NotifyingAction(
-        traceMap.getStepId(),
         listener,
         providedKey,
-        actionVisitor.visitBranch(
+        innerVisitor.visitSingle(stepId, requiredKeys, providedKey, operation));
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> Action visitSequence(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<Action> items) {
+    return new NotifyingAction(
+        stepId,
+        listener,
+        providedKey,
+        innerVisitor.visitSequence(stepId, requiredKeys, providedKey, (List) items));
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> Action visitBranch(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, Action defaultBranch, List<Conditional<Action>> conditionalBranches) {
+    return new NotifyingAction(
+        stepId,
+        listener,
+        providedKey,
+        innerVisitor.visitBranch(
             stepId,
             requiredKeys,
             providedKey,
             defaultBranch,
-            (List) conditionalBranches));
-
-    return TracedAction.of(traceMap, action);
-  }
-
-  private List<Conditional<TraceMap>> getConditionalTraceMaps(List<Conditional<TracedAction>> conditionalActions) {
-    List<Conditional<TraceMap>> children = new ArrayList<>(conditionalActions.size());
-    for (Conditional<TracedAction> branch : conditionalActions) {
-      children.add(branch.map(toTraceMap));
-    }
-    return children;
+            conditionalBranches));
   }
 
   @Override
   public Condition visitCondition(Condition condition) {
-    return actionVisitor.visitCondition(condition);
+    return innerVisitor.visitCondition(condition);
   }
 
   private static final class NotifyingAction implements Action {
