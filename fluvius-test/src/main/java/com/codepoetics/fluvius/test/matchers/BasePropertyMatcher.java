@@ -32,7 +32,7 @@ abstract class BasePropertyMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
 
   @Override
   public void describeTo(Description description) {
-    description.appendText("A ").appendText(entityType).appendText(" with");
+    description.appendText("A ").appendText(entityType);
     indent();
     describeProperties(new PropertyDescriber(description));
     outdent();

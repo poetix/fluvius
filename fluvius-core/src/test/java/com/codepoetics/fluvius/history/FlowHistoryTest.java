@@ -4,23 +4,25 @@ import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.FlowExecution;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
-import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
+import com.codepoetics.fluvius.api.history.FlowEventRepository;
 import com.codepoetics.fluvius.api.tracing.FlowStepType;
 import com.codepoetics.fluvius.api.tracing.TraceMapLabel;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.test.matchers.*;
 import com.codepoetics.fluvius.tracing.TraceMaps;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.UUID;
 
 import static com.codepoetics.fluvius.FlowExample.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 public class FlowHistoryTest {
 
-  private final FlowHistoryRepository<String> repository = FlowHistoryRepositories.createInMemory(EventDataSerialisers.toStringSerialiser());
+  private final FlowEventRepository<String> repository = FlowEventRepositories.createInMemory(EventDataSerialisers.toStringSerialiser());
   private final FlowCompiler compiler = Compilers.builder()
       .loggingToConsole()
       .tracingWith(repository)
@@ -81,25 +83,22 @@ public class FlowHistoryTest {
             postcode.of("VB6 5UX")
         );
 
-    repository.storeTraceMap(flowId, TraceMaps.getTraceMap(completeFlow));
 
-    assertThat(repository.getFlowHistory(flowId),
-        AFlowHistory
-            .<String>withFlowId(flowId)
 
-            .withEventHistory(
-                AFlowEvent.<String>stepStarted(),
+    assertThat(repository.getEvents(flowId),
+        AnEventHistory.of(
+          AFlowEvent.<String>stepStarted(),
 
-                  AFlowEvent.<String>stepStarted()
-                      .withStepId(recorder.equalsRecorded("authorize user")),
-                  AFlowEvent.stepSucceeded("ACCESS TOKEN"),
+            AFlowEvent.<String>stepStarted()
+                  .withStepId(recorder.equalsRecorded("authorize user")),
+            AFlowEvent.stepSucceeded("ACCESS TOKEN"),
 
-                  AFlowEvent.<String>stepStarted()
-                      .withStepId(recorder.equalsRecorded("get temperature")),
-                  AFlowEvent.stepSucceeded("26.0"),
+            AFlowEvent.<String>stepStarted()
+                .withStepId(recorder.equalsRecorded("get temperature")),
+            AFlowEvent.stepSucceeded("26.0"),
 
-                AFlowEvent.stepSucceeded("26.0")
-            )
+          AFlowEvent.stepSucceeded("26.0")
+        )
     );
   }
 }

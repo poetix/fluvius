@@ -1,9 +1,10 @@
 package com.codepoetics.fluvius.flows;
 
-import com.codepoetics.fluvius.api.functional.SingleParameterStep;
 import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
-import com.codepoetics.fluvius.api.functional.TripleParameterStep;
 import com.codepoetics.fluvius.api.functional.ScratchpadFunction;
+import com.codepoetics.fluvius.api.functional.SingleParameterStep;
+import com.codepoetics.fluvius.api.functional.TripleParameterStep;
+
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 

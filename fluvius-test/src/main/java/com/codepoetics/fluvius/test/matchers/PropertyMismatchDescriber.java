@@ -6,6 +6,7 @@ import org.hamcrest.Matcher;
 import static com.codepoetics.fluvius.test.matchers.IndentationControl.*;
 
 final class PropertyMismatchDescriber {
+
   private final Description description;
   private boolean matches = true;
 

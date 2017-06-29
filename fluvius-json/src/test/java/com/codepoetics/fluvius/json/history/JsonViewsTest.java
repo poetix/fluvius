@@ -7,10 +7,10 @@ import com.codepoetics.fluvius.api.FlowVisitor;
 import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.DoubleParameterStep;
 import com.codepoetics.fluvius.api.history.EventDataSerialiser;
-import com.codepoetics.fluvius.api.history.FlowHistoryRepository;
+import com.codepoetics.fluvius.api.history.FlowEventRepository;
 import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
-import com.codepoetics.fluvius.history.FlowHistoryRepositories;
+import com.codepoetics.fluvius.history.FlowEventRepositories;
 import com.codepoetics.fluvius.tracing.TraceMaps;
 import com.codepoetics.fluvius.visitors.Visitors;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,7 +29,7 @@ public class JsonViewsTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
   private final EventDataSerialiser<JsonNode> serialiser = JsonEventDataSerialiser.using(mapper);
-  private final FlowHistoryRepository<JsonNode> repository = FlowHistoryRepositories.createInMemory(serialiser);
+  private final FlowEventRepository<JsonNode> repository = FlowEventRepositories.createInMemory(serialiser);
   private final FlowCompiler compiler = Compilers.builder()
       .loggingToConsole()
       .mutationChecking()
@@ -37,7 +37,7 @@ public class JsonViewsTest {
       .build();
 
   @Test
-  public void inMemoryRepositoryStoresFlowHistory() throws Exception {
+  public void flowHistoryViewExample() throws Exception {
     Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
@@ -72,8 +72,9 @@ public class JsonViewsTest {
             postcode.of("VB6 5UX")
         );
 
-    repository.storeTraceMap(flowId, TraceMaps.getTraceMap(completeFlow));
-
-    System.out.println(mapper.writeValueAsString(FlowHistoryView.from(repository.getFlowHistory(flowId))));
+    System.out.println(mapper.writeValueAsString(FlowHistoryView.from(
+        flowId,
+        TraceMaps.getTraceMap(completeFlow),
+        repository.getEvents(flowId))));
   }
 }

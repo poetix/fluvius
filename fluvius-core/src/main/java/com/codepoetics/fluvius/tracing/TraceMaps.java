@@ -18,10 +18,22 @@ public final class TraceMaps {
   private TraceMaps() {
   }
 
+  /**
+   * Generate the {@link TraceMap} for the provided {@link Flow}
+   *
+   * @param flow The flow to obtain the trace map for.
+   * @return The generated trace map.
+   */
   public static TraceMap getTraceMap(Flow<?> flow) {
     return flow.visit(visitor);
   }
 
+  /**
+   * Describe the provided {@link TraceMap}, using the provided {@link DescriptionWriter}
+   *
+   * @param traceMap The trace map to describe.
+   * @param descriptionWriter The description writer to use to write the description.
+   */
   public static void describe(TraceMap traceMap, DescriptionWriter descriptionWriter) {
     switch (traceMap.getType()) {
       case STEP:
@@ -30,7 +42,7 @@ public final class TraceMaps {
       case SEQUENCE:
         describeSequence(traceMap, descriptionWriter);
         return;
-      case BRANCH:
+      default:
         describeBranch(traceMap, descriptionWriter);
     }
   }
