@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @param <A>      The type of the function's argument.
  * @param <OUTPUT> The type of the function's result.
  */
-public interface SingleParameterStep<A, OUTPUT> extends Serializable {
+public interface SingleParameterStep<A, OUTPUT> extends Returning<OUTPUT>, Serializable {
   /**
    * Apply this function to the supplied input.
    *

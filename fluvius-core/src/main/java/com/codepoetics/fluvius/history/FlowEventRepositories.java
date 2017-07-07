@@ -1,7 +1,6 @@
 package com.codepoetics.fluvius.history;
 
 import com.codepoetics.fluvius.api.history.*;
-import com.codepoetics.fluvius.api.tracing.TraceMap;
 
 /**
  * Utility class for creating {@link FlowEventRepository}s out of smaller pieces.

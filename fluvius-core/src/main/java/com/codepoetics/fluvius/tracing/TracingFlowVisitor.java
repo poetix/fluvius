@@ -48,7 +48,7 @@ public final class TracingFlowVisitor implements FlowVisitor<Action> {
         stepId,
         listener,
         providedKey,
-        innerVisitor.visitSequence(stepId, requiredKeys, providedKey, (List) items));
+        innerVisitor.visitSequence(stepId, requiredKeys, providedKey, items));
   }
 
   @SuppressWarnings("unchecked")

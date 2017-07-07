@@ -63,6 +63,18 @@ public interface Flow<T> extends Serializable {
   Flow<T> orIf(Condition condition, Flow<T> ifTrue);
 
   /**
+   * Combine this flow with a subsequent Flow, branching into a failure flow if this flow did not succeed.
+   * @param onSuccessFlow The flow to execute next if this flow succeeded.
+   * @param <V> The type of the value returned by both success and failure flows.
+   * @return The next step in the fluent API.
+   */
+  <V> OnSuccessCapture<V> thenOnSuccess(Flow<V> onSuccessFlow);
+
+  interface OnSuccessCapture<V> {
+    Flow<V> otherwise(Flow<V> failureFlow);
+  }
+
+  /**
    * Flatten this flow into a list of flows.
    * @return A list of flows containing either this flow, or (if this flow is a sequence) all of the flows in this flow.
    */

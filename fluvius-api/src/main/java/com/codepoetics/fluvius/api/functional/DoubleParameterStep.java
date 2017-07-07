@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @param <B>      The type of the function's second argument.
  * @param <OUTPUT> The type of the function's result.
  */
-public interface DoubleParameterStep<A, B, OUTPUT> extends Serializable {
+public interface DoubleParameterStep<A, B, OUTPUT> extends Returning<OUTPUT>, Serializable {
   /**
    * Apply this function to the supplied inputs.
    *

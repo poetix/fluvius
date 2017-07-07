@@ -3,11 +3,7 @@ package com.codepoetics.fluvius.test.matchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import java.util.List;
-
-import static com.codepoetics.fluvius.test.matchers.IndentationControl.indent;
 import static com.codepoetics.fluvius.test.matchers.IndentationControl.newline;
-import static com.codepoetics.fluvius.test.matchers.IndentationControl.outdent;
 
 final class PropertyDescriber {
 

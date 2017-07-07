@@ -3,6 +3,7 @@ package com.codepoetics.fluvius.flows;
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.scratchpad.Key;
+import com.codepoetics.fluvius.conditions.Conditions;
 
 import java.util.*;
 
@@ -41,6 +42,16 @@ abstract class AbstractFlow<T> implements Flow<T> {
   @Override
   public Flow<T> orIf(Condition condition, Flow<T> ifTrue) {
     return BranchFlow.create(this, condition, ifTrue);
+  }
+
+  @Override
+  public <V> OnSuccessCapture<V> thenOnSuccess(final Flow<V> successFlow) {
+    return new OnSuccessCapture<V>() {
+      @Override
+      public Flow<V> otherwise(Flow<V> failureFlow) {
+        return then(successFlow.orIf(Conditions.keyRecordsFailure(getProvidedKey()), failureFlow));
+      }
+    };
   }
 
   @Override

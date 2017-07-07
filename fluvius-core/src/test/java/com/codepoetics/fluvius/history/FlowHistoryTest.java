@@ -11,14 +11,12 @@ import com.codepoetics.fluvius.compilation.Compilers;
 import com.codepoetics.fluvius.flows.Flows;
 import com.codepoetics.fluvius.test.matchers.*;
 import com.codepoetics.fluvius.tracing.TraceMaps;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.UUID;
 
 import static com.codepoetics.fluvius.FlowExample.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 
 public class FlowHistoryTest {
 
