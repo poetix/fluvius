@@ -10,7 +10,7 @@
 
     <groupId>com.codepoetics</groupId>
     <artifactId>fluvius</artifactId>
-    <version>1.9</version>
+    <version>1.10-SNAPSHOT</version>
     <description>A simple co-ordination API for Java 7</description>
     <url>https://poetix.github.io/fluvius</url>
     <packaging>pom</packaging>
