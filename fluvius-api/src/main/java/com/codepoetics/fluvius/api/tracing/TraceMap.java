@@ -1,5 +1,7 @@
 package com.codepoetics.fluvius.api.tracing;
 
+import com.codepoetics.fluvius.api.Flow;
+
 import java.util.*;
 
 /**
@@ -7,19 +9,44 @@ import java.util.*;
  */
 public final class TraceMap {
 
+  /**
+   * Create the TraceMap for a single step.
+   * @param stepId The unique ID of the step.
+   * @param requiredKeys The keys required by the step.
+   * @param providedKey The key provided by the step.
+   * @param description A description of the step.
+   * @return The constructed TraceMap.
+   */
   public static TraceMap ofStep(UUID stepId, Set<String> requiredKeys, String providedKey, String description) {
     return new TraceMap(stepId, requiredKeys, providedKey, description, FlowStepType.STEP, Collections.<TraceMapLabel, TraceMap>emptyMap());
   }
 
+  /**
+   * Create the TraceMap for a sequence of steps.
+   * @param stepId The unique ID of the sequence.
+   * @param requiredKeys The keys required by the sequence.
+   * @param providedKey The key provided by the sequence.
+   * @param steps The TraceMaps of all of the steps in the sequence.
+   * @return The constructed TraceMap.
+   */
   public static TraceMap ofSequence(UUID stepId, Set<String> requiredKeys, String providedKey, List<TraceMap> steps) {
     Map<TraceMapLabel, TraceMap> children = new LinkedHashMap<>();
     int stepIndex = 1;
     for (TraceMap step : steps) {
-      children.put(TraceMapLabel.forSequence(stepIndex++), step);
+      children.put(TraceMapLabel.forSequenceMember(stepIndex++), step);
     }
     return new TraceMap(stepId, requiredKeys, providedKey, "Sequence", FlowStepType.SEQUENCE, children);
   }
 
+  /**
+   * Create the TraceMap for a branching flow.
+   * @param stepId The unique ID of the branching flow.
+   * @param requiredKeys The keys required by the branching flow.
+   * @param providedKey The key provided by every branch in the flow.
+   * @param defaultTraceMap The TraceMap of the default branch.
+   * @param conditionalTraceMaps The TraceMaps of each of the conditional branches.
+   * @return The constructed TraceMap.
+   */
   public static TraceMap ofBranch(UUID stepId, Set<String> requiredKeys, String providedKey, TraceMap defaultTraceMap, Map<String, TraceMap> conditionalTraceMaps) {
     Map<TraceMapLabel, TraceMap> children = new LinkedHashMap<>();
     for (Map.Entry<String, TraceMap> entry : conditionalTraceMaps.entrySet()) {
@@ -45,43 +72,67 @@ public final class TraceMap {
     this.children = children;
   }
 
+  /**
+   * Get the unique ID of the {@link com.codepoetics.fluvius.api.Flow} for which this is the TraceMap.
+   * @return The unique ID of the {@link com.codepoetics.fluvius.api.Flow} for which this is the TraceMap.
+   */
   public UUID getStepId() {
     return stepId;
   }
 
+  /**
+   * Get the names of the required keys of the {@link com.codepoetics.fluvius.api.Flow} for which this is the TraceMap.
+   * @return The names of the required keys of the {@link com.codepoetics.fluvius.api.Flow} for which this is the TraceMap.
+   */
   public Set<String> getRequiredKeys() {
     return requiredKeys;
   }
 
+  /**
+   * Get the name of the key provided by the {@link Flow} for which this is the TraceMap.
+   * @return The name of the key provided by the {@link Flow} for which this is the TraceMap.
+   */
   public String getProvidedKey() {
     return providedKey;
   }
 
+  /**
+   * Get the description of the {@link Flow} for which this is the TraceMap.
+   * @return The description of the {@link Flow} for which this is the TraceMap.
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Get the type of the {@link Flow} for which this is the TraceMap.
+   * @return The type of the {@link Flow} for which this is the TraceMap.
+   */
   public FlowStepType getType() {
     return type;
   }
 
+  /**
+   * Get the children, if any, of the {@link Flow} for which this is the TraceMap.
+   * @return The children, if any, of the {@link Flow} for which this is the TraceMap.
+   */
   public Map<TraceMapLabel, TraceMap> getChildren() {
     return children;
   }
 
   @Override
-  public boolean equals(Object o) {
-    return this == o
-        || (o instanceof TraceMap && equals((TraceMap) o));
+  public boolean equals(Object other) {
+    return this == other
+        || (other instanceof TraceMap && equals((TraceMap) other));
   }
 
-  private boolean equals(TraceMap o) {
-    return o.stepId.equals(stepId)
-        && o.requiredKeys.equals(requiredKeys)
-        && o.providedKey.equals(providedKey)
-        && o.description.equals(description)
-        && o.type.equals(type)
-        && o.children.equals(children);
+  private boolean equals(TraceMap other) {
+    return other.stepId.equals(stepId)
+        && other.requiredKeys.equals(requiredKeys)
+        && other.providedKey.equals(providedKey)
+        && other.description.equals(description)
+        && other.type.equals(type)
+        && other.children.equals(children);
   }
 
   @Override

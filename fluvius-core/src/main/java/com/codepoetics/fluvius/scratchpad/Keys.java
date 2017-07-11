@@ -8,10 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class for working with {@link Key}s
+ * Utility class for working with {@link Key}s.
  */
 public final class Keys {
 
+  /**
+   * Create a new {@link KeyProvider}. Each new KeyProvider will ensure the uniqueness / type-consistency only of the keys it has issued.
+   *
+   * @return The created {@link KeyProvider}.
+   */
   public static KeyProvider createProvider() {
     return new DefaultKeyProvider();
   }

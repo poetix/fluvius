@@ -30,11 +30,11 @@ public final class KeyValue implements Serializable {
   }
 
   @Override
-  public boolean equals(Object o) {
-    return this == o
-        || (o instanceof KeyValue
-          && ((KeyValue) o).key.equals(key)
-          && ((KeyValue) o).value.equals(value));
+  public boolean equals(Object other) {
+    return this == other
+        || (other instanceof KeyValue
+          && ((KeyValue) other).key.equals(key)
+          && ((KeyValue) other).value.equals(value));
   }
 
   @Override

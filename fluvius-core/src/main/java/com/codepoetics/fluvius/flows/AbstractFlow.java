@@ -2,6 +2,7 @@ package com.codepoetics.fluvius.flows;
 
 import com.codepoetics.fluvius.api.Condition;
 import com.codepoetics.fluvius.api.Flow;
+import com.codepoetics.fluvius.api.functional.Predicate;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.conditions.Conditions;
 
@@ -45,20 +46,56 @@ abstract class AbstractFlow<T> implements Flow<T> {
   }
 
   @Override
-  public <V> OnSuccessCapture<V> thenOnSuccess(final Flow<V> successFlow) {
-    return new OnSuccessCapture<V>() {
+  public BranchOnResultFirstCondition<T> branchOnResult() {
+
+    return new BranchOnResultFirstCondition<T>() {
       @Override
-      public Flow<V> otherwise(Flow<V> failureFlow) {
-        return then(successFlow.orIf(Conditions.keyRecordsFailure(getProvidedKey()), failureFlow));
+      public <V> BranchOnResultSubsequentConditions<T, V> onFailure(Flow<V> failureFlow) {
+        return new ResultBranchBuilder<>(
+            AbstractFlow.this,
+            BranchBuilder.startingWith(
+                Conditions.keyRecordsFailure(getProvidedKey()),
+                failureFlow));
+      }
+
+      @Override
+      public <V> BranchOnResultSubsequentConditions<T, V> onCondition(String description, Predicate<T> predicate, Flow<V> flow) {
+        return new ResultBranchBuilder<>(
+            AbstractFlow.this,
+            BranchBuilder.startingWith(
+                Conditions.keyMatches(getProvidedKey(), description, predicate),
+                flow));
       }
     };
   }
 
+  private static final class ResultBranchBuilder<T, V> implements BranchOnResultSubsequentConditions<T, V> {
+
+    private final Flow<T> firstFlow;
+    private BranchBuilder<V> branchBuilder;
+
+    private ResultBranchBuilder(Flow<T> firstFlow, BranchBuilder<V> branchBuilder) {
+      this.firstFlow = firstFlow;
+      this.branchBuilder = branchBuilder;
+    }
+
+    @Override
+    public BranchOnResultSubsequentConditions<T, V> onCondition(String description, Predicate<T> predicate, Flow<V> flow) {
+      return new ResultBranchBuilder<>(
+          firstFlow,
+          branchBuilder.orIf(Conditions.keyMatches(firstFlow.getProvidedKey(), description, predicate), flow));
+    }
+
+    @Override
+    public Flow<V> otherwise(Flow<V> defaultFlow) {
+      return firstFlow.then(branchBuilder.otherwise(defaultFlow));
+    }
+  }
+
   @Override
-  public List<Flow<?>> getAllFlows() {
-    List<Flow<?>> flows = new ArrayList<>(1);
-    flows.add(this);
-    return flows;
+  public List<Flow<?>> appendTo(List<Flow<?>> previousFlows) {
+    previousFlows.add(this);
+    return previousFlows;
   }
 
 }

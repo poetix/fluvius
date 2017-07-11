@@ -9,14 +9,28 @@ public final class TraceMapLabel {
 
   private static final TraceMapLabel DEFAULT_BRANCH_LABEL = new TraceMapLabel(TraceMapLabelType.DEFAULT_BRANCH, "Otherwise");
 
-  public static TraceMapLabel forSequence(int sequenceNumber) {
+  /**
+   * Create a TraceMapLabel for a member of a sequence.
+   * @param sequenceNumber The index of the member in the sequence.
+   * @return The constructed label.
+   */
+  public static TraceMapLabel forSequenceMember(int sequenceNumber) {
     return new TraceMapLabel(TraceMapLabelType.SEQUENCE_ITEM, Integer.toString(sequenceNumber));
   }
 
+  /**
+   * Create a TraceMapLabel for a conditional branch.
+   * @param conditionDescription The description of the condition.
+   * @return The constructed label.
+   */
   public static TraceMapLabel forConditionalBranch(String conditionDescription) {
     return new TraceMapLabel(TraceMapLabelType.CONDITIONAL_BRANCH, conditionDescription);
   }
 
+  /**
+   * Create a TraceMapLabel for the default branch.
+   * @return The constructed label.
+   */
   public static TraceMapLabel forDefaultBranch() {
     return DEFAULT_BRANCH_LABEL;
   }
@@ -29,20 +43,28 @@ public final class TraceMapLabel {
     this.description = description;
   }
 
+  /**
+   * Get the type of this label.
+   * @return The type of this label.
+   */
   public TraceMapLabelType getType() {
     return type;
   }
 
+  /**
+   * Get the description of this label.
+   * @return The description of this label.
+   */
   public String getDescription() {
     return description;
   }
 
   @Override
-  public boolean equals(Object o) {
-    return this == o
-        || (o instanceof TraceMapLabel
-        && ((TraceMapLabel) o).type == type
-        && ((TraceMapLabel) o).description.equals(description));
+  public boolean equals(Object other) {
+    return this == other
+        || (other instanceof TraceMapLabel
+        && ((TraceMapLabel) other).type == type
+        && ((TraceMapLabel) other).description.equals(description));
   }
 
   @Override

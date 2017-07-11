@@ -1,5 +1,6 @@
 package com.codepoetics.fluvius.api;
 
+import com.codepoetics.fluvius.api.functional.Predicate;
 import com.codepoetics.fluvius.api.scratchpad.Key;
 
 import java.io.Serializable;
@@ -63,20 +64,72 @@ public interface Flow<T> extends Serializable {
   Flow<T> orIf(Condition condition, Flow<T> ifTrue);
 
   /**
-   * Combine this flow with a subsequent Flow, branching into a failure flow if this flow did not succeed.
-   * @param onSuccessFlow The flow to execute next if this flow succeeded.
-   * @param <V> The type of the value returned by both success and failure flows.
-   * @return The next step in the fluent API.
+   * Start creating a branching flow which branches on the result of this flow's execution.
+   *
+   * @return The next step in the fluent API for creating a flow which branches on the result of this flow's execution.
    */
-  <V> OnSuccessCapture<V> thenOnSuccess(Flow<V> onSuccessFlow);
+  BranchOnResultFirstCondition<T> branchOnResult();
 
-  interface OnSuccessCapture<V> {
-    Flow<V> otherwise(Flow<V> failureFlow);
+  /**
+   * The first step in a fluent API for creating a flow which branches on the result of the previous flow's execution.
+   * @param <T> The type of the previous flow's result.
+   */
+  interface BranchOnResultFirstCondition<T> {
+
+    /**
+     * Specify the flow to execute if the previous flow returned a failure result.
+     *
+     * @param failureFlow The flow to execute if the previous flow returned a failure result.
+     * @param <V> The type returned by the branching flow.
+     * @return The next step in the fluent API.
+     */
+    <V> BranchOnResultSubsequentConditions<T, V> onFailure(Flow<V> failureFlow);
+
+    /**
+     * Specify the flow to execute if the result of the previous flow matches the provided {@link Predicate}.
+     *
+     * @param description A description of the condition.
+     * @param predicate A predicate which tests whether the condition has been met.
+     * @param flow The flow to execute if the condition is met.
+     * @param <V> The type returned by the branching flow.
+     * @return The next step in the fluent API.
+     */
+    <V> BranchOnResultSubsequentConditions<T, V> onCondition(String description, Predicate<T> predicate, Flow<V> flow);
   }
 
   /**
-   * Flatten this flow into a list of flows.
-   * @return A list of flows containing either this flow, or (if this flow is a sequence) all of the flows in this flow.
+   * Specify subsequent conditions, and finally the default execution, in a branching flow which branches on the previous flow's result.
+   *
+   * @param <T> The type of the previous flow's result.
+   * @param <V> The type of the branching flow's result.
    */
-  List<Flow<?>> getAllFlows();
+  interface BranchOnResultSubsequentConditions<T, V> {
+
+    /**
+     * Specify the flow to execute if the result of the previous flow matches the provided {@link Predicate}.
+     *
+     * @param description A description of the condition.
+     * @param predicate A predicate which tests whether the condition has been met.
+     * @param flow The flow to execute if the condition is met.
+     * @return The next step in the fluent API.
+     */
+    BranchOnResultSubsequentConditions<T, V> onCondition(String description, Predicate<T> predicate, Flow<V> flow);
+
+    /**
+     * Specify the flow to execute if no other condition is met, and exit the fluent API returning the constructed {@link Flow}.
+     *
+     * @param defaultFlow The flow to execute if no other condition is met.
+     * @return The constructed branching {@link Flow}.
+     */
+    Flow<V> otherwise(Flow<V> defaultFlow);
+  }
+
+  /**
+   * Append this flow (or, if this flow is a sequence, all of the flows sequenced by this flow) to the provided list of flows.
+   *
+   * @param previousFlows The list of flows to append flows to.
+   * @return The extended list of flows;
+   */
+  List<Flow<?>> appendTo(List<Flow<?>> previousFlows);
+
 }

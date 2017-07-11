@@ -117,12 +117,12 @@ public class FlowApiTest implements Serializable {
           .withId(recorder.record(sequenceStepId))
           .withChildren(AMap
               .containing(
-                  TraceMapLabel.forSequence(1),
+                  TraceMapLabel.forSequenceMember(1),
                   ATraceMap.ofType(FlowStepType.STEP)
                     .withDescription("Authorize user")
                     .withId(recorder.record(authorizeUserStepId)))
               .with(
-                  TraceMapLabel.forSequence(2),
+                  TraceMapLabel.forSequenceMember(2),
                   ATraceMap.ofType(FlowStepType.STEP)
                     .withDescription("Get local temperature")
                     .withId(recorder.record(getTemperatureStepId)))

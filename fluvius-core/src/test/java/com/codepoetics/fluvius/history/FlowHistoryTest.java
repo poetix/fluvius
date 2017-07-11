@@ -57,12 +57,12 @@ public class FlowHistoryTest {
         ATraceMap.ofType(FlowStepType.SEQUENCE)
             .withChildren(AMap
                 .containing(
-                    TraceMapLabel.forSequence(1),
+                    TraceMapLabel.forSequenceMember(1),
                     ATraceMap.ofType(FlowStepType.STEP)
                         .withId(recorder.record("authorize user"))
                         .withDescription("Authorize user"))
                 .with(
-                    TraceMapLabel.forSequence(2),
+                    TraceMapLabel.forSequenceMember(2),
                     ATraceMap.ofType(FlowStepType.STEP)
                         .withId(recorder.record("get temperature"))
                         .withDescription("Get local temperature"))

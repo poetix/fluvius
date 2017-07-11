@@ -4,9 +4,13 @@ import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.annotations.KeyName;
 import com.codepoetics.fluvius.api.annotations.OperationName;
 import com.codepoetics.fluvius.api.annotations.StepMethod;
+import com.codepoetics.fluvius.api.functional.Predicate;
 import com.codepoetics.fluvius.api.functional.Returning;
+import com.codepoetics.fluvius.api.functional.ScratchpadPredicate;
+import com.codepoetics.fluvius.api.scratchpad.Scratchpad;
 import com.codepoetics.fluvius.api.wrapping.FlowWrapperFactory;
 import com.codepoetics.fluvius.compilation.Compilers;
+import com.codepoetics.fluvius.conditions.Conditions;
 import com.codepoetics.fluvius.flows.Flows;
 import org.junit.Test;
 
@@ -66,15 +70,27 @@ public class WrappingTest {
       Compilers.builder().loggingToConsole().build()
   );
 
+  private static final Flow<String> loginFlow = factory.flowFor(new LoginStep(true));
+  private static final Flow<String> getAccountDetailsFlow = factory.flowFor(new GetAccountDetailsStep());
+  private static final Flow<String> reportFailureFlow = factory.flowFor(new ReportFailureStep());
+
   @Test
   public void runFlow() {
-    Flow<String> getAccountDetailsFlow = factory.flowFor(new LoginStep(true))
-        .thenOnSuccess(factory.flowFor(new GetAccountDetailsStep()))
-        .otherwise(factory.flowFor(new ReportFailureStep()));
+    Predicate<String> isEmpty = new Predicate<String>() {
+      @Override
+      public boolean test(String value) {
+        return value.isEmpty();
+      }
+    };
 
-    System.out.println(Flows.prettyPrint(getAccountDetailsFlow));
+    Flow<String> completeFlow = loginFlow.branchOnResult()
+        .onFailure(reportFailureFlow)
+        .onCondition("is empty", isEmpty, reportFailureFlow)
+        .otherwise(getAccountDetailsFlow);
 
-    RunAccountDetailsFlow runner = factory.proxyFor(RunAccountDetailsFlow.class, getAccountDetailsFlow);
+    System.out.println(Flows.prettyPrint(completeFlow));
+
+    RunAccountDetailsFlow runner = factory.proxyFor(RunAccountDetailsFlow.class, completeFlow);
 
     assertEquals("Everything's ruined", runner.getAccountDetails("Bob", "password", "Account01"));
   }

@@ -12,65 +12,43 @@ final class SequenceFlow<T> extends AbstractFlow<T> {
     Preconditions.checkNotNull("first", first);
     Preconditions.checkNotNull("last", last);
 
-    return create(first, Collections.<Flow<?>>emptyList(), last);
+    List<Flow<?>> sequencedFlows = new ArrayList<>();
+    first.appendTo(sequencedFlows);
+    last.appendTo(sequencedFlows);
+
+    return create(sequencedFlows);
   }
 
-  private static <T> Flow<T> create(Flow<?> first, List<Flow<?>> middle, Flow<T> last) {
-    List<Flow<?>> flatLast = last.getAllFlows();
-    if (flatLast.size() > 1) {
-      return create(first, middle, flatLast);
-    }
+  private static <T> Flow<T> create(List<Flow<?>> sequencedFlows) {
+    Flow<?> first = sequencedFlows.get(0);
+    Flow<T> last = (Flow<T>) sequencedFlows.get(sequencedFlows.size() - 1);
 
     Set<Key<?>> requiredKeys = first.getRequiredKeys();
     Set<Key<?>> providedKeys = new HashSet<>();
     providedKeys.add(first.getProvidedKey());
 
-    for (Flow<?> flow : middle) {
+    for (int i = 1; i < sequencedFlows.size() - 1; i++) {
+      Flow<?> flow = sequencedFlows.get(i);
       Set<Key<?>> requiredKeysForStage = flow.getRequiredKeys();
       requiredKeysForStage.removeAll(providedKeys);
       requiredKeys.addAll(requiredKeysForStage);
       providedKeys.add(flow.getProvidedKey());
     }
 
-    Set<Key<?>> requiredKeysForLast = last.getRequiredKeys();
-    requiredKeysForLast.removeAll(providedKeys);
-    requiredKeys.addAll(requiredKeysForLast);
-
-    return new SequenceFlow<>(UUID.randomUUID(), requiredKeys, first, middle, last);
+    return new SequenceFlow<>(UUID.randomUUID(), requiredKeys, last.getProvidedKey(), sequencedFlows);
   }
 
-  @SuppressWarnings("unchecked")
-  private static <T> Flow<T> create(Flow<?> first, List<Flow<?>> middle, List<Flow<?>> flatLast) {
-    List<Flow<?>> newMiddle = new ArrayList<>(middle);
-    newMiddle.addAll(flatLast);
-    Flow<T> newLast = (Flow<T>) newMiddle.get(newMiddle.size() - 1);
-    newMiddle.remove(newMiddle.size() - 1);
-    return create(first, newMiddle, newLast);
-  }
+  private final List<Flow<?>> sequencedFlows;
 
-  private final Flow<?> first;
-  private final List<Flow<?>> middle;
-  private final Flow<T> last;
-
-  private SequenceFlow(UUID stepId, Set<Key<?>> requiredKeys, Flow<?> first, List<Flow<?>> middle, Flow<T> last) {
-    super(stepId, requiredKeys, last.getProvidedKey());
-    this.first = first;
-    this.middle = middle;
-    this.last = last;
-  }
-
-  private List<Flow<?>> allFlows() {
-    List<Flow<?>> flows = new ArrayList<>(middle.size() + 2);
-    flows.add(first);
-    flows.addAll(middle);
-    flows.add(last);
-    return flows;
+  private SequenceFlow(UUID stepId, Set<Key<?>> requiredKeys, Key<T> providedKey, List<Flow<?>> sequencedFlows) {
+    super(stepId, requiredKeys, providedKey);
+    this.sequencedFlows = sequencedFlows;
   }
 
   @Override
   public <V> V visit(FlowVisitor<V> visitor) {
     List<V> items = new ArrayList<>();
-    for (Flow<?> flow : allFlows()) {
+    for (Flow<?> flow : sequencedFlows) {
       items.add(flow.visit(visitor));
     }
     return visitor.visitSequence(getStepId(), getRequiredKeys(), getProvidedKey(), items);
@@ -78,14 +56,14 @@ final class SequenceFlow<T> extends AbstractFlow<T> {
 
   @Override
   public <N> Flow<N> then(Flow<N> next) {
-    List<Flow<?>> newMiddle = new ArrayList<>(middle);
-    newMiddle.add(last);
-    return create(first, newMiddle, next);
+    List<Flow<?>> newSequencedFlows = new ArrayList<>(sequencedFlows);
+    return create(next.appendTo(newSequencedFlows));
   }
 
   @Override
-  public List<Flow<?>> getAllFlows() {
-    return allFlows();
+  public List<Flow<?>> appendTo(List<Flow<?>> previousFlows) {
+    previousFlows.addAll(sequencedFlows);
+    return previousFlows;
   }
 
 }
