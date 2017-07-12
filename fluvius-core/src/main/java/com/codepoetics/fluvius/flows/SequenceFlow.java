@@ -20,21 +20,25 @@ final class SequenceFlow<T> extends AbstractFlow<T> {
   }
 
   private static <T> Flow<T> create(List<Flow<?>> sequencedFlows) {
-    Flow<?> first = sequencedFlows.get(0);
-    Flow<T> last = (Flow<T>) sequencedFlows.get(sequencedFlows.size() - 1);
+    Iterator<Flow<?>> iterator = sequencedFlows.iterator();
+    Flow<?> first = iterator.next();
 
-    Set<Key<?>> requiredKeys = first.getRequiredKeys();
+    Set<Key<?>> requiredKeys = new HashSet<>();
     Set<Key<?>> providedKeys = new HashSet<>();
+
+    requiredKeys.addAll(first.getRequiredKeys());
     providedKeys.add(first.getProvidedKey());
 
-    for (int i = 1; i < sequencedFlows.size() - 1; i++) {
-      Flow<?> flow = sequencedFlows.get(i);
-      Set<Key<?>> requiredKeysForStage = flow.getRequiredKeys();
+    Flow<?> cursor = first;
+    while (iterator.hasNext()) {
+      cursor = iterator.next();
+      Set<Key<?>> requiredKeysForStage = cursor.getRequiredKeys();
       requiredKeysForStage.removeAll(providedKeys);
       requiredKeys.addAll(requiredKeysForStage);
-      providedKeys.add(flow.getProvidedKey());
+      providedKeys.add(cursor.getProvidedKey());
     }
 
+    Flow<T> last = (Flow<T>) cursor;
     return new SequenceFlow<>(UUID.randomUUID(), requiredKeys, last.getProvidedKey(), sequencedFlows);
   }
 

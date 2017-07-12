@@ -9,6 +9,8 @@ import com.codepoetics.fluvius.api.scratchpad.KeyProvider;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 final class Reflection {
 
@@ -18,12 +20,14 @@ final class Reflection {
   static Key[] getParameterKeys(Method method, KeyProvider keyProvider) {
     Annotation[][] parameterAnnotations = method.getParameterAnnotations();
     Type[] parameterTypes = method.getGenericParameterTypes();
+    Class<?>[] parameterClasses = method.getParameterTypes();
+
     Key[] keys = new Key[parameterAnnotations.length];
 
-    for (int i = 0; i < keys.length; i++) {
+    for (int i = 0; i < parameterAnnotations.length; i++) {
       String keyName = getKeyName(parameterAnnotations[i]);
       if (keyName == null) {
-        throw new IllegalArgumentException("Parameter " + i + " of method " + method + " has no @KeyName annotation");
+        keyName = lowercaseFirst(parameterClasses[i].getSimpleName());
       }
       keys[i] = keyProvider.getKey(keyName, parameterTypes[i]);
     }
@@ -40,28 +44,72 @@ final class Reflection {
     return null;
   }
 
-  static String getOperationName(Class<?> functionClass) {
-    if (functionClass.isAnnotationPresent(OperationName.class)) {
-      return functionClass.getAnnotation(OperationName.class).value();
+  static String getOperationName(Method stepMethod) {
+    Class<?> declaringClass = stepMethod.getDeclaringClass();
+
+    if (declaringClass.isAnnotationPresent(OperationName.class)) {
+      return declaringClass.getAnnotation(OperationName.class).value();
     }
-    return functionClass.getSimpleName();
+
+    String className = declaringClass.getSimpleName();
+    if (className.endsWith("Step")) {
+      return lowercaseFirst(className.substring(0, className.length() - 4));
+    }
+
+    return lowercaseFirst(declaringClass.getSimpleName());
+  }
+
+  private static String lowercaseFirst(String name) {
+    return name.substring(0, 1).toLowerCase() + name.substring(1);
   }
 
   static Method getStepMethod(Class<?> functionClass) {
-    Method[] declaredMethods = functionClass.getDeclaredMethods();
-
-    for (Method declaredMethod : declaredMethods) {
-      if (declaredMethod.isAnnotationPresent(StepMethod.class)) {
-        return declaredMethod;
+    for (Method method : getMethods(functionClass)) {
+      if (method.isAnnotationPresent(StepMethod.class)) {
+        return method;
       }
     }
 
     throw new IllegalArgumentException("Class " + functionClass + " has no method annotated as @StepMethod");
   }
 
+  private static List<Class<?>> getClassHierarchy(Class<?> inheritor) {
+    List<Class<?>> result = new ArrayList<>();
+    result.add(inheritor);
+
+    Class<?> superclass = inheritor.getSuperclass();
+    while (superclass != null) {
+      result.add(superclass);
+      superclass = superclass.getSuperclass();
+    }
+
+    for (Class<?> iface : inheritor.getInterfaces()) {
+      result.add(iface);
+    }
+
+    return result;
+  }
+
+  private static List<Method> getMethods(Class<?> inheritor) {
+    List<Method> result = new ArrayList<>();
+
+    for (Class<?> klass : getClassHierarchy(inheritor)) {
+      for (Method method : klass.getDeclaredMethods()) {
+        result.add(method);
+      }
+    }
+
+    return result;
+  }
+
   static <OUTPUT> Key<OUTPUT> getOutputKey(Method stepMethod, KeyProvider keyProvider) {
+    String annotatedName = stepMethod.getAnnotation(StepMethod.class).value();
+    String calculatedName = annotatedName.isEmpty()
+        ? lowercaseFirst(stepMethod.getReturnType().getSimpleName())
+        : annotatedName;
+
     return keyProvider.getKey(
-        stepMethod.getAnnotation(StepMethod.class).value(),
+        calculatedName,
         stepMethod.getGenericReturnType());
   }
 }

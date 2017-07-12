@@ -15,5 +15,5 @@ public @interface StepMethod {
    * The name of the {@link com.codepoetics.fluvius.api.scratchpad.Scratchpad} key to which the return-value of the method will be bound.
    * @return The name of the {@link com.codepoetics.fluvius.api.scratchpad.Scratchpad} key to which the return-value of the method will be bound.
    */
-  String value();
+  String value() default "";
 }
