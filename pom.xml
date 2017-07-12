@@ -10,7 +10,7 @@
 
     <groupId>com.codepoetics</groupId>
     <artifactId>fluvius</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.10</version>
     <description>A simple co-ordination API for Java 7</description>
     <url>https://poetix.github.io/fluvius</url>
     <packaging>pom</packaging>
@@ -148,7 +148,6 @@
         <module>fluvius-json</module>
     </modules>
 
-    <!--
     <distributionManagement>
         <site>
             <name>Github Pages</name>
@@ -156,7 +155,6 @@
             <id>github-pages</id>
         </site>
     </distributionManagement>
-    -->
 
     <scm>
         <connection>scm:git:git://github.com/poetix/fluvius.git</connection>
