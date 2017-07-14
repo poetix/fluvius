@@ -11,19 +11,18 @@ Here's an example sequence, for processing a request to update a user's details.
 Sequence:
     1: Check user's credentials
     2: Branch
-        2a) If user is authorized: Sequence:
-            2a.1: Update user's details
-            2a.2: Format success message
-        2b) Otherwise: Format failure message
+    2a) If credentials are authorized: Sequence:
+        2a.1: Update user's details
+        2a.2: Format success message
+    2b) Otherwise: Format failure message
 ```
 
 At the top-level, this sequence might be defined as follows in Java:
 
 ```java
-Flow<String> updateUserDetails = checkUsersCredentials
-    .then(branch(
-        ifUserIsAuthorized, updateUserDetails.then(formatSuccessMessage))
-        .otherwise(formatFailureMessage));
+Flow<String> updateUserDetails = checkUsersCredentials.branchOnResult()
+    .onCondition(isAuthorised, updateUserDetails.then(formatSuccessMessage))
+    .otherwise(formatFailureMessage));
 ```
 
 In this example, `checkUsersCredentials` is a `Flow` which performs a single action: it accepts a user name and password, and returns an authorisation response:
@@ -32,7 +31,7 @@ In this example, `checkUsersCredentials` is a `Flow` which performs a single act
 Flow<AuthorizationResponse> checkUsersCredentials = Flow
     .obtaining(authorizationResponse)
     .from(userName, password)
-    .using("Check user's credentials", new F2<String, String, AuthorizationResponse>() {
+    .using("Check user's credentials", new DoubleParameterStep<String, String, AuthorizationResponse>() {
         @Override
         public AuthorizationResponse apply(String userName, String password) {
             // Authorization logic goes here
@@ -40,7 +39,7 @@ Flow<AuthorizationResponse> checkUsersCredentials = Flow
     });
 ```
 
-We supply a function (in this case, an anonymous inner class extending the `F2` interface) to do the work.
+We supply a function (in this case, an anonymous inner class extending the `DoubleParameterStep` interface) to do the work.
 
 The `obtaining` and `from` expressions in the above code both accept `Key`s, which index values written onto a scratchpad used by the flow. Here's how those are defined:
 
@@ -68,7 +67,7 @@ For example, suppose we join two flows together:
 Flow<String> getAccessToken = Flows
         .obtaining(accessToken)
         .from(userName, password)
-        .using("Authorize user", new F2<String, String, String>() {
+        .using("Authorize user", new DoubleParameterStep<String, String, String>() {
             @Override
             public String apply(String username, String password) {
                 return "ACCESS TOKEN";
@@ -78,7 +77,7 @@ Flow<String> getAccessToken = Flows
 Flow<Double> getLocalTemperature = Flows
         .obtaining(temperature)
         .from(accessToken, postcode)
-        .using("Get local temperature", new F2<String, String, Double>() {
+        .using("Get local temperature", new DoubleParameterStep<String, String, Double>() {
             @Override
             public Double apply(String accessCode, String postcode) {
                 return 26D;
@@ -103,21 +102,82 @@ We can see that in order to run the whole sequence, we need to supply a scratchp
 Here's how we run the flow:
 
 ```java
-Double result = Flows.run(
-        completeFlow,
-        Scratchpads.create(
-            userName.of("Arthur"),
-            password.of("Special secret password"),
-            postcode.of("VB6 5UX")),
-        Visitors.logging(Visitors.getDefault())
-);
+FlowCompiler compiler = Compilers.builder().loggingToConsole().build();
+
+Double result = compiler.compile(completeFlow).run(
+    userName.of("Arthur"),
+    password.of("Special secret password"),
+    postcode.of("VB6 5UX"));
 ```
 
-The flow is assembled into an executable `Action` by a `FlowVisitor`, and this `Action` is run to obtain a result. The default visitor simply assembles the pieces of the flow together, but we can supply visitors that perform other actions such as logging flow steps or dispatching them to be run by a local or remote executor. In this case, we've added logging in to the execution behaviour we want, so that we can see how the flow runs. Here's what that prints out:
+The flow is assembled into an executable `FlowExecution` by the `FlowCompiler`, and this `FlowExecution` is run to obtain a result. We can configure the compiler to layer in various behaviours to execution, such as logging or sending trace information to an event listener. Here, we've set it up to add logging to the console, which prints out the following:
 
 ```
-INFO: Running action Authorize user with scratchpad {userName=Arthur, password=Special secret password, postcode=VB6 5UX}
-INFO: Action Authorize user returned result ACCESS TOKEN
-INFO: Running action Get local temperature with scratchpad {accessToken=ACCESS TOKEN, password=Special secret password, postcode=VB6 5UX, userName=Arthur}
-INFO: Action Get local temperature returned result 26.0
+2017-07-14T14:40:36.483/76cc9d7a-4e77-4140-acdc-36fecbaf6ccc Operation 'Authorize user' started with scratchpad {userName=Arthur, password=the true password, postcode=VB6 5UX}
+2017-07-14T14:40:36.491/76cc9d7a-4e77-4140-acdc-36fecbaf6ccc Operation 'Authorize user' completed, writing value ACCESS TOKEN to key accessToken
+2017-07-14T14:40:36.491/76cc9d7a-4e77-4140-acdc-36fecbaf6ccc Operation 'Get local temperature' started with scratchpad {userName=Arthur, password=the true password, postcode=VB6 5UX, accessToken=ACCESS TOKEN}
+2017-07-14T14:40:36.492/76cc9d7a-4e77-4140-acdc-36fecbaf6ccc Operation 'Get local temperature' completed, writing value 26.0 to key temperature
 ```
+
+# Reflective flow wrapping
+
+As an alternative to manually defining `Key`s and configuring flows using the fluent API, a `FlowWrapperFactory` can be used to convert objects to `Flow`s directly.
+
+Here's class defining a single flow step:
+
+```java
+public static final class SayHelloStep implements Returning<String> {
+    @StepMethod("greeting")
+    String getGreeting(@KeyName("personName") String personName) {
+      return "Hello " + personName;
+    }
+}
+```
+
+and here's how to wrap it into a `Flow``:
+
+```java
+KeyProvider keyProvider = Keys.createProvider();
+FlowWrapperFactory factory = Wrappers.createWrapperFactory(keyProvider);
+
+Flow<String> helloFlow = factory.flowFor(new SayHelloStep());
+```
+
+which pretty-prints as
+
+```
+Say hello (requires [personName], provides greeting)
+```
+
+Note that the description of the flow step, "Say hello", has been inferred from the class name, while the names of the required and provided keys have been taken from the annotations applied to the `getGreeting` method.
+
+The difficulty here is that because we have not explicitly declared a `personName` `Key`, we cannot provide a value for that key to run the flow with. There are two alternatives here. The first is to use the `KeyProvider` to request a copy of the `Key` it associated with the `personName` parameter:
+
+```java
+FlowCompiler compiler = Compilers.builder().loggingToConsole().build();
+Key<String> personName = keyProvider.getKey("personName", String.class);
+
+String greeting = compiler.compile(helloFlow).run(personName.of("Gerald"));
+```
+
+An alternative is to generate a proxy which will convert a method call into a flow execution. First we need to define the interface for the proxy:
+
+```java
+public interface SayHelloRunner extends Returning<String> {
+    FlowRunner<String> sayHello(@KeyName("personName") String personName);
+}
+```
+
+Then we create the proxy object:
+
+```java
+FlowExecutionProxyFactory proxyFactory = Wrappers.createProxyFactory(compiler, keyProvider);
+SayHelloRunner runner = proxyFactory.proxyFor(SayHelloRunner.class, helloFlow);
+
+String greeting = runner.sayHello("Gerald").run();
+```
+
+Note that the `FlowExecutionProxyFactory` must be created with the same `KeyProvider` as the `FlowWrapperFactory`, to ensure that the `Key`s associated with parameters in the proxy interface are the same as those associated with parameters in the wrapped `StepMethod`s.
+
+When defining large numbers of steps, with a separate class used to define each step, this approach can greatly simplify flow definition by moving responsibility for defining and associating `Key`s with flows to the class definitions for individual steps.
+
