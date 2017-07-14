@@ -18,12 +18,12 @@ public class NamingConventionsTest {
   public static final class UsefullyNamedTypeB { }
   public static final class UsefullyNamedTypeC { }
 
-  public interface UnAnnotatedStep {
+  public interface DoSomethingStep {
     @StepMethod
     UsefullyNamedTypeC getOutput(UsefullyNamedTypeA a, UsefullyNamedTypeB b);
   }
 
-  public static final class UnAnnotatedStepImpl implements UnAnnotatedStep {
+  public static final class DoSomethingStepImpl implements DoSomethingStep {
     @Override
     public UsefullyNamedTypeC getOutput(UsefullyNamedTypeA a, UsefullyNamedTypeB b) {
       return null;
@@ -46,12 +46,12 @@ public class NamingConventionsTest {
   @Test
   public void testWrapUnannotatedStepClass() {
     KeyProvider keyProvider = Keys.createProvider();
-    Method stepMethod = Reflection.getStepMethod(UnAnnotatedStepImpl.class);
+    Method stepMethod = Reflection.getStepMethod(DoSomethingStepImpl.class);
 
     Key<?>[] requiredKeys = Reflection.getParameterKeys(stepMethod, keyProvider);
     Key<String> providedKey = Reflection.getOutputKey(stepMethod, keyProvider);
 
-    assertEquals("unAnnotated", Reflection.getOperationName(stepMethod));
+    assertEquals("Do something", Reflection.getOperationName(stepMethod));
     assertEquals("usefullyNamedTypeA", requiredKeys[0].getName());
     assertEquals("usefullyNamedTypeB", requiredKeys[1].getName());
     assertEquals("usefullyNamedTypeC", providedKey.getName());
@@ -69,6 +69,17 @@ public class NamingConventionsTest {
     assertEquals("inputA", requiredKeys[0].getName());
     assertEquals("inputB", requiredKeys[1].getName());
     assertEquals("result", providedKey.getName());
+  }
+
+  @Test
+  public void operatorNames() {
+    assertEquals("A", Naming.getOperationName("a"));
+    assertEquals("A", Naming.getOperationName("A"));
+    assertEquals("AB", Naming.getOperationName("AB"));
+    assertEquals("A bc", Naming.getOperationName("ABc"));
+    assertEquals("A bc d", Naming.getOperationName("ABcD"));
+    assertEquals("A bc de", Naming.getOperationName("ABcDe"));
+    assertEquals("XML configuration", Naming.getOperationName("XMLConfiguration"));
   }
 
 }

@@ -4,8 +4,10 @@ import com.codepoetics.fluvius.api.Flow;
 import com.codepoetics.fluvius.api.annotations.KeyName;
 import com.codepoetics.fluvius.api.annotations.OperationName;
 import com.codepoetics.fluvius.api.annotations.StepMethod;
+import com.codepoetics.fluvius.api.compilation.FlowCompiler;
 import com.codepoetics.fluvius.api.functional.Predicate;
 import com.codepoetics.fluvius.api.functional.Returning;
+import com.codepoetics.fluvius.api.scratchpad.Key;
 import com.codepoetics.fluvius.api.scratchpad.KeyProvider;
 import com.codepoetics.fluvius.api.wrapping.FlowExecutionProxyFactory;
 import com.codepoetics.fluvius.api.wrapping.FlowRunner;
@@ -95,4 +97,35 @@ public class WrappingTest {
 
     assertEquals("Everything's ruined", runner.getAccountDetails("Bob", "password", "Account01").run());
   }
+
+  public static final class SayHelloStep implements Returning<String> {
+    @StepMethod("greeting")
+    String getGreeting(@KeyName("personName") String personName) {
+      return "Hello " + personName;
+    }
+  }
+
+  public interface SayHelloRunner extends Returning<String> {
+    FlowRunner<String> sayHello(@KeyName("personName") String personName);
+  }
+
+  @Test
+  public void helloWorldExample() throws Exception {
+    KeyProvider keyProvider = Keys.createProvider();
+    FlowWrapperFactory factory = Wrappers.createWrapperFactory(keyProvider);
+    FlowCompiler compiler = Compilers.builder().loggingToConsole().build();
+
+    Flow<String> helloFlow = factory.flowFor(new SayHelloStep());
+
+    System.out.println(Flows.prettyPrint(helloFlow));
+
+    Key<String> personName = keyProvider.getKey("personName", String.class);
+
+    String greetingA = compiler.compile(helloFlow).run(personName.of("Gerald"));
+
+    FlowExecutionProxyFactory proxyFactory = Wrappers.createProxyFactory(compiler, keyProvider);
+    SayHelloRunner runner = proxyFactory.proxyFor(SayHelloRunner.class, helloFlow);
+    String greetingB = runner.sayHello("Gerald").run();
+  }
+
 }

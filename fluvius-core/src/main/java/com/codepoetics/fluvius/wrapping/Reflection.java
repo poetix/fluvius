@@ -27,7 +27,7 @@ final class Reflection {
     for (int i = 0; i < parameterAnnotations.length; i++) {
       String keyName = getKeyName(parameterAnnotations[i]);
       if (keyName == null) {
-        keyName = lowercaseFirst(parameterClasses[i].getSimpleName());
+        keyName = Naming.getKeyName(parameterClasses[i].getSimpleName());
       }
       keys[i] = keyProvider.getKey(keyName, parameterTypes[i]);
     }
@@ -47,20 +47,9 @@ final class Reflection {
   static String getOperationName(Method stepMethod) {
     Class<?> declaringClass = stepMethod.getDeclaringClass();
 
-    if (declaringClass.isAnnotationPresent(OperationName.class)) {
-      return declaringClass.getAnnotation(OperationName.class).value();
-    }
-
-    String className = declaringClass.getSimpleName();
-    if (className.endsWith("Step")) {
-      return lowercaseFirst(className.substring(0, className.length() - 4));
-    }
-
-    return lowercaseFirst(declaringClass.getSimpleName());
-  }
-
-  private static String lowercaseFirst(String name) {
-    return name.substring(0, 1).toLowerCase() + name.substring(1);
+    return declaringClass.isAnnotationPresent(OperationName.class)
+      ? declaringClass.getAnnotation(OperationName.class).value()
+      : Naming.getOperationName(declaringClass.getSimpleName());
   }
 
   static Method getStepMethod(Class<?> functionClass) {
@@ -105,7 +94,7 @@ final class Reflection {
   static <OUTPUT> Key<OUTPUT> getOutputKey(Method stepMethod, KeyProvider keyProvider) {
     String annotatedName = stepMethod.getAnnotation(StepMethod.class).value();
     String calculatedName = annotatedName.isEmpty()
-        ? lowercaseFirst(stepMethod.getReturnType().getSimpleName())
+        ? Naming.getKeyName(stepMethod.getReturnType().getSimpleName())
         : annotatedName;
 
     return keyProvider.getKey(

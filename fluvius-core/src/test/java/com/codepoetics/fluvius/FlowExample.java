@@ -17,12 +17,14 @@ public final class FlowExample {
   public static final Key<String> password = Key.named("password");
   public static final Key<String> postcode = Key.named("postcode");
   public static final Key<AuthorisationResult> authorisationResult = Key.named("authorisationResult");
+
   public static final Condition isAuthorised = Conditions.keyMatches(authorisationResult, "is authorized", new Predicate<AuthorisationResult>() {
     @Override
     public boolean test(AuthorisationResult value) {
       return value.isAuthorised();
     }
   });
+
   public static final Flow<AuthorisationResult> authorize = Flows
       .obtaining(authorisationResult)
       .from(userName, password)
@@ -36,14 +38,18 @@ public final class FlowExample {
                   : new AuthorisationResult(false, null);
             }
           });
+
   public static final Key<String> accessToken = Key.named("accessToken");
+
   public static final Flow<String> extractAccessToken = Flows.obtaining(accessToken).from(authorisationResult).using(new SingleParameterStep<AuthorisationResult, String>() {
             @Override
             public String apply(AuthorisationResult input) {
               return input.getAccessToken();
             }
           });
+
   public static final Key<Double> temperature = Key.named("temperature");
+
   public static final Flow<Double> getWeather = Flows
               .obtaining(temperature)
               .from(accessToken, postcode)
@@ -55,7 +61,9 @@ public final class FlowExample {
                       return 26D;
                     }
                   });
+
   public static final Key<String> weatherMessage = Key.named("weatherMessage");
+
   public static final Flow<String> formatWeather = Flows
       .from(userName, postcode, temperature)
       .to(weatherMessage)
@@ -67,6 +75,7 @@ public final class FlowExample {
               + " is " + scratchpad.get(temperature) + " degrees";
         }
       });
+
   public static final Flow<String> formatError = Flows.obtaining(weatherMessage).from(userName).using("Format error message", new SingleParameterStep<String, String>() {
                     @Override
                     public String apply(String userName) {
@@ -76,7 +85,6 @@ public final class FlowExample {
 
   private FlowExample() {
   }
-
 
   public static final class AuthorisationResult {
     private final boolean isAuthorised;
