@@ -34,9 +34,19 @@ final class Naming {
     Iterator<String> iterator = words.iterator();
     operationName.append(uppercaseFirst(iterator.next()));
     while (iterator.hasNext()) {
-      operationName.append(" ").append(lowercaseFirst(iterator.next()));
+      operationName.append(" ");
+      String nextWord = iterator.next();
+      if (isAcronym(nextWord)) {
+        operationName.append(nextWord);
+      } else {
+        operationName.append(lowercaseFirst(nextWord));
+      }
     }
     return operationName.toString();
+  }
+
+  private static boolean isAcronym(String nextWord) {
+    return nextWord.length() > 1 && Character.isUpperCase(nextWord.toCharArray()[1]);
   }
 
   private static List<String> getWords(String trimmed) {

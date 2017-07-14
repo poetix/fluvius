@@ -80,6 +80,7 @@ public class NamingConventionsTest {
     assertEquals("A bc d", Naming.getOperationName("ABcD"));
     assertEquals("A bc de", Naming.getOperationName("ABcDe"));
     assertEquals("XML configuration", Naming.getOperationName("XMLConfiguration"));
+    assertEquals("New XML configuration", Naming.getOperationName("NewXMLConfiguration"));
   }
 
 }
