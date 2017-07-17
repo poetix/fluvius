@@ -134,7 +134,7 @@ public static final class SayHelloStep implements Returning<String> {
 }
 ```
 
-and here's how to wrap it into a `Flow``:
+and here's how to wrap it into a `Flow`:
 
 ```java
 KeyProvider keyProvider = Keys.createProvider();
